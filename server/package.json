@@ -1,0 +1,73 @@
+{
+  "name": "new_media_development_men_boilerplate",
+  "version": "1.0.0",
+  "description": "MEN Boilerplate with TypeScript",
+  "main": "dist/index.js",
+  "repository": "https://github.com/gdmgent-1920-mobdev2/MERN-stack",
+  "author": "drdynscript",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "ejs": "^3.0.1",
+    "express": "^4.17.1",
+    "faker": "^4.1.0",
+    "gridfs-stream": "^1.1.1",
+    "method-override": "^3.0.0",
+    "moment": "^2.24.0",
+    "mongoose": "^5.9.5",
+    "mongoose-paginate": "^5.0.3",
+    "morgan": "^1.9.1",
+    "multer": "^1.4.2",
+    "multer-gridfs-storage": "^4.0.2",
+    "path": "^0.12.7",
+    "swagger-jsdoc": "^3.5.0",
+    "swagger-ui-express": "^4.1.3",
+    "util": "^0.12.2",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.19.0",
+    "@types/cors": "^2.8.6",
+    "@types/dotenv": "^8.2.0",
+    "@types/ejs": "^3.0.1",
+    "@types/express": "^4.17.3",
+    "@types/faker": "^4.1.10",
+    "@types/gridfs-stream": "^0.5.32",
+    "@types/method-override": "^0.0.31",
+    "@types/moment": "^2.13.0",
+    "@types/mongoose": "^5.7.6",
+    "@types/morgan": "^1.9.0",
+    "@types/multer": "^1.4.2",
+    "@types/multer-gridfs-storage": "^4.0.0",
+    "@types/node": "^13.9.2",
+    "@types/swagger-jsdoc": "^3.0.2",
+    "@types/swagger-ui-express": "^4.1.1",
+    "@types/winston": "^2.4.4",
+    "husky": "^4.2.3",
+    "prettier": "^1.19.1",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "tslint": "^6.1.0",
+    "tslint-config-airbnb": "^5.11.2",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.8.3"
+  },
+  "scripts": {
+    "build": "tsc --build tsconfig.json",
+    "lint": "tslint --project tsconfig.json",
+    "prettier:base": "prettier --parser typescript --single-quote",
+    "prettier:check": "yarn prettier:base --list-different \"src/**/*.{ts,tsx}\"",
+    "prettier:write": "yarn prettier:base --write \"src/**/*.{ts,tsx}\"",
+    "serve": "node dist/index.js",
+    "watch:serve": "ts-node-dev --watch --poll --respawn --transpileOnly ./src/index.ts"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn prettier:write"
+    }
+  },
+  "engines": {
+    "node": "12.x"
+  }
+}

@@ -1,0 +1,17 @@
+<% if (section) { %>
+    <section class="section--home section--<%= section.theme %> <%= section.slant %>">
+        <div class="divider">
+            <% if (section.left) { %>
+            <div class="divider__left" style="<% if (section.left.background ) { %>background: url('<%= section.left.background.url %>') <%= section.left.background.position %>; background-size: cover;
+                <% } %>">
+            </div>
+            <% } %>
+            <% if (section.right) { %>
+            <div class="divider__right"
+                style="<% if (section.right.background ) { %>background: url('<%= section.right.background.url %>') <%= section.right.background.position %>; background-size: cover;"
+                <% } %>">
+            </div>
+            <% } %>
+        </div>
+    </section>
+    <% } %>

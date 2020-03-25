@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="nl-be">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MERN-stack Boilerplate | New Media Development | Artevelde University of Applied Sciences</title>
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body class="page--home">
+    <%- include('../partials/header.ejs') %>
+    <main class="main">
+        <% sections.forEach(function(section) { %>
+            <%- include('../partials/home-section.ejs', { section: section}) %>
+        <% }) %>
+    </main>
+    <%- include('../partials/footer.ejs') %>
+</body>
+</html>

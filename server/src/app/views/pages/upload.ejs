@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Upload a picture</title>
+</head>
+<body>
+	<form action="/upload" method="post" enctype="multipart/form-data">
+		<input type="text" name="pictureTitle">
+		<input type="text" name="pictureDescription">
+		<input type="file" name="picture">
+		<button type="submit">Submit picture</button>
+	</form>
+</body>
+</html>
