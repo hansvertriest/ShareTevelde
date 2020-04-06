@@ -3,7 +3,7 @@ import { default as faker } from 'faker';
 
 import { ILogger } from '../logger';
 import { IConfig } from '../config';
-import { IMessage, Message } from '../../models/mongoose';
+import { IMessage, Message, IUser, User, ICourse, CourseModel } from '../../models/mongoose';
 
 class MongoDBDatabase {
   private config: IConfig;
@@ -52,6 +52,71 @@ class MongoDBDatabase {
     });
   }
 
+  private UserCreate = async (
+    userName: string,
+    profileDescription: string,
+    postIds: string[],
+    profilePictureName: string,
+    linkFb: string,
+    linkInsta: string,
+    linkTwitter: string,
+  ) => {
+    const user = new User({
+      userName,
+      profileDescription,
+      postIds,
+      profilePictureName,
+      linkFb,
+      linkInsta,
+      linkTwitter,
+    });
+    try {
+      const newUser = await user.save();
+      this.logger.info(`Message created with id ${newUser._id}`, {});
+    } catch (error) {
+      this.logger.error('An error occurred when creating a message', error);
+    }
+
+  }
+
+  private createUsers = async () => {
+    new Promise( async () => this.UserCreate(
+        faker.name.findName(),
+        faker.lorem.sentences(4),
+        [],
+        '02125be7bc1e82fdf7a34ba12b9f9063.jpg',
+        'https://www.facebook.com/jana.vanderborgt',
+        'https://twitter.com/lena_vdb',
+        'https://www.instagram.com/melina_torres_924/',
+      )
+    )
+  }
+
+  // private courseCreate = async (
+  //   courseTitle: string,
+  //   year: Date,
+  //   direction: string,
+  //   schoolyear: string,
+  // ) : Promise<void> => {
+  //   const course = new CourseModel({
+  //     courseTitle,
+  //     year,
+  //     direction,
+  //     schoolyear,
+  //   })
+  //   try {
+  //     const newUser = await course.save();
+  //     this.logger.info(`Course created with id ${newUser._id}`, {});
+  //   } catch (error) {
+  //     this.logger.error('An error occurred when creating a course', error);
+  //   }
+  // }
+
+  // private createCourses= async () => {
+
+  // }
+
+
   private messageCreate = async (body: string) => {
     const message = new Message({ body });
 
@@ -79,14 +144,20 @@ class MongoDBDatabase {
   };
 
   public seed = async () => {
-    const messages = await Message.estimatedDocumentCount()
+    // const messages = await Message.estimatedDocumentCount()
+    //   .exec()
+    //   .then(async (count) => {
+    //     if (count === 0) {
+    //       await this.createMessages();
+    //     }
+    //   });
+    const users = await User.estimatedDocumentCount()
       .exec()
-      .then(async count => {
-        if (count === 0) {
-          await this.createMessages();
+      .then(async (count) => {
+        if (count === 0 ) {
+          await this.createUsers();
         }
-        return Message.find().exec();
-      });
+      })
   };
 }
 

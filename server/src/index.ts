@@ -17,7 +17,7 @@ import { MongoDBDatabase, GridFs } from './app/services/database';
     const connected = await mongoDBDatabase.connect();
 
     if (config.env === Environment.development) {
-      // mongoDBDatabase.seed();
+      mongoDBDatabase.seed();
     }
 
     // init gridFs stream

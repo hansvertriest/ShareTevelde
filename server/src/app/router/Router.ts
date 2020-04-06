@@ -6,20 +6,21 @@ import {
   UploadController,
 } from '../controllers';
 import { default as ApiRouter } from '../api/router';
-import Logger, { ILogger } from '../services/logger';
-import { GridFs } from '../services/database';
+import { IConfig, AuthService, Logger, ILogger, GridFs } from '../services';
 
 class Router {
   private app: Application;
   private apiRouter: ApiRouter;
+
   private homeController: HomeController;
   private fallbackController: FallbackController;
   private uploadController: UploadController;
+
   private logger: ILogger;
 
-  constructor(app: Application) {
+  constructor(app: Application, config: IConfig, authService: AuthService) {
     this.app = app;
-    this.apiRouter = new ApiRouter();
+    this.apiRouter = new ApiRouter(config, authService);
 
     this.logger = new Logger();
 
@@ -35,15 +36,16 @@ class Router {
 
   private registerRoutes() {
     // this.app.route(['/', '/home']).all(this.homeController.index);
-    this.app.use('/api', this.apiRouter.router);
-    // this.app.use('/*', this.fallbackController.index);
     try {
+      this.app.use('/api', this.apiRouter.router);
       this.app.get('/upload', this.uploadController.index);
       this.app.post(
         '/upload',
         GridFs.createStorage().single('picture'),
         this.uploadController.upload,
       );
+      
+      this.app.use('/*', this.fallbackController.index);
     } catch (error) {
       this.logger.error('Error at registering routes', error);
     }

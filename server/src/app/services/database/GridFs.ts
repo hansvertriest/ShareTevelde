@@ -1,10 +1,12 @@
 import mongoose, { Connection } from 'mongoose';
+import { Request, Response } from 'express'
 import GridFsStorage from 'multer-gridfs-storage';
 import multer from 'multer';
-import crypto from 'crypto';
 import path from 'path';
+import crypto from 'crypto';
 
 import Logger, { ILogger } from '../../services/logger';
+import MulterGridfsStorage from 'multer-gridfs-storage';
 
 class GridFs {
   private connection: Connection;
@@ -26,7 +28,7 @@ class GridFs {
       });
       this.logger.info('Initiated GridFs stream', {});
     } else {
-      this.logger.error('Could not initiated GridFs stream', {});
+      this.logger.error('Could not initiated GridFs stream because there is no connection', {});
     }
   }
 
@@ -59,30 +61,26 @@ class GridFs {
   }
 
   /*
-		Pipes the requested imqge into the response
+		Pipes the requested image into the response
 		FIX: typing
 	*/
 
-  public pipeImage(res: any, req: any) {
-    try {
-      const file = this.gfsBucket
-        .find({
-          filename: req.params.filename,
-        })
-        .toArray((err: any, files: any) => {
-          if (!files || files.length === 0) {
-            return res.status(404).json({
-              err: 'no files exist',
-            });
-          }
-          this.gfsBucket
-            .openDownloadStreamByName(req.params.filename)
-            .pipe(res);
-        });
-    } catch (err) {
-      console.log(err);
+  public pipeImage( req: Request, res: Response) : void {
+    const file = this.gfsBucket
+      .find({
+        filename: req.params.filename,
+      })
+      .toArray((err: any, files: any) => {
+        if (!files || files.length === 0) {
+          return res.status(404).json({
+            err: '404: file does not exist',
+          });
+        }
+        this.gfsBucket
+          .openDownloadStreamByName(req.params.filename)
+          .pipe(res);
+      });
     }
-  }
 }
 
 export default new GridFs();

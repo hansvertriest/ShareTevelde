@@ -14,8 +14,7 @@ import {
   SwaggerMiddleware,
 } from './middleware';
 import { IAppError } from './utilities';
-import { IConfig, Environment } from './services/config';
-import { ILogger } from './services/logger';
+import { Environment, ILogger, IConfig, AuthService } from './services';
 
 class App {
   public app: Application;
@@ -23,6 +22,7 @@ class App {
   private logger: ILogger;
   private router: Router;
   private server: Server;
+  private authService: AuthService;
 
   constructor(logger: ILogger, config: IConfig) {
     this.logger = logger;
@@ -39,6 +39,7 @@ class App {
       MorganMiddleware.load(this.app);
     }
     SwaggerMiddleware.load(this.app, __dirname);
+    this.createPassport();
     this.createRouter();
     this.app.use(this.clientErrorHandler);
     this.app.use(this.errorHandler);
@@ -85,8 +86,12 @@ class App {
     });
   }
 
+  private createPassport(): void {
+    this.authService = new AuthService(this.config);
+  }
+
   private createRouter(): void {
-    this.router = new Router(this.app);
+    this.router = new Router(this.app, this.config, this.authService);
   }
 
   public start(): void {

@@ -16,27 +16,4 @@ const messageSchema: Schema = new Schema({
 
 const Message = mongoose.model<IMessage>('Message', messageSchema);
 
-// interface IUser extends Document {
-//   userId: string;
-//   userName: string;
-//   profileDescription: string;
-//   postIds: string[];
-//   profilePictureUrl: string;
-//   linkFb: string;
-//   linkInsta: string;
-//   linkTwitter: string;
-// }
-
-// const userSchema: Schema = new Schema({
-//   userId: {type: String},
-//   userName: {type: String},
-//   profileDescription: {type: String},
-//   postIds: {type: [String]},
-//   profilePictureUrl: {type: String},
-//   linkFb: {type: String},
-//   linkInsta: {type: String},
-//   linkTwitter: {type: String},
-// })
-
 export { IMessage, Message, messageSchema };
-// export {  }

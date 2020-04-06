@@ -5,6 +5,7 @@ import {
   Environment,
   IServerConfig,
   ServerProtocol,
+  IAuthConfig,
 } from './config.types';
 
 class Config implements IConfig {
@@ -12,6 +13,7 @@ class Config implements IConfig {
   public env: Environment;
   public server: IServerConfig;
   public mongoDBConnection: string;
+  public auth: IAuthConfig;
 
   constructor() {
     dotenv.config();
@@ -19,7 +21,10 @@ class Config implements IConfig {
   }
 
   private loadEnvironmentVariables(): void {
+    // docs config
     this.docs = Boolean(process.env.NODE_DOCS || false);
+
+    // environment config
     this.env =
       Environment[
         (process.env.NODE_ENV ||
@@ -34,7 +39,22 @@ class Config implements IConfig {
             ServerProtocol.http) as keyof typeof ServerProtocol
         ],
     } as IServerConfig;
+
+    // mongo config
     this.mongoDBConnection = process.env.MONGODB_CONNECTION;
+
+    // auth config
+    this.auth = {
+      bcryptSalt: Number(process.env.AUTH_BCRYPT_SALT || 10),
+      jwt: {
+        secret: process.env.AUTH_JWT_SECRET || 'share_secret_Tevelde',
+        session: Boolean(process.env.AUTH_JWT_SESSION || true),
+      },
+      facebook: {
+        clientId: process.env.AUTH_FACEBOOK_CLIENT_ID,
+        clientSecret: process.env.AUTH_FACEBOOK_CLIENT_SECRET,
+      },
+    };
   }
 }
 

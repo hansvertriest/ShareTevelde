@@ -1,0 +1,23 @@
+{
+  "name": "MERN-stack",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "http://github.com/gdmgent-1920-mobdev2/MERN-stack",
+  "author": "drdynscript <drdynscript@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^5.1.0",
+    "cpy-cli": "^3.1.0",
+    "cross-env": "^7.0.2",
+    "rimraf": "^3.0.2"
+  },
+  "scripts": {
+    "build:clean": "rimraf ./dist/*",
+    "build": "yarn build:clean && yarn react-client:build && yarn server:build",
+    "install": "concurrently \"cd server && yarn install\" \"cd react-client && yarn install\"",
+    "react-client:build": "cd react-client && yarn build && cpy **/*.* --cwd=build ../../dist/client --parents",
+    "server:build": "cd server && yarn build && cpy **/*.* --cwd=dist ../../dist --parents && cpy ./package.production.json ../../dist/ --parents",
+    "serve:build": "cross-env NODE_ENV=Production NODE_SERVER_PORT=8082 node ./dist/index.js",
+    "watch": "concurrently \"cd server && yarn watch:serve\" \"cd react-client && yarn start\""
+  }
+}
