@@ -1,4 +1,4 @@
-# ShareTevelde
+# ShareTevelde WORK IN PROGRESS
 
 Online platform for sharing of and giving feedback on assignments of Artevelde Hogeschool in Campus mariakerke in times of corona.
 
