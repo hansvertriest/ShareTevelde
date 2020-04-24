@@ -8,7 +8,6 @@ interface ILocalProvider {
 interface IProfile {
   username: string;
   profileDescription: string;
-  postIds: string[];
   profilePictureName: string;
   linkFb: string;
   linkInsta: string;
@@ -33,10 +32,12 @@ interface IUser extends Document {
 }
 
 const userSchema: Schema = new Schema({
+  softDeleted: { type: Boolean, default: false},
   email: {
     type: String,
     required: true,
     unique: true,
+    immutable: true,
   },
 	_createdAt: { type: Number, required: true, default: Date.now() },
   _modifiedAt: { type: Number, required: false, default: null },
@@ -50,7 +51,6 @@ const userSchema: Schema = new Schema({
   profile: {
     username: {type: String},
     profileDescription: {type: String},
-    postIds: {type: [String]},
     profilePictureName: {type: String},
     // signupEmailPassword: ,
     linkFb: {type: String},
@@ -64,6 +64,7 @@ const userSchema: Schema = new Schema({
     enum: ['user', 'administrator'],
     default: 'user',
     required: true,
+    immutable: true,
   },
 })
 
@@ -75,8 +76,11 @@ userSchema.methods.comparePassword = function( candidatePassword: String, cb: Fu
   });
 };
 
-const User = mongoose.model<IUser>('User', userSchema);
+
+
+const UserModel = mongoose.model<IUser>('User', userSchema);
 
 const UserModelProperties = Object.keys(userSchema.paths);
+const userForbiddenFilters = ['role','softDeleted', 'email'];
 
-export { IUser, User, userSchema, UserModelProperties };
+export { IUser, IProfile, UserModel, userSchema, UserModelProperties, userForbiddenFilters };

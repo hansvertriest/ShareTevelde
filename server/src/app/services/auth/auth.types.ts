@@ -6,6 +6,7 @@ export enum Role {
 export interface IVerifiedToken {
 	verified: boolean;
 	id: string | undefined;
+	role: string;
 	error?: {
 		msg: string;
 	}

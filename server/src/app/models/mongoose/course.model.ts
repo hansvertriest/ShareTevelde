@@ -6,13 +6,15 @@ interface ICourse extends Document {
 	year: number;
 	direction: string;
 	schoolyear: string;
+	softDeleted: boolean;
 }
 
 const courseSchema: Schema = new Schema({
-	courseTitle : { type: String, required: true, max: 30 },
+	courseTitle : { type: String, required: true, unique: true, max: 30 },
 	year : { type: Number, required: true },
 	direction : { type: String, required: true },
 	schoolyear: { type : String, required: true },
+	softDeleted: { type: Boolean, default: false},
 });
 
 

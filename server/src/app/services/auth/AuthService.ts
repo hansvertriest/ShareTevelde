@@ -6,7 +6,7 @@ import { default as jwt } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
 import { Environment, IConfig } from '../config';
-import { IUser, User } from '../../models/mongoose';
+import { IUser, UserModel } from '../../models/mongoose';
 import { Role, IVerifiedToken } from './auth.types';
 import { UnauthorizedError, ForbiddenError } from '../../utilities';
 import { errorMonitor } from 'events';
@@ -41,7 +41,7 @@ class AuthService {
         },
         async (email: string, password: string, done) => {
           try {
-            const user = await User.findOne({
+            const user = await UserModel.findOne({
               email: email,
             });
 
@@ -74,7 +74,7 @@ class AuthService {
           try {
             const { id } = jwtPayload;
 
-            const user = await User.findById(id);
+            const user = await UserModel.findById(id);
             if (!user) {
               return done(null, false);
             }
@@ -91,6 +91,7 @@ class AuthService {
   public createToken(user: IUser): string {
     const payload = {
       id: user._id,
+      role: user.role,
     };
     return jwt.sign(payload, this.config.auth.jwt.secret, {
       expiresIn: 60 * 120,
@@ -132,22 +133,26 @@ class AuthService {
       return {
         verified: true,
         id: decoded.id,
+        role: decoded.role,
       };
     } catch (error) {
       if (error.msg) {
         return {
           verified: false,
           id: undefined,
+          role: undefined,
           error,
         };
       }
       return {
         verified: false,
         id: undefined,
+        role: undefined,
         unknownError: error,
       };
     }
   }
+
 
 }
 

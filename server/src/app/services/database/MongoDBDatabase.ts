@@ -3,7 +3,7 @@ import { default as faker } from 'faker';
 
 import { ILogger } from '../logger';
 import { IConfig } from '../config';
-import { IMessage, Message, IUser, User, ICourse, CourseModel } from '../../models/mongoose';
+import { IMessage, Message, IUser, UserModel, ICourse, CourseModel } from '../../models/mongoose';
 
 class MongoDBDatabase {
   private config: IConfig;
@@ -151,7 +151,7 @@ class MongoDBDatabase {
     //       await this.createMessages();
     //     }
     //   });
-    const users = await User.estimatedDocumentCount()
+    const users = await UserModel.estimatedDocumentCount()
       .exec()
       .then(async (count) => {
         if (count === 0 ) {

@@ -3,7 +3,7 @@ import { default as mongoose, Document, Schema } from 'mongoose';
 interface IPicture extends Document {
   title: string;
   description: string;
-  pictureFileName: string;
+  filename: string;
   _createdAt: number;
 }
 
@@ -20,11 +20,10 @@ const pictureSchema: Schema = new Schema({
     unique: false,
     max: 600,
   },
-  pictureFileName: {
-    type: String,
-    required: true,
-    unique: true,
-  },
+  filename: {
+		type: String,
+		required: true,
+	},
   _createdAt: { type: Number, required: true, default: Date.now() },
 });
 
