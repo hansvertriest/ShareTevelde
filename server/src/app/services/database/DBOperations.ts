@@ -30,7 +30,7 @@ class DBOperations {
 		const sanitizedParams: any = {};
 		
 		paramKeys.forEach((paramKey: string) => {
-			if (Array.isArray(JSON.parse(parameters[paramKey]))) {
+			if (parameters[paramKey].includes('[') && Array.isArray(JSON.parse(parameters[paramKey]))) {
 				const sanitizedArray = JSON.parse(parameters[paramKey]).map((str: string) => str.trim());
 				sanitizedParams[paramKey] = sanitizedArray;
 			} else {

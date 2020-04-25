@@ -40,7 +40,7 @@ class CourseController {
 		} catch (error) {
 			if (error.code) return res.status(error.code).send(error);
 			this.logger.error('Unknown error occured while creating course.', error);
-			return res.status(500).send(error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
 		}
 	}
 
@@ -48,13 +48,10 @@ class CourseController {
 		try {
 			// get id
 			const { id } = req.query;
+			if (id.length !== 24 ) throw {code: 412, msg: 'Incorrect id.'}
 
 			// get course
-			const post: ICourse = await CourseModel.findById(mongoose.Types.ObjectId(id))
-				.populate('assignment')
-				.populate('pictures')
-				.populate('user', 'profile.username _id')
-				.exec();
+			const post: ICourse = await CourseModel.findById(mongoose.Types.ObjectId(id)).exec();
 
 			// check output and send response
 			if (post) {
@@ -65,7 +62,8 @@ class CourseController {
 
 		} catch (error) {
 			if (error.code) return res.status(error.code).send(error);
-			return res.status(500).send(error);
+			this.logger.error('Unknown error occured while getting course.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
 		}
 	}
 
@@ -73,7 +71,6 @@ class CourseController {
 		try{
 			// get parameters and keys
 			const params = req.query;
-			const paramKeys: string[] = Object.keys(req.query);
 
 			// sanitize parameters
 			const sanitizedParams: any = DBOperations.sanitizeParameters(params);
@@ -92,9 +89,9 @@ class CourseController {
 			}
 
 		} catch (error) {
-			if (error.msg) return res.status(error.code).send({msg: error.msg});
+			if (error.msg) return res.status(error.code).send(error);
 			this.logger.error('Error while getting courses.', error);
-			res.status(500).send({msg: 'Unknown error occured.'})
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
 		}
 	}
 
@@ -113,16 +110,16 @@ class CourseController {
 			let courses: ICourse[] = await CourseModel.find(filter).exec();
 
 			// send response
-			if (courses) {
+			if (courses.length > 0) {
 				return res.status(200).json(courses);
 			} else {
-				throw { code: 404, msg: 'No courses found' };
+				throw { code: 404, msg: 'No courses found.' };
 			}
 
 		} catch (error) {
-			if (error.msg) return res.status(error.code).send({msg: error.msg})
+			if (error.msg) return res.status(error.code).send(error)
 			this.logger.error('Error while getting courses.', error);
-			res.status(500).send({msg: 'Unknown error occured.'})
+			return res.status(500).send({msg: 'Unknown error occured.'})
 		}
 	}
 
@@ -130,6 +127,7 @@ class CourseController {
 		try {
 			// get id
 			const { id } = req.body;
+			if (id.length !== 24 ) throw {code: 412, msg: 'Incorrect id.'}
 
 			// set boolean to true
 			DBOperations.softDeleteById(CourseModel, id)
@@ -142,12 +140,12 @@ class CourseController {
 					return res.status(200).send();
 				})
 				.catch((err) =>{
-					throw err;
+					if (err.msg) return res.status(err.code).send(err)
 				});
 		} catch (error) {
-			if (error.msg) return res.status(error.code).send({msg: error.msg})
+			if (error.msg) return res.status(error.code).send(error)
 			this.logger.error('Error while soft deleting course.', error);
-			res.status(500).send({msg: 'Unknown error occured.'})
+			return res.status(500).send({msg: 'Unknown error occured.'})
 		}
 	}
 
@@ -155,41 +153,45 @@ class CourseController {
 		try {
 			// get id
 			const { id } = req.body;
+			if (id.length !== 24 ) throw {code: 412, msg: 'Incorrect id.'}
 
+			// set boolean to false
 			DBOperations.undeleteById(CourseModel, id)
-				.then(() => {
+				.then((resolve) => {
+					if (resolve.n === 0) {
+						throw {code: 404, msg: 'Given course does not exist'}
+					} else if (resolve.nModified === '0') {
+						throw {code: 500, msg: 'Nothing was undeleted.'}
+					}
 					return res.status(200).send();
 				})
 				.catch((err) =>{
-					throw err;
+					if (err.msg) return res.status(err.code).send(err)
 				});
 		} catch (error) {
-			this.logger.error('Error while undeleting course.', error);
-			return res.status(500).send({msg: 'Unknown error occured.'});
+			if (error.msg) return res.status(error.code).send(error)
+			this.logger.error('Error while soft deleting course.', error);
+			return res.status(500).send({msg: 'Unknown error occured.'})
 		}
 	}
 
-	public permanentDelete = async (
-		req: Request,
-		res: Response, 
-		next: NextFunction,
-	): Promise<Response<any>> => {
+	public permanentDelete = async ( req: Request, res: Response,  next: NextFunction ): Promise<Response<any>> => {
 		try {
 			// delete all softDeleted courses
 			DBOperations.permanentDelete(CourseModel)
 				.then((resolve) => {
 					if (resolve.n === 0) {
-						throw {code: 404, msg: 'No softdeleted courses were found.'}
+						throw {code: 404, msg: 'No courses to delete'}
 					}
 					return res.status(200).send();
 				})
-				.catch((error) => {
-					throw error;
+				.catch((err) => {
+					if (err.msg) return res.status(err.code).send(err)
 				});
 		} catch (error) {
 			if (error.msg) return res.status(error.code).send(error);
 			this.logger.error('Error while permenantly deleting course.', error);
-			return res.status(500).send({msg: 'Unknown error occured.'});
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
 		}
 	}
 }
