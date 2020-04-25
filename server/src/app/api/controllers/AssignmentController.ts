@@ -3,20 +3,15 @@ import { default as mongoose, Connection } from 'mongoose';
 
 import Logger, { ILogger } from '../../services/logger';
 import { AssignmentModel, IAssignment, AssignmentModelKeys } from '../../models/mongoose';
-import { AuthService } from '../../services';
 
 class AssignmentController {
-	private db: Connection;
 	private logger: Logger;
-	private authService: AuthService;
 
-	constructor(authService: AuthService) {
-		this.db = mongoose.connection;
+	constructor() {
 		this.logger = new Logger();
-		this.authService = authService;
 	}
 
-	public getAssignmentById = async (req: Request, res: Response, next: NextFunction): Promise<Response<any>> => {
+	public getById = async (req: Request, res: Response, next: NextFunction): Promise<Response<any>> => {
 		try {
 			const { id } = req.query;
 			const post: IAssignment = await AssignmentModel.findById(mongoose.Types.ObjectId(id)).populate('assignment').populate('pictures').populate('user', 'profile.username _id').exec();
@@ -34,7 +29,7 @@ class AssignmentController {
 		}
 	}
 
-	public getAllAssignments = async (req: Request, res: Response, next: NextFunction) : Promise<Response<any>> => {
+	public getAll = async (req: Request, res: Response, next: NextFunction) : Promise<Response<any>> => {
 		try {
 			const params = req.query;
 			const paramKeys: any = Object.keys(req.query);
@@ -51,7 +46,7 @@ class AssignmentController {
 		}
 	}
 
-	public getAllAssignmentsAndSoftDeleted = async (req: Request, res: Response, next: NextFunction) : Promise<Response<any>> => {
+	public getAllAndSoftDeleted = async (req: Request, res: Response, next: NextFunction) : Promise<Response<any>> => {
 		try {
 			const params = req.query;
 			const paramKeys: any = Object.keys(req.query);
@@ -70,7 +65,7 @@ class AssignmentController {
 		}
 	}
 
-	public newAssignment = async (req: Request, res: Response, next: NextFunction) : Promise<Response<any>> => {
+	public new = async (req: Request, res: Response, next: NextFunction) : Promise<Response<any>> => {
 		try {
 			const { title, courseId, description } = req.body;
 		

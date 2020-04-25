@@ -26,7 +26,7 @@ class UserController {
 		this.config = config;
 	}
 
-	public getUserByTokenOrId = async (
+	public getByTokenOrId = async (
 		req: Request,
 		res: Response, 
 		next: NextFunction,
@@ -65,7 +65,7 @@ class UserController {
 		}
 	}
 
-	public getUserByTokenOrIdAndSoftDeleted = async (
+	public getByTokenOrIdAndSoftDeleted = async (
 		req: Request,
 		res: Response, 
 		next: NextFunction,
@@ -104,7 +104,7 @@ class UserController {
 		}
 	}
 	
-	public getAllUsers = async (
+	public getAll = async (
 		req: Request,
 		res: Response, 
 		next: NextFunction,
@@ -140,7 +140,7 @@ class UserController {
 		}
 	}
 
-	public getallAndSoftDeleted = async (
+	public getAllAndSoftDeleted = async (
 		req: Request,
 		res: Response, 
 		next: NextFunction,
@@ -175,7 +175,7 @@ class UserController {
 		}
 	}
 
-	public updateUserProfileById = async (
+	public updateProfileById = async (
 		req: Request,
 		res: Response,
 		next: NextFunction,
@@ -208,7 +208,7 @@ class UserController {
 		}
 	}
 
-	public updateUserProfileByToken = async (
+	public updateProfileByToken = async (
 		req: Request,
 		res: Response,
 		next: NextFunction,
@@ -241,7 +241,7 @@ class UserController {
 		}
 	}
 	
-	public softDeleteUserById = async (
+	public softDeleteById = async (
 		req: Request,
 		res: Response, 
 		next: NextFunction,
@@ -274,7 +274,7 @@ class UserController {
 		
 	}
 
-	public softDeleteUserByToken = async (
+	public softDeleteByToken = async (
 		req: Request,
 		res: Response, 
 		next: NextFunction,

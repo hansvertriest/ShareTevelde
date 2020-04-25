@@ -17,7 +17,7 @@ class PostController {
 		this.logger = new Logger();
 	}
 
-	public uploadPost = async (req: Request, res: Response, next: NextFunction): Promise<Response<any>> => {
+	public new = async (req: Request, res: Response, next: NextFunction): Promise<Response<any>> => {
 		try {
 			const { assignmentId, urlToProject, pictures, token } = req.body;
 			const pictureIds = JSON.parse(pictures).map((foto: string) => {
@@ -60,7 +60,7 @@ class PostController {
 		}
 	}
 
-	public getPostById = async (req: Request, res: Response, next: NextFunction): Promise<Response<any>> => {
+	public getById = async (req: Request, res: Response, next: NextFunction): Promise<Response<any>> => {
 		try {
 			const { id } = req.query;
 			const post: IPost = await PostModel.findById(mongoose.Types.ObjectId(id)).populate('assignment').populate('pictures').populate('user', 'profile.username _id').exec();
@@ -78,7 +78,7 @@ class PostController {
 		}
 	}
 
-	public getPostsAll = async (req: Request, res: Response, next: NextFunction): Promise<Response<any>> => {
+	public getAll = async (req: Request, res: Response, next: NextFunction): Promise<Response<any>> => {
 		try {
 			const params = req.query;
 			const paramKeys: any = Object.keys(req.query);
@@ -105,7 +105,7 @@ class PostController {
 		}
 	}
 
-	public getPostsAllAndSoftDeleted = async (req: Request,res: Response, next: NextFunction): Promise<Response<any>> => {
+	public getAllAndSoftDeleted = async (req: Request,res: Response, next: NextFunction): Promise<Response<any>> => {
 		try{
 			const params = req.query;
 			const paramKeys: any = Object.keys(req.query);
@@ -130,7 +130,7 @@ class PostController {
 		}
 	}
 
-	public updateOwnPost = async (req: Request, res: Response, next: NextFunction): Promise<Response<any>> => {
+	public updateOwn = async (req: Request, res: Response, next: NextFunction): Promise<Response<any>> => {
 		const propKeys = Object.keys(req.body).filter((key) => key !== 'id');
 		const { assignmentId, pictures, urlToProject, id, token } = req.body;
 		console.log(id, token);
