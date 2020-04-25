@@ -3,10 +3,13 @@ import { default as mongoose, Connection } from 'mongoose';
 
 import Logger, { ILogger } from '../../services/logger';
 import { IPost, PostModel  } from '../../models/mongoose';
-import { PictureModel, IPicture,  AssignmentModel, UserModel  } from '../../models/mongoose';
+import { PictureModel, IPicture,  AssignmentModel, IAssignment, IUser  } from '../../models/mongoose';
+import {DBOperations} from '../../services/database';
 
 interface IPostModifications {
-	[index: string]: string;
+	assignment: IAssignment['_id'];
+	urlToProject: string;
+	pictures: IPicture['_id'][];
 }
 
 
@@ -24,9 +27,7 @@ class PostController {
 				return mongoose.Types.ObjectId(foto);
 			}); 
 
-			
 			// check if pictures exist
-			let picture;
 			pictureIds.forEach(async (id: mongoose.Types.ObjectId) => {
 				const picture: IPicture[] = await PictureModel.find({_id: id}).exec()
 				if (picture.length === 0) {
@@ -35,7 +36,7 @@ class PostController {
 			});
 
 			// check if assignment exists
-			const assignment = await AssignmentModel.find({_id: mongoose.Types.ObjectId(assignmentId)});
+			const assignment = await AssignmentModel.find({_id: mongoose.Types.ObjectId(assignmentId), softDeleted: false});
 			if (assignment.length === 0) throw {code: 404, msg: 'Given assignment was not found'};
 
 			const post: IPost = new PostModel({
@@ -45,100 +46,115 @@ class PostController {
 				user: mongoose.Types.ObjectId(token.id),
 			});
 
-			post.save()
+			await post.save()
 				.then((response) => {
 					return res.status(200).send(response);
 				})
-				.catch((error) => {throw error});
+				.catch((error) => {
+					return res.status(500).send({code: 500, msg: 'Unknown error occured.'});
+				});
 		}catch (error) {
-			if (error.code) {
-				return res.status(error.code).send(error);
-			}
-
-			console.log(error);
-			return res.status(500).send({ msg: 'unknown error'});
+			if (error.code) return res.status(error.code).send(error);
+			this.logger.error('Unknown error occured while creating post.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'});
 		}
 	}
 
 	public getById = async (req: Request, res: Response, next: NextFunction): Promise<Response<any>> => {
 		try {
+			// get id
 			const { id } = req.query;
-			const post: IPost = await PostModel.findById(mongoose.Types.ObjectId(id)).populate('assignment').populate('pictures').populate('user', 'profile.username _id').exec();
+			if (id.length !== 24 ) throw {code: 412, msg: 'Incorrect id.'}
+			
+			// get course
+			const post: IPost = await PostModel.findById(mongoose.Types.ObjectId(id))
+				.populate('assignment')
+				.populate('pictures')
+				.populate('user', 'profile.username _id')
+				.exec();
 
+			// check output and send response
 			if (post) {
 				return res.status(200).send(post);
 			} else {
 				throw {code: 404, msg: 'No post with that id'}
 			}
 		} catch (error) {
-			if (error.code) {
-				return res.status(error.code).send(error);
-			}
-			return res.status(500).send(error);
+			if (error.code) return res.status(error.code).send(error);
+			this.logger.error('Unknown error occured while getting post.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
 		}
 	}
 
 	public getAll = async (req: Request, res: Response, next: NextFunction): Promise<Response<any>> => {
 		try {
+			// get parameters and keys
 			const params = req.query;
-			const paramKeys: any = Object.keys(req.query);
-			const filter: any = {};
-			filter.softDeleted = false;
-			paramKeys.forEach((paramKey:string) => {
-				const value = (Array.isArray(JSON.parse(params[paramKey]))) ? {$in: JSON.parse(params[paramKey])} : params[paramKey]; 
-				filter[paramKey]  = value;
-			});
 
-			const post: IPost[] = await PostModel.find(filter).populate('assignment').populate('pictures').populate('user', 'profile.username _id').exec();
+			// sanitize parameters
+			const sanitizedParams: any = DBOperations.sanitizeParameters(params);
+
+			// create filter
+			const filter = DBOperations.createFilter(sanitizedParams);
+
+			// get posts
+			const post: IPost[] = await PostModel.find(filter)
+				.populate('assignment')
+				.populate('pictures')
+				.populate('user', 'profile.username _id')
+				.exec();
 
 			if (post.length !== 0) {
 				return res.status(200).send(post);
 			} else {
-				throw {code: 404, msg: 'No posts found'}
+				throw {code: 404, msg: 'No posts found.'}
 			}
 		} catch (error) {
-			if (error.code) {
-				return res.status(error.code).send(error);
-			}
-			console.log(error)
-			return res.status(500).send(error);
+			if (error.code) return res.status(error.code).send(error);
+			this.logger.error('Unknown error occured while getting post.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
 		}
 	}
 
 	public getAllAndSoftDeleted = async (req: Request,res: Response, next: NextFunction): Promise<Response<any>> => {
 		try{
+			// get parameters and keys
 			const params = req.query;
-			const paramKeys: any = Object.keys(req.query);
-			const filter: any = {};
-			paramKeys.forEach((paramKey:string) => {
-				const value = (Array.isArray(JSON.parse(params[paramKey]))) ? {$in: JSON.parse(params[paramKey])} : params[paramKey]; 
-				filter[paramKey]  = value;
-			});
 
-			const post: IPost[] = await PostModel.find(filter).populate('assignment').populate('pictures').populate('user', 'profile.username _id').exec();
+			// sanitize parameters
+			const sanitizedParams: any = DBOperations.sanitizeParameters(params);
 
-			if (post.length !== 0) {
+			// create filter
+			const filter = DBOperations.createFilter(sanitizedParams, true);
+
+			// get posts
+			const post: IPost[] = await PostModel.find(filter)
+				.populate('assignment')
+				.populate('pictures')
+				.populate('user', 'profile.username _id')
+				.exec();
+
+			if (post.length > 0) {
 				return res.status(200).send(post);
 			} else {
-				throw {code: 404, msg: 'No posts found'}
+				throw {code: 404, msg: 'No posts found.'}
 			}
 		} catch (error) {
-			if (error.code) {
-				return res.status(error.code).send(error);
-			}
-			console.log(error)
+			if (error.code) return res.status(error.code).send(error);
+			this.logger.error('Unknown error occured while getting posts.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
 		}
 	}
 
+	
 	public updateOwn = async (req: Request, res: Response, next: NextFunction): Promise<Response<any>> => {
-		const propKeys = Object.keys(req.body).filter((key) => key !== 'id');
-		const { assignmentId, pictures, urlToProject, id, token } = req.body;
-		console.log(id, token);
-		const pictureIds = JSON.parse(pictures).map((foto: string) => {
-			return mongoose.Types.ObjectId(foto);
-		}); 
-
 		try {
+			// get body and pictures
+			const { assignmentId, pictures, urlToProject, id, token } = req.body;
+			const pictureIds = JSON.parse(pictures).map((foto: string) => {
+				return mongoose.Types.ObjectId(foto);
+			}); 
+
 			// check if pictures exist
 			pictureIds.forEach(async (id: mongoose.Types.ObjectId) => {
 				const picture: IPicture[] = await PictureModel.find({_id: id}).exec()
@@ -151,14 +167,19 @@ class PostController {
 			const assignment = await AssignmentModel.find({_id: mongoose.Types.ObjectId(assignmentId)});
 			if (assignment.length === 0) throw {code: 404, msg: 'Given assignment was not found'};
 			
+			// construct modifications object
 			const modifications: IPostModifications = {
 				assignment: assignmentId,
-				pictures: pictureIds,
+				pictures,
 				urlToProject,
 			};
 			
+			// sanitize parameters
+			const sanitizedModifications: IPostModifications = DBOperations.sanitizeParameters(modifications);
 
-			await PostModel.updateOne({ _id: mongoose.Types.ObjectId(id), user: mongoose.Types.ObjectId(token.id)}, { $set: modifications})
+			await PostModel.updateOne(
+				{ _id: mongoose.Types.ObjectId(id), user: mongoose.Types.ObjectId(token.id)},
+				{ $set: sanitizedModifications})
 				.then((resolve) => {
 					if (resolve.n === 0) {
 						throw {code: 404, msg: 'No posts were found.'}
@@ -167,37 +188,56 @@ class PostController {
 					}
 					return res.status(200).send();
 				}).catch((error) => {
-					throw error;
+					if (error.code) return res.status(error.code).send(error);
 				});
 		} catch (error) {
-			if (error.code) {
-				return res.status(error.code).send(error)
-			}
-			this.logger.error('Error while updating post.' ,error);
-			return res.status(500).send({msg: 'unknown error'})
+			if (error.code) return res.status(error.code).send(error);
+			this.logger.error('Unknown error occured while updating post.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
 		}
 	}
 
-	public softDeleteOwn = async (
-		req: Request,
-		res: Response, 
-		next: NextFunction,
-	): Promise<Response<any>> => {
-		// verify token
-		const { id, token } = req.body;
-		
+	public softDeleteOwn = async ( req: Request, res: Response,  next: NextFunction ): Promise<Response<any>> => {
 		try {
+			// get id
+			const userId = req.body.token.id;
+			const postId = req.body.id;
+			if (userId.length !== 24 ) throw {code: 412, msg: 'Incorrect id.'}
+			if (postId.length !== 24 ) throw {code: 412, msg: 'Incorrect id.'}
+
 			// set boolean to true
-			const update = await PostModel.updateOne(
-				{ _id: mongoose.Types.ObjectId(id), user: mongoose.Types.ObjectId(token.id)},
-				{
-					$set : {[`softDeleted`] : true}
-				})
+			DBOperations.softDeleteById(PostModel, postId, userId)
 				.then((resolve) => {
 					if (resolve.n === 0) {
 						throw {code: 404, msg: 'No posts were found.'}
 					} else if (resolve.nModified === '0') {
-						throw {code: 500, msg: 'Nothing was softdeleted'}
+						throw {code: 500, msg: 'Nothing was softdeleted.'}
+					}
+					return res.status(200).send();
+				})
+				.catch((error) =>{
+					if (error.code) return res.status(error.code).send(error);
+				});
+		} catch (error) {
+			if (error.code) return res.status(error.code).send(error);
+			this.logger.error('Unknown error occured softdeleting post.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
+		}
+	}
+
+	public softDeleteById = async ( req: Request, res: Response,  next: NextFunction ): Promise<Response<any>> => {
+		try {
+			// get id
+			const { id } = req.body;
+			if (id.length !== 24 ) throw {code: 412, msg: 'Incorrect id.'}
+
+			// set boolean to true
+			DBOperations.softDeleteById(PostModel, id)
+				.then((resolve) => {
+					if (resolve.n === 0) {
+						throw {code: 404, msg: 'No posts were found.'}
+					} else if (resolve.nModified === '0') {
+						throw {code: 500, msg: 'Nothing was softdeleted.'}
 					}
 					return res.status(200).send();
 				})
@@ -205,50 +245,37 @@ class PostController {
 					throw err;
 				});
 		} catch (error) {
-			this.logger.error('Error while soft deleting post', error);
-			return res.status(500).send(error);
+			if (error.code) return res.status(error.code).send(error);
+			this.logger.error('Unknown error occured while softdeleting post.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
 		}
-		
 	}
 
-	public softDeleteById = async (
-		req: Request,
-		res: Response, 
-		next: NextFunction,
-	): Promise<Response<any>> => {
-		// verify token
-		const { id } = req.body;
-		
+	public undeleteById = async (req: Request,res: Response, next: NextFunction): Promise<Response<any>> => {
 		try {
+			// get id
+			const { id } = req.body;
+			if (id.length !== 24 ) throw {code: 412, msg: 'Incorrect id.'}
+
 			// set boolean to true
-			const update = await PostModel.updateOne(
-				{ _id: mongoose.Types.ObjectId(id)},
-				{
-					$set : {[`softDeleted`] : true}
-				})
+			DBOperations.undeleteById(PostModel, id)
 				.then((resolve) => {
-					if (resolve.n === 0) {
-						throw {code: 404, msg: 'No posts were found.'}
-					} else if (resolve.nModified === '0') {
-						throw {code: 500, msg: 'Nothing was softdeleted'}
-					}
 					return res.status(200).send();
 				})
-				.catch((err) =>{
-					throw err;
+				.catch((error) =>{
+					if (error.msg) return res.status(error.code).send(error)
 				});
 		} catch (error) {
-			if (error.msg) {
-				return res.status(error.code).send(error);
-			}
-			this.logger.error('Error while soft deleting post', error);
-			return res.status(500).send(error);
+			if (error.msg) return res.status(error.code).send(error)
+			this.logger.error('Error while undeleting post.', error);
+			return res.status(500).send({msg: 'Unknown error occured.'})
 		}
 	}
 
 	public permanentDelete = async ( req: Request, res: Response,  next: NextFunction): Promise<Response<any>> => {
 		try {
-			const deletion = await PostModel.deleteMany({softDeleted: true})
+			// delete all softDeleted users
+			DBOperations.permanentDelete(PostModel)
 				.then((resolve) => {
 					if (resolve.n === 0) {
 						throw {code: 404, msg: 'No posts to delete.'}
@@ -259,33 +286,9 @@ class PostController {
 					throw error;
 				});
 		} catch (error) {
-			if (error.msg) {
-				return res.status(error.code).send(error);
-			}
-			return res.status(500).send({msg: 'Unknown error occured'});
-		}
-	}
-
-	public undeleteById = async (req: Request,res: Response, next: NextFunction): Promise<Response<any>> => {
-		// verify token
-		const { id } = req.body;
-		
-		try {
-			// set boolean to true
-			const update = await PostModel.updateOne(
-				{ _id: mongoose.Types.ObjectId(id)},
-				{
-					$set : {[`softDeleted`] : false}
-				})
-				.then((resolve) => {
-					return res.status(200).send();
-				})
-				.catch((err) =>{
-					throw err;
-				});
-		} catch (error) {
-			this.logger.error('Error while undeleting user', error);
-			return res.status(500).send(error);
+			if (error.msg) return res.status(error.code).send(error);
+			this.logger.error('Error while permenantly deleting posts.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
 		}
 	}
 }

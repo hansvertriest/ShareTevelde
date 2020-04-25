@@ -2,11 +2,10 @@ import { default as express, NextFunction, Request, Response } from 'express';
 import { default as mongoose, Connection } from 'mongoose';
 
 import Logger, { ILogger } from '../../services/logger';
-import { UserModel, IUser, UserModelProperties, userForbiddenFilters, PostModel } from '../../models/mongoose';
+import { UserModel, IUser, IProfile } from '../../models/mongoose';
 import { AuthService, IConfig,  } from '../../services';
-import { IVerifiedToken } from '../../services/auth';
 import { NotFoundError } from '../../utilities';
-import { decode } from 'punycode';
+import {DBOperations} from '../../services/database';
 
 
 interface IUserModifications {
@@ -26,342 +25,7 @@ class UserController {
 		this.config = config;
 	}
 
-	public getByTokenOrId = async (
-		req: Request,
-		res: Response, 
-		next: NextFunction,
-	): Promise<Response<any>> => {
-		try {
-			const { token } = req.body;
-			const { id } = req.query;
-
-			const userId = (id) ? id : token.id
-			// check id length
-			if (id.length != 24) {
-				throw { code: 412, msg: 'Id has not the required length' };
-			}
-
-			// get user
-			const user: IUser = await UserModel.findOne(
-				{
-					_id: mongoose.Types.ObjectId(userId),
-				}
-			).select('profile id').exec();
-
-			// send response
-			if (user) {
-				return res.status(200).json(user);
-			} else {
-				throw { code: 404, msg: 'No user with that id' };
-			}
-
-		} catch (error) {
-			if (error.code) {
-				res.status(error.code).send({msg: error.msg})
-			} else {
-				this.logger.error('Error while getting a user', error);
-				res.status(500).send({msg: 'unknown error occured'})
-			}
-		}
-	}
-
-	public getByTokenOrIdAndSoftDeleted = async (
-		req: Request,
-		res: Response, 
-		next: NextFunction,
-	): Promise<Response<any>> => {
-		try {
-			console.log('ddfdfwssdf')
-			const { token } = req.body;
-			const { id } = req.query;
-
-			// check id length
-			if (id.length != 24) {
-				throw { code: 412, msg: 'Id has not the required length' };
-			}
-
-			// get user
-			const user: IUser = await UserModel.findOne(
-				{
-					_id: mongoose.Types.ObjectId(id),
-				}
-			).exec();
-
-			// send response
-			if (user) {
-				return res.status(200).json(user);
-			} else {
-				throw { code: 404, msg: 'No user with that id' };
-			}
-
-		} catch (error) {
-			if (error.code) {
-				res.status(error.code).send({msg: error.msg})
-			} else {
-				this.logger.error('Error while getting a user', error);
-				res.status(500).send({msg: 'unknown error occured'})
-			}
-		}
-	}
-	
-	public getAll = async (
-		req: Request,
-		res: Response, 
-		next: NextFunction,
-	): Promise<Response<any>> => {
-		try{
-			const params = req.query;
-			const paramKeys: any = Object.keys(req.query);
-			const filter: any = {};
-			filter.softDeleted = false;
-			paramKeys.forEach((paramKey:string) => {
-				if (!userForbiddenFilters.includes(paramKey)) {
-					const value = (Array.isArray(JSON.parse(params[paramKey]))) ? {$in: JSON.parse(params[paramKey])} : params[paramKey];
-					filter[`profile.${paramKey}`]  = value;
-				}
-			});
-			// get users
-			let users: IUser[] = await UserModel.find(filter).select('profile id').exec();
-
-			// send response
-			if (users) {
-				return res.status(200).json(users);
-			} else {
-				throw { code: 404, msg: 'No users found' };
-			}
-
-		} catch (error) {
-			if (error.code) {
-				res.status(error.code).send({msg: error.msg})
-			} else {
-				this.logger.error('Error while getting a user', error);
-				res.status(500).send({msg: 'unknown error occured'})
-			}
-		}
-	}
-
-	public getAllAndSoftDeleted = async (
-		req: Request,
-		res: Response, 
-		next: NextFunction,
-	): Promise<Response<any>> => {
-		try{
-			const params = req.query;
-			const paramKeys: any = Object.keys(req.query);
-			const filter: any = {};
-			paramKeys.forEach((paramKey:string) => {
-				if (!userForbiddenFilters.includes(paramKey)) {
-					filter[paramKey]  = params[paramKey];
-				}
-			});
-
-			// get users
-			let users: IUser[] = await UserModel.find(filter).exec();
-
-			// send response
-			if (users) {
-				return res.status(200).json(users);
-			} else {
-				throw { code: 404, msg: 'No users found' };
-			}
-
-		} catch (error) {
-			if (error.code) {
-				res.status(error.code).send({msg: error.msg})
-			} else {
-				this.logger.error('Error while getting a user', error);
-				res.status(500).send({msg: 'unknown error occured'})
-			}
-		}
-	}
-
-	public updateProfileById = async (
-		req: Request,
-		res: Response,
-		next: NextFunction,
-	) : Promise<Response<any>> => {
-		const id = req.body.id;
-		const propKeys = Object.keys(req.body).filter((propKey) => propKey !== 'token' && propKey != 'id');
-		const modifications: IUserModifications = {};
-
-		propKeys.forEach(async (key: string) => {
-			modifications[`profile.${key}`] = req.body[key];
-		});
-
-		try {
-			await UserModel.updateOne({ _id: mongoose.Types.ObjectId(id)}, { $set: modifications})
-				.then((resolve) => {
-					if (resolve.n === 0) {
-						throw {code: 404, msg: 'No users were found.'}
-					} else if (resolve.nModified === '0') {
-						throw {code: 500, msg: 'No modifications were made.'}
-					}
-					return res.status(200).send();
-				}).catch((error) => {
-					throw error;
-				});
-		} catch (error) {
-			if (error.code) {
-				return res.status(error.code).send(error)
-			}
-			return res.status(500).send(error)
-		}
-	}
-
-	public updateProfileByToken = async (
-		req: Request,
-		res: Response,
-		next: NextFunction,
-	) : Promise<Response<any>> => {
-		const token = req.body.token;
-		const propKeys = Object.keys(req.body).filter((propKey) => propKey !== 'token' && propKey != 'id');
-		const modifications: IUserModifications = {};
-
-		propKeys.forEach(async (key: string) => {
-			modifications[`profile.${key}`] = req.body[key];
-		});
-
-		try {
-			await UserModel.updateOne({ _id: mongoose.Types.ObjectId(token.id)}, { $set: modifications})
-				.then((resolve) => {
-					if (resolve.n === 0) {
-						throw {code: 404, msg: 'No users were found.'}
-					} else if (resolve.nModified === '0') {
-						throw {code: 500, msg: 'No modifications were made.'}
-					}
-					return res.status(200).send();
-				}).catch((error) => {
-					throw error;
-				});
-		} catch (error) {
-			if (error.code) {
-				return res.status(error.code).send(error)
-			}
-			return res.status(500).send(error)
-		}
-	}
-	
-	public softDeleteById = async (
-		req: Request,
-		res: Response, 
-		next: NextFunction,
-	): Promise<Response<any>> => {
-		// verify token
-		const { id } = req.body;
-		
-		try {
-			// set boolean to true
-			const update = await UserModel.updateOne(
-				{ _id: mongoose.Types.ObjectId(id)},
-				{
-					$set : {[`softDeleted`] : true}
-				})
-				.then((resolve) => {
-					if (resolve.n === 0) {
-						throw {code: 404, msg: 'No users were found.'}
-					} else if (resolve.nModified === '0') {
-						throw {code: 500, msg: 'Nothong was softdeleted'}
-					}
-					return res.status(200).send();
-				})
-				.catch((err) =>{
-					throw err;
-				});
-		} catch (error) {
-			this.logger.error('Error while soft deleting user', error);
-			return res.status(500).send(error);
-		}
-		
-	}
-
-	public softDeleteByToken = async (
-		req: Request,
-		res: Response, 
-		next: NextFunction,
-	): Promise<Response<any>> => {
-		// verify token
-		const { token } = req.body;
-		
-		try {
-			// set boolean to true
-			UserModel.updateOne(
-				{ _id: mongoose.Types.ObjectId(token.id)},
-				{
-					$set : {[`softDeleted`] : true}
-				})
-				.then((resolve) => {
-					if (resolve.n === 0) {
-						throw {code: 404, msg: 'No users were found.'}
-					} else if (resolve.nModified === '0') {
-						throw {code: 500, msg: 'Nothong was softdeleted'}
-					}
-					return res.status(200).send();
-				})
-				.catch((err) =>{
-					throw err;
-				});
-		} catch (error) {
-			this.logger.error('Error while soft deleting user', error);
-			return res.status(500).send(error);
-		}
-	}
-
-	public undeleteById = async (
-		req: Request,
-		res: Response, 
-		next: NextFunction,
-	): Promise<Response<any>> => {
-		// verify token
-		const { id } = req.body;
-		
-		try {
-			// set boolean to true
-			const update = await UserModel.updateOne(
-				{ _id: mongoose.Types.ObjectId(id)},
-				{
-					$set : {[`softDeleted`] : false}
-				})
-				.then((resolve) => {
-					return res.status(200).send();
-				})
-				.catch((err) =>{
-					throw err;
-				});
-		} catch (error) {
-			this.logger.error('Error while undeleting user', error);
-			return res.status(500).send(error);
-		}
-	}
-
-	public permanentDelete = async (
-		req: Request,
-		res: Response, 
-		next: NextFunction,
-	): Promise<Response<any>> => {
-		try {
-			const deletion = await UserModel.deleteMany({softDeleted: true})
-				.then((resolve) => {
-					if (resolve.n === 0) {
-						throw {code: 404, msg: 'No Users were found.'}
-					}
-					return res.status(200).send();
-				})
-				.catch((error) => {
-					throw error;
-				});
-		} catch (error) {
-			if (error.msg) {
-				return res.status(error.code).send(error);
-			}
-			return res.status(500).send({msg: 'Unknown error occured'});
-		}
-	}
-
-	signupLocal = async (
-		req: Request,
-		res: Response,
-		next: NextFunction,
-	): Promise<Response | void> => {
+	signupLocal = async ( req: Request, res: Response, next: NextFunction ): Promise<Response | void> => {
 		const { email, password, role } = req.body;
 
 		try {
@@ -406,12 +70,7 @@ class UserController {
 		
 	};
 
-	signInLocal = async (
-		req: Request,
-		res: Response,
-		next: NextFunction,
-	): Promise<void> => {
-		console.log('============');
+	signInLocal = async ( req: Request, res: Response, next: NextFunction ): Promise<void> => {
 		this.authService.passport.authenticate(
 			'local',
 			{ session: this.config.auth.jwt.session },
@@ -435,12 +94,292 @@ class UserController {
 		)(req, res, next);
 	};
 
+	public getById = async ( req: Request, res: Response,  next: NextFunction ): Promise<Response<any>> => {
+		try {
+			const { id } = req.query;
+			if (id.length !== 24 ) throw {code: 412, msg: 'Incorrect id.'}
+
+			// get user
+			const user: IUser = await UserModel.findOne({_id: mongoose.Types.ObjectId(id), softDeleted: false})
+			.select('profile id')
+			.exec();
+
+			// send response
+			if (user) {
+				return res.status(200).json(user);
+			} else {
+				throw { code: 404, msg: 'No user with that id.' };
+			}
+
+		} catch (error) {
+			if (error.msg) return res.status(error.code).send(error);
+			this.logger.error('Error while getting user by id.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
+		}
+	}
+
+	public getByIdAndSoftDeleted = async ( req: Request, res: Response,  next: NextFunction ): Promise<Response<any>> => {
+		try {
+			const { id } = req.query;
+			if (id.length !== 24 ) throw {code: 412, msg: 'Incorrect id.'}
+
+			// get user
+			const user: IUser = await UserModel.findOne({_id: mongoose.Types.ObjectId(id)}).exec();
+
+			// send response
+			if (user) {
+				return res.status(200).json(user);
+			} else {
+				throw { code: 404, msg: 'No user with that id' };
+			}
+
+		} catch (error) {
+			if (error.msg) return res.status(error.code).send(error);
+			this.logger.error('Error while getting user by id.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
+		}
+	}
 	
-	public sendOk = async (
-		req: Request,
-		res: Response,
-		next: NextFunction,
-	): Promise<Response<any>> => {
+	public getAll = async ( req: Request, res: Response,  next: NextFunction ): Promise<Response<any>> => {
+		try{
+			// get parameters and keys
+			const params = req.query;
+
+			// sanitize parameters
+			const sanitizedParams: any = DBOperations.sanitizeParameters(params, 'profile.');
+
+			// create filter
+			const filter = DBOperations.createFilter(sanitizedParams);
+			console.log(filter);
+			// get users
+			let users: IUser[] = await UserModel.find(filter).select('profile id').exec();
+
+			// send response
+			if (users.length > 0) {
+				return res.status(200).json(users);
+			} else {
+				throw { code: 404, msg: 'No users found' };
+			}
+
+		} catch (error) {
+			if (error.msg) return res.status(error.code).send(error);
+			this.logger.error('Error while getting users.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
+		}
+	}
+
+	public getAllAndSoftDeleted = async ( req: Request, res: Response,  next: NextFunction ): Promise<Response<any>> => {
+		try{
+			// get parameters and keys
+			const params = req.query;
+
+			// sanitize parameters
+			const sanitizedParams: any = DBOperations.sanitizeParameters(params, 'profile.');
+
+			// create filter
+			const filter = DBOperations.createFilter(sanitizedParams, true);
+
+			// get users
+			let users: IUser[] = await UserModel.find(filter).exec();
+
+			// send response
+			if (users) {
+				return res.status(200).json(users);
+			} else {
+				throw { code: 404, msg: 'No users found' };
+			}
+
+		} catch (error) {
+			if (error.msg) return res.status(error.code).send(error);
+			this.logger.error('Error while getting users.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
+		}
+	}
+
+	public updateProfileById = async ( req: Request, res: Response, next: NextFunction ) : Promise<Response<any>> => {
+		try {
+			// get body
+			const { username, profileDescription, profilePictureName, linkFb, linkInsta, linkTwitter, linkYt, linkVimeo} = req.body;
+
+			// get id
+			const { id } = req.body;
+			if (id.length !== 24 ) throw {code: 412, msg: 'Incorrect id.'}
+
+			// construct modifications object
+			let modifications: IProfile = {
+				username,
+				profileDescription,
+				profilePictureName,
+				linkFb,
+				linkInsta,
+				linkTwitter,
+				linkYt,
+				linkVimeo,
+			}
+			
+			// sanitize parameters
+			const sanitizedModifications: IProfile = DBOperations.sanitizeParameters(modifications, 'profile.');
+
+			// apply modifications
+			await UserModel.updateOne({ _id: mongoose.Types.ObjectId(id)}, { $set: sanitizedModifications})
+				.then((resolve) => {
+					if (resolve.n === 0) {
+						throw {code: 404, msg: 'No users were found.'}
+					} else if (resolve.nModified === '0') {
+						throw {code: 500, msg: 'No modifications were made.'}
+					}
+					return res.status(200).send();
+				}).catch((error) => {
+					if (error.msg) return res.status(error.code).send(error);
+				});
+		} catch (error) {
+			if (error.msg) return res.status(error.code).send(error);
+			this.logger.error('Error while getting users.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'});
+		}
+	}
+
+	public updateProfileByToken = async ( req: Request, res: Response, next: NextFunction ) : Promise<Response<any>> => {
+		try {			
+			// get body
+			const { username, profileDescription, profilePictureName, linkFb, linkInsta, linkTwitter, linkYt, linkVimeo} = req.body;
+
+			// get id
+			const id = req.body.token.id;
+			if (id.length !== 24 ) throw {code: 412, msg: 'Incorrect id.'}
+
+			// construct modifications object
+			let modifications: IProfile = {
+				username,
+				profileDescription,
+				profilePictureName,
+				linkFb,
+				linkInsta,
+				linkTwitter,
+				linkYt,
+				linkVimeo,
+			}
+			
+			// sanitize parameters
+			const sanitizedModifications: any = DBOperations.sanitizeParameters(modifications, 'profile.');
+
+			// apply modifications
+			await UserModel.updateOne({ _id: mongoose.Types.ObjectId(id)}, { $set: sanitizedModifications})
+				.then((resolve) => {
+					if (resolve.n === 0) {
+						throw {code: 404, msg: 'No users were found.'}
+					} else if (resolve.nModified === '0') {
+						throw {code: 500, msg: 'No modifications were made.'}
+					}
+					return res.status(200).send();
+				}).catch((error) => {
+					if (error.msg) return res.status(error.code).send(error);
+				});
+		} catch (error) {
+			if (error.msg) return res.status(error.code).send(error);
+			this.logger.error('Error while getting users.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
+		}
+	}
+	
+	public softDeleteById = async ( req: Request, res: Response,  next: NextFunction ): Promise<Response<any>> => {
+		try {
+			// get id
+			const { id } = req.body;
+			if (id.length !== 24 ) throw {code: 412, msg: 'Incorrect id.'}
+
+			// set boolean to true
+			DBOperations.softDeleteById(UserModel, id)
+				.then((resolve) => {
+					if (resolve.n === 0) {
+						throw {code: 404, msg: 'No users were found.'}
+					} else if (resolve.nModified === '0') {
+						throw {code: 500, msg: 'Nothong was softdeleted'}
+					}
+					return res.status(200).send();
+				})
+				.catch((error) =>{
+					if (error.msg) return res.status(error.code).send(error);
+				});
+		} catch (error) {
+			if (error.msg) return res.status(error.code).send(error);
+			this.logger.error('Error while getting users.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
+		}
+		
+	}
+
+	public softDeleteByToken = async ( req: Request, res: Response,  next: NextFunction ): Promise<Response<any>> => {
+		try {
+			// get id
+			const id = req.body.token.id;
+			if (id.length !== 24 ) throw {code: 412, msg: 'Incorrect id.'}
+
+			// set boolean to true
+			DBOperations.softDeleteById(UserModel, id)
+				.then((resolve) => {
+					if (resolve.n === 0) {
+						throw {code: 404, msg: 'No users were found.'}
+					} else if (resolve.nModified === '0') {
+						throw {code: 500, msg: 'Nothing was softdeleted'}
+					}
+					return res.status(200).send();
+				})
+				.catch((error) =>{
+					if (error.msg) return res.status(error.code).send(error);
+				});
+		} catch (error) {
+			if (error.msg) return res.status(error.code).send(error);
+			this.logger.error('Error while getting users.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
+		}
+	}
+
+	public undeleteById = async ( req: Request, res: Response,  next: NextFunction ): Promise<Response<any>> => {
+		try {
+			// get id
+			const { id } = req.body;
+			if (id.length !== 24 ) throw {code: 412, msg: 'Incorrect id.'}
+
+			// set boolean to true
+			DBOperations.undeleteById(UserModel, id)
+				.then((resolve) => {
+					return res.status(200).send();
+				})
+				.catch((error) =>{
+					if (error.msg) return res.status(error.code).send(error)
+				});
+		} catch (error) {
+			if (error.msg) return res.status(error.code).send(error)
+			this.logger.error('Error while undeleting course.', error);
+			return res.status(500).send({msg: 'Unknown error occured.'})
+		}
+	}
+
+	public permanentDelete = async ( req: Request, res: Response,  next: NextFunction ): Promise<Response<any>> => {
+		try {
+			// delete all softDeleted users
+			DBOperations.permanentDelete(UserModel)
+				.then((resolve) => {
+					if (resolve.n === 0) {
+						throw {code: 404, msg: 'No users were found.'}
+					}
+					return res.status(200).send();
+				})
+				.catch((error) => {
+					if (error.msg) return res.status(error.code).send(error);
+				});
+		} catch (error) {
+			if (error.msg) return res.status(error.code).send(error);
+			this.logger.error('Error while permenantly deleting courses.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
+		}
+	}
+
+
+
+	
+	public sendOk = async ( req: Request, res: Response, next: NextFunction ): Promise<Response<any>> => {
 		return res.status(200).send();
 	}
 }

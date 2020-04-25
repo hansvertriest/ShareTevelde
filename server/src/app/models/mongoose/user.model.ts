@@ -11,7 +11,7 @@ interface IProfile {
   profilePictureName: string;
   linkFb: string;
   linkInsta: string;
-	linkTwitter: string;
+linkTwitter: string;
   linkYt: string;
   linkVimeo: string;
 }

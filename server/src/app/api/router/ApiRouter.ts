@@ -106,8 +106,8 @@ class ApiRouter {
     
     this.router.get('/user/all', this.userController.getAll);
     this.router.get('/user/softDeleted/all', this.verifyJwtAndCheckAdmin, this.userController.getAllAndSoftDeleted);
-    this.router.get('/user', this.verifyJwt, this.userController.getByTokenOrId);
-    this.router.get('/user/softdeleted/', this.verifyJwtAndCheckAdmin, this.userController.getByTokenOrIdAndSoftDeleted);
+    this.router.get('/user', this.verifyJwt, this.userController.getById);
+    this.router.get('/user/softdeleted/', this.verifyJwtAndCheckAdmin, this.userController.getByIdAndSoftDeleted);
     this.router.put('/user/byId', this.verifyJwtAndCheckAdmin, this.userController.updateProfileById);
     this.router.put('/user/token', this.verifyJwt, this.userController.updateProfileByToken);
     this.router.delete('/user/token', this.verifyJwt, this.userController.softDeleteByToken);

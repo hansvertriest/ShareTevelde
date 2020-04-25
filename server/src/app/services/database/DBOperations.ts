@@ -6,35 +6,17 @@ import { CourseModel, ICourse, AssignmentModel, IAssignment, UserModel, IUser, P
 import { resolve } from 'dns';
 
 class DBOperations {
-	static getById (
-		id: string,
-		model: ICourse | IAssignment | IUser | IPost,
-		populateParameter: string,
-	) {
-		return new Promise((res, rej) => {
-			CourseModel.findById(mongoose.Types.ObjectId(id)).populate('assignment')
-				 .populate('pictures')
-				 .populate('user', 'profile.username _id')
-				 .exec()
-				.then((response) => {
-					res(response);
-				})
-				.catch((err) => {
-					rej(err);
-				});
-		});
-	}
-
-	static sanitizeParameters (parameters: any): any {
+	static sanitizeParameters (parameters: any, prefix: string = ''): any {
 		const paramKeys: string[] = Object.keys(parameters);
 		const sanitizedParams: any = {};
 		
 		paramKeys.forEach((paramKey: string) => {
-			if (parameters[paramKey].includes('[') && Array.isArray(JSON.parse(parameters[paramKey]))) {
+			if (parameters[paramKey] && parameters[paramKey].includes('[') && Array.isArray(JSON.parse(parameters[paramKey]))) {
 				const sanitizedArray = JSON.parse(parameters[paramKey]).map((str: string) => str.trim());
-				sanitizedParams[paramKey] = sanitizedArray;
-			} else {
-				sanitizedParams[paramKey] = parameters[paramKey].trim();
+				sanitizedParams[`${prefix}${paramKey}`] = sanitizedArray;
+			} else if (parameters[paramKey]) {
+				console.log(parameters[paramKey]);
+				sanitizedParams[`${prefix}${paramKey}`] = parameters[paramKey].trim();
 			}
 		});
 
@@ -55,10 +37,13 @@ class DBOperations {
 	static softDeleteById (
 		model: any,
 		id: string,
+		userId: string = undefined
 	): Promise<any> {
+		const query: any = { _id: mongoose.Types.ObjectId(id)};
+		if (userId) query.user = userId;
 		return new Promise<any>((res, rej) => {
 			model.updateOne(
-				{ _id: mongoose.Types.ObjectId(id)},
+				query,
 				{
 					$set : {[`softDeleted`] : true}
 				})
@@ -73,10 +58,13 @@ class DBOperations {
 	static undeleteById (
 		model: any,
 		id: string,
+		userId: string = undefined
 	): Promise<any> {
+		const query: any = { _id: mongoose.Types.ObjectId(id)};
+		if (userId) query.user = userId;
 		return new Promise<any>((res, rej) => {
 			model.updateOne(
-				{ _id: mongoose.Types.ObjectId(id)},
+				query,
 				{
 					$set : {[`softDeleted`] : false}
 				})

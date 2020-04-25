@@ -11,9 +11,9 @@ interface IPost extends Document {
 	pictures: IPicture['_id'][];
 	user: IUser['_id'];
 
-	_createdAt: number;
-	_modifiedAt: number;
-	_deletedAt: number;
+	// _createdAt: number;
+	// _modifiedAt: number;
+	// _deletedAt: number;
 	softDeleted: boolean;
 }
 
