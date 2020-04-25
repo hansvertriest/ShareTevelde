@@ -10,6 +10,7 @@ interface IAssignment extends Document {
 	title: string;
 	courseId : ICourse['_id'];
 	description: string;
+	softDeleted: boolean;
 }
 
 const assignmentSchema: Schema = new Schema({
@@ -19,7 +20,8 @@ const assignmentSchema: Schema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'course',
 		required: true,
-	}
+	},
+	softDeleted: { type: Boolean, default: false},
 });
 
 // assignmentSchema.plugin(beautifyUnique);

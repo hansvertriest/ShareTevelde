@@ -136,10 +136,10 @@ class ApiRouter {
     this.router.post('/assignment', this.verifyJwt, this.assignmentController.newAssignment);
     this.router.get('/assignment/all', this.assignmentController.getAllAssignments);
 	this.router.get('/assignment/softDeleted/all', this.verifyJwtAndCheckAdmin, this.assignmentController.getAllAssignmentsAndSoftDeleted);
-	// this.router.get('/assignment/byId', this.assignmentController.getAssignmentById);
-	// this.router.delete('/assignment', this.verifyJwtAndCheckAdmin, this.assignmentController.softDeleteById);
-	// this.router.delete('/assignment/all/softDeleted', this.verifyJwtAndCheckAdmin, this.assignmentController.permanentDelete);
-	// this.router.put('/assignment/undelete', this.verifyJwtAndCheckAdmin, this.assignmentController.undeleteById);
+	this.router.get('/assignment/byId', this.assignmentController.getAssignmentById);
+	this.router.delete('/assignment', this.verifyJwtAndCheckAdmin, this.assignmentController.softDeleteById);
+	this.router.delete('/assignment/all/softDeleted', this.verifyJwtAndCheckAdmin, this.assignmentController.permanentDelete);
+	this.router.put('/assignment/undelete', this.verifyJwtAndCheckAdmin, this.assignmentController.undeleteById);
   }
 }
 
