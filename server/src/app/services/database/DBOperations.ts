@@ -2,7 +2,7 @@ import { default as express, NextFunction, Request, Response } from 'express';
 import { default as mongoose, Connection, Model } from 'mongoose';
 
 
-import { CourseModel, ICourse, AssignmentModel, IAssignment, UserModel, IUser, PostModel, IPost } from '../../models/mongoose';
+import { ILike } from '../../models/mongoose';
 import { resolve } from 'dns';
 
 class DBOperations {
@@ -35,7 +35,7 @@ class DBOperations {
 	}
 
 	static softDeleteById (
-		model: any,
+		model: mongoose.Model<any>,
 		id: string,
 		userId: string = undefined
 	): Promise<any> {
@@ -56,7 +56,7 @@ class DBOperations {
 	}
 
 	static undeleteById (
-		model: any,
+		model: mongoose.Model<any>,
 		id: string,
 		userId: string = undefined
 	): Promise<any> {
@@ -86,6 +86,51 @@ class DBOperations {
 				}).catch((err: any) => {
 					rej(err);
 				});
+		});
+	}
+
+	static setLike (
+		model: mongoose.Model<any>,
+		postId: string,
+		userId: string,
+	): Promise<any> {
+		const query: object = { _id: mongoose.Types.ObjectId(postId)};
+		const likeDoc: ILike = {
+			user: mongoose.Types.ObjectId(userId),
+			_createdAt: Date.now(),
+		};
+		return new Promise<any>((res, rej) => {
+			model.updateOne(
+				query,
+				{
+					$push : { likes: likeDoc }
+				})
+			.then((resolve: any) => {
+				res(resolve);
+			}).catch((err: any) => {
+				rej(err);
+			});
+		});
+	}
+
+	static deleteLike (
+		model: mongoose.Model<any>,
+		postId: string,
+		userId: string,
+	): Promise<any> {
+		const query: object = { _id: mongoose.Types.ObjectId(postId)};
+		
+		return new Promise<any>((res, rej) => {
+			model.updateOne(
+				query,
+				{
+					$pull : { likes: {user: userId} }
+				})
+			.then((resolve: any) => {
+				res(resolve);
+			}).catch((err: any) => {
+				rej(err);
+			});
 		});
 	}
 }

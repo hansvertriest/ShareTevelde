@@ -61,7 +61,7 @@ class MongoDBDatabase {
     linkInsta: string,
     linkTwitter: string,
   ) => {
-    const user = new User({
+    const user = new UserModel({
       userName,
       profileDescription,
       postIds,
@@ -151,13 +151,13 @@ class MongoDBDatabase {
     //       await this.createMessages();
     //     }
     //   });
-    const users = await UserModel.estimatedDocumentCount()
-      .exec()
-      .then(async (count) => {
-        if (count === 0 ) {
-          await this.createUsers();
-        }
-      })
+    // const users = await UserModel.estimatedDocumentCount()
+    //   .exec()
+    //   .then(async (count) => {
+    //     if (count === 0 ) {
+    //       await this.createUsers();
+    //     }
+    //   })
   };
 }
 

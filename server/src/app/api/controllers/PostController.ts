@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { default as mongoose, Connection } from 'mongoose';
+import { default as mongoose, Connection, mongo } from 'mongoose';
 
 import Logger, { ILogger } from '../../services/logger';
 import { IPost, PostModel  } from '../../models/mongoose';
@@ -260,6 +260,9 @@ class PostController {
 			// set boolean to true
 			DBOperations.undeleteById(PostModel, id)
 				.then((resolve) => {
+					if (resolve.n === 0) {
+						throw {code: 404, msg: 'Given post was not found.'}
+					}
 					return res.status(200).send();
 				})
 				.catch((error) =>{
@@ -286,6 +289,79 @@ class PostController {
 					throw error;
 				});
 		} catch (error) {
+			if (error.msg) return res.status(error.code).send(error);
+			this.logger.error('Error while permenantly deleting posts.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
+		}
+	}
+
+	public like = async (req: Request, res: Response, next: NextFunction): Promise<Response<any>> => {
+		try {
+			// get body 
+			const { id, token } = req.body;
+
+			// set boolean to value like
+			DBOperations.setLike(PostModel, id, token.id)
+				.then((resolve) => {
+					if (resolve.n === 0) {
+						throw {code: 404, msg: 'Given post was not found.'}
+					} else if (resolve.nModified === '0') {
+						throw {code: 500, msg: 'Nothing was softdeleted.'}
+					}
+					return res.status(200).send();
+				})
+				.catch((error) =>{
+					if (error.msg) return res.status(error.code).send(error)
+				});
+		} catch(error) {
+			if (error.msg) return res.status(error.code).send(error);
+			this.logger.error('Error while permenantly deleting posts.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
+		}
+	}
+
+	public deleteLike = async (req: Request, res: Response, nex: NextFunction): Promise<Response<any>> => {
+		try {
+			// get body 
+			const { id, token } = req.body;
+
+			// set boolean to value like
+			DBOperations.deleteLike(PostModel, id, token.id)
+				.then((resolve) => {
+					if (resolve.n === 0) {
+						throw {code: 404, msg: 'Given like was not found.'}
+					} else if (resolve.nModified === '0') {
+						throw {code: 500, msg: 'Nothing was deleted.'}
+					}
+					return res.status(200).send();
+				})
+				.catch((error) =>{
+					if (error.msg) return res.status(error.code).send(error)
+				});
+		} catch(error) {
+			if (error.msg) return res.status(error.code).send(error);
+			this.logger.error('Error while permenantly deleting posts.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
+		}
+	}
+
+	public getLikes = async (req: Request, res: Response, nex: NextFunction): Promise<Response<any>> => {
+		try {
+			// get parameter
+			const { id } = req.query;
+
+			// get likes
+			const likes = await PostModel.find({ _id: mongoose.Types.ObjectId(id) })
+				.select('likes')
+				.populate('likes.user', 'profile');
+
+			// check output and send response
+			if (likes.length > 0) {
+				return res.status(200).send(likes);
+			} else {
+				throw {code: 404, msg: 'No post with that id'}
+			}
+		} catch(error) {
 			if (error.msg) return res.status(error.code).send(error);
 			this.logger.error('Error while permenantly deleting posts.', error);
 			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
