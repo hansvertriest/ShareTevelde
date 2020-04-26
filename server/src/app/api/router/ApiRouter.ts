@@ -138,10 +138,10 @@ class ApiRouter {
 		this.router.delete('/post/byId', this.verifyJwtAndCheckAdmin, this.postController.softDeleteById);
 		this.router.delete('/post/all/softDeleted', this.verifyJwtAndCheckAdmin, this.postController.permanentDelete);
 		this.router.put('/post/undelete', this.verifyJwtAndCheckAdmin, this.postController.undeleteById);
-		// this.router.post('/post/feedback', this.verifyJwt, this.postController.postFeedback);
-		// this.router.post('/post/feedback/agree', this..verifyJwt, this.postController.agree);
+		this.router.post('/post/feedback', this.verifyJwt, this.postController.postFeedback);
+		this.router.post('/post/feedback/agree', this.verifyJwt, this.postController.agree);
+		this.router.get('/post/feedback/agrees', this.postController.getAgrees);
 		this.router.post('/post/like', this.verifyJwt, this.postController.like);
-		this.router.delete('/post/like', this.verifyJwt, this.postController.deleteLike);
 		this.router.get('/post/likes', this.postController.getLikes);
 
 		this.router.post('/course', this.verifyJwt, this.courseController.new);

@@ -71,10 +71,12 @@ const userSchema: Schema = new Schema({
 	},
 	profile: {
 		username: {
-			type: String
+			type: String,
+			max: 15,
 		},
 		profileDescription: {
-			type: String
+			type: String,
+			max: 200,
 		},
 		profilePictureName: {
 			type: String

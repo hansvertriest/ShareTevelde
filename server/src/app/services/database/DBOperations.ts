@@ -2,7 +2,7 @@ import { default as express, NextFunction, Request, Response } from 'express';
 import { default as mongoose, Connection, Model } from 'mongoose';
 
 
-import { ILike } from '../../models/mongoose';
+import { ILike, IAgree } from '../../models/mongoose';
 import { resolve } from 'dns';
 
 class DBOperations {
@@ -125,6 +125,58 @@ class DBOperations {
 				query,
 				{
 					$pull : { likes: {user: userId} }
+				})
+			.then((resolve: any) => {
+				res(resolve);
+			}).catch((err: any) => {
+				rej(err);
+			});
+		});
+	}
+
+	static setAgree (
+		model: mongoose.Model<any>,
+		feedbackId: string,
+		userId: string,
+	): Promise<any> {
+		const query: object = {
+			'feedback._id': mongoose.Types.ObjectId(feedbackId)
+		};
+		const agreeDoc: IAgree = {
+			user: mongoose.Types.ObjectId(userId),
+			_createdAt: Date.now(),
+		};
+		return new Promise<any>((res, rej) => {
+			model.updateOne(
+				query,
+				{
+					$push : { 
+						'feedback.$.agrees': agreeDoc,
+					}
+				})
+			.then((resolve: any) => {
+				res(resolve);
+			}).catch((err: any) => {
+				rej(err);
+			});
+		});
+	}
+
+	static deleteAgree (
+		model: mongoose.Model<any>,
+		feedbackId: string,
+		userId: string,
+	): Promise<any> {
+		
+		const query: object = {
+			'feedback._id': mongoose.Types.ObjectId(feedbackId)
+		};
+		
+		return new Promise<any>((res, rej) => {
+			model.updateOne(
+				query,
+				{
+					$pull : { 'feedback.$.agrees': {user: mongoose.Types.ObjectId(userId)} }
 				})
 			.then((resolve: any) => {
 				res(resolve);

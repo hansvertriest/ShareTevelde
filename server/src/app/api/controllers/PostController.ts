@@ -3,7 +3,7 @@ import { default as mongoose, Connection, mongo } from 'mongoose';
 
 import Logger, { ILogger } from '../../services/logger';
 import { IPost, PostModel  } from '../../models/mongoose';
-import { PictureModel, IPicture,  AssignmentModel, IAssignment, IUser  } from '../../models/mongoose';
+import { PictureModel, IPicture,  AssignmentModel, IAssignment, IUser, IFeedback  } from '../../models/mongoose';
 import {DBOperations} from '../../services/database';
 
 interface IPostModifications {
@@ -295,13 +295,128 @@ class PostController {
 		}
 	}
 
+	public postFeedback = async (req: Request, res: Response, next: NextFunction): Promise<Response<any>> => {
+		try {
+			// get body
+			const { postId, token, content } = req.body;
+
+			// construct feedback
+			const feedback: IFeedback = {
+				user: mongoose.Types.ObjectId(token.id),
+				content,
+				agrees: [],
+				_createdAt: Date.now(),
+			}
+
+			// post feedback
+			await PostModel.updateOne(
+				{ _id: mongoose.Types.ObjectId(postId) },
+				{
+					$push : { feedback : feedback }
+				})
+				.then((resolve) => {
+					console.log(resolve);
+					if (resolve.n === 0) {
+						throw {code: 404, msg: 'Given post was not found.'}
+					} else if (resolve.nModified === '0') {
+						throw {code: 500, msg: 'Nothing was softdeleted.'}
+					}
+					return res.status(200).send();
+				})
+				.catch((error) =>{
+					if (error.msg) return res.status(error.code).send(error)
+				});
+
+		} catch (error) {
+			if (error.msg) return res.status(error.code).send(error);
+			this.logger.error('Error while permenantly deleting posts.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
+		}
+	}
+
+	public agree = async (req: Request, res: Response, next: NextFunction): Promise<Response<any>> => {
+		try {
+			// get body 
+			const { id, token } = req.body;
+
+			// check if already agreed
+			const check = await PostModel.find({
+				'feedback.agrees.user': mongoose.Types.ObjectId(token.id),
+			})
+				.exec();
+
+			// set boolean to value like
+			if (check.length === 0) {
+				DBOperations.setAgree(PostModel, id, token.id)
+				.then((resolve) => {
+					if (resolve.n === 0) {
+						throw {code: 404, msg: 'Given feedback was not found.'}
+					} else if (resolve.nModified === '0') {
+						throw {code: 500, msg: 'Nothing was agreed.'}
+					}
+					return res.status(200).send();
+				})
+				.catch((error) =>{
+					if (error.msg) return res.status(error.code).send(error)
+				});
+			} else {
+				DBOperations.deleteAgree(PostModel, id, token.id)
+				.then((resolve) => {
+					if (resolve.n === 0) {
+						throw {code: 404, msg: 'Given feedback was not found.'}
+					} else if (resolve.nModified === '0') {
+						throw {code: 500, msg: 'Nothing was agreed.'}
+					}
+					return res.status(200).send();
+				})
+				.catch((error) =>{
+					if (error.msg) return res.status(error.code).send(error)
+				});
+			}
+		} catch(error) {
+			if (error.msg) return res.status(error.code).send(error);
+			this.logger.error('Error while permenantly deleting posts.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
+		}
+	}
+
+	public getAgrees = async (req: Request, res: Response, nex: NextFunction): Promise<Response<any>> => {
+		try {
+			// get parameter
+			const { id } = req.query;
+
+			// get likes
+			const agrees = await PostModel.find({ 'feedback._id': mongoose.Types.ObjectId(id) })
+				.select('feedback.agrees')
+				.populate('feedback.agrees.user', 'profile');
+
+			// check output and send response
+			if (agrees.length > 0) {
+				return res.status(200).send(agrees);
+			} else {
+				throw {code: 404, msg: 'No post with that id'}
+			}
+		} catch(error) {
+			if (error.msg) return res.status(error.code).send(error);
+			this.logger.error('Error while permenantly deleting posts.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
+		}
+	}
+
 	public like = async (req: Request, res: Response, next: NextFunction): Promise<Response<any>> => {
 		try {
 			// get body 
 			const { id, token } = req.body;
 
-			// set boolean to value like
-			DBOperations.setLike(PostModel, id, token.id)
+			// check if already liked
+			const check = await PostModel.find({
+				'likes.user': mongoose.Types.ObjectId(token.id),
+			})
+				.exec();
+			
+			if (check.length === 0) {
+				// set boolean to value like
+				DBOperations.setLike(PostModel, id, token.id)
 				.then((resolve) => {
 					if (resolve.n === 0) {
 						throw {code: 404, msg: 'Given post was not found.'}
@@ -313,20 +428,9 @@ class PostController {
 				.catch((error) =>{
 					if (error.msg) return res.status(error.code).send(error)
 				});
-		} catch(error) {
-			if (error.msg) return res.status(error.code).send(error);
-			this.logger.error('Error while permenantly deleting posts.', error);
-			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
-		}
-	}
-
-	public deleteLike = async (req: Request, res: Response, nex: NextFunction): Promise<Response<any>> => {
-		try {
-			// get body 
-			const { id, token } = req.body;
-
-			// set boolean to value like
-			DBOperations.deleteLike(PostModel, id, token.id)
+			} else {
+				// set boolean to value like
+				DBOperations.deleteLike(PostModel, id, token.id)
 				.then((resolve) => {
 					if (resolve.n === 0) {
 						throw {code: 404, msg: 'Given like was not found.'}
@@ -338,6 +442,8 @@ class PostController {
 				.catch((error) =>{
 					if (error.msg) return res.status(error.code).send(error)
 				});
+			}
+			
 		} catch(error) {
 			if (error.msg) return res.status(error.code).send(error);
 			this.logger.error('Error while permenantly deleting posts.', error);

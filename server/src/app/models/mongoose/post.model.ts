@@ -20,12 +20,25 @@ interface ILike {
 	_createdAt: number;
 }
 
+interface IAgree {
+	user: IUser['_id'];
+	_createdAt: number;
+}
+
+interface IFeedback {
+	user: IUser['_id'];
+	content: string;
+	agrees: IAgree[];
+	_createdAt: number;
+}
+
 interface IPost extends Document {
 	assignment: IAssignment['_id'];
 	urlToProject: string;
 	pictures: IPicture['_id'][];
 	user: IUser['_id'];
 	likes: ILike[];
+	feedback: IFeedback[];
 	softDeleted: boolean;
 }
 
@@ -58,6 +71,38 @@ const postSchema: Schema = new Schema({
 			required: true,
 			immutable: true,
 		},
+		_createdAt: {
+			type: Number,
+			required: true,
+			default: Date.now()
+		},
+	}],
+
+	feedback: [{
+		user: {
+			type: Schema.Types.ObjectId,
+			ref: 'User',
+			required: true,
+			immutable: true,
+		},
+		content: {
+			type: String,
+			required: true,
+			max: 200,
+		},
+		agrees: [{
+			user: {
+				type: Schema.Types.ObjectId,
+				ref: 'User',
+				required: true,
+				immutable: true,
+			},
+			_createdAt: {
+				type: Number,
+				required: true,
+				default: Date.now()
+			},
+		}],
 		_createdAt: {
 			type: Number,
 			required: true,
@@ -100,4 +145,6 @@ export {
 	IPicture,
 	IUser,
 	ILike,
+	IFeedback,
+	IAgree,
 };
