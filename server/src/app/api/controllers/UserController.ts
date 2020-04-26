@@ -51,6 +51,7 @@ class UserController {
 			const user: IUser = await newUser.save();
 	
 			const token = this.authService.createToken(user);
+			DBOperations.sendNotificationToUser(user.id, 'Welkom bij ShareTevelde!')
 			return res.status(200).json({
 				id: user.id,
 				email: user.email, 

@@ -2,8 +2,7 @@ import { default as express, NextFunction, Request, Response } from 'express';
 import { default as mongoose, Connection, Model } from 'mongoose';
 
 
-import { ILike, IAgree } from '../../models/mongoose';
-import { resolve } from 'dns';
+import { ILike, IAgree, INotification, UserModel } from '../../models/mongoose';
 
 class DBOperations {
 	static sanitizeParameters (parameters: any, prefix: string = ''): any {
@@ -167,7 +166,6 @@ class DBOperations {
 		feedbackId: string,
 		userId: string,
 	): Promise<any> {
-		
 		const query: object = {
 			'feedback._id': mongoose.Types.ObjectId(feedbackId)
 		};
@@ -177,6 +175,48 @@ class DBOperations {
 				query,
 				{
 					$pull : { 'feedback.$.agrees': {user: mongoose.Types.ObjectId(userId)} }
+				})
+			.then((resolve: any) => {
+				res(resolve);
+			}).catch((err: any) => {
+				rej(err);
+			});
+		});
+	}
+
+	static sendNotificiationToAll (content: string, destinationUrl: string): Promise<any>  {
+		const query = {role: 'user'};
+		const notification: INotification = {
+			content,
+			destinationUrl,
+			_createdAt: Date.now(),
+		}
+		return new Promise<any>((res, rej) => {
+			UserModel.updateMany(
+				query,
+				{
+					$push : { notifications: notification }
+				})
+			.then((resolve: any) => {
+				res(resolve);
+			}).catch((err: any) => {
+				rej(err);
+			});
+		});
+	}
+
+	static sendNotificationToUser (userId: string, content: string, destinationUrl: string = ''): Promise<any> {
+		const query = {_id: mongoose.Types.ObjectId(userId)};
+		const notification: INotification = {
+			content,
+			destinationUrl,
+			_createdAt: Date.now(),
+		}
+		return new Promise<any>((res, rej) => {
+			UserModel.updateOne(
+				query,
+				{
+					$push : { notifications: notification }
 				})
 			.then((resolve: any) => {
 				res(resolve);

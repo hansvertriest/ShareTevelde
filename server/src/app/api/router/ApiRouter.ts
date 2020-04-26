@@ -14,6 +14,7 @@ import {
 	UserController,
 	CourseController,
 	AssignmentController,
+	NotificationController,
 } from '../controllers';
 import {
 	IConfig,
@@ -41,6 +42,7 @@ class ApiRouter {
 	private userController: UserController;
 	private courseController: CourseController;
 	private assignmentController: AssignmentController;
+	private notificationController: NotificationController;
 
 	constructor(config: IConfig, authService: AuthService) {
 		this.router = express.Router();
@@ -58,6 +60,7 @@ class ApiRouter {
 		this.userController = new UserController(this.config, this.authService);
 		this.courseController = new CourseController();
 		this.assignmentController = new AssignmentController();
+		this.notificationController = new NotificationController();
 	}
 
 	private verifyJwt = async (
@@ -160,8 +163,8 @@ class ApiRouter {
 		this.router.delete('/assignment/all/softDeleted', this.verifyJwtAndCheckAdmin, this.assignmentController.permanentDelete);
 		this.router.put('/assignment/undelete', this.verifyJwtAndCheckAdmin, this.assignmentController.undeleteById);
 		
-		// this.router.post('notification/toAll', this.verifyJwtAndCheckAdmin, this.notificationController.sendAll);
-		// this.router.post('/notification/toUser', this.verifyJwt, this.notificationController.sendToUserById)
+		this.router.post('/notification/toAll', this.verifyJwtAndCheckAdmin, this.notificationController.sendAll);
+		this.router.get('/notification/all', this.verifyJwt, this.notificationController.get)
 	}
 }
 

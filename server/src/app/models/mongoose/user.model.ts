@@ -11,6 +11,12 @@ interface ILocalProvider {
 	password: string;
 }
 
+interface INotification {
+	content: string;
+	destinationUrl: string;
+	_createdAt: number;
+}
+
 interface IProfile {
 	username: string;
 	profileDescription: string;
@@ -29,6 +35,7 @@ interface IUser extends Document {
 
 	role: string;
 	profile ? : IProfile;
+	notifications: INotification[];
 
 	_createdAt: number;
 	_modifiedAt: number;
@@ -98,6 +105,21 @@ const userSchema: Schema = new Schema({
 			type: String
 		},
 	},
+	notifications: [{
+		content: {
+			type: String,
+			max: 100,
+			required: true,
+		},
+		destinationToUrl: {
+			type: String,
+		},
+		_createdAt: {
+			type: Number,
+			required: true,
+			default: Date.now()
+		},
+	}],
 	role: {
 		type: String,
 		enum: ['user', 'administrator'],
@@ -125,6 +147,7 @@ const userForbiddenFilters = ['role', 'softDeleted', 'email'];
 export {
 	IUser,
 	IProfile,
+	INotification,
 	UserModel,
 	userSchema,
 	UserModelProperties,

@@ -5,6 +5,7 @@ import PictureController from './PictureController';
 import UserController from './UserController';
 import CourseController from './CourseController';
 import AssignmentController from './AssignmentController';
+import NotificationController from './NotificationController';
 
 export {
   HelloController,
@@ -14,4 +15,5 @@ export {
   UserController,
   CourseController,
   AssignmentController,
+  NotificationController
 };
