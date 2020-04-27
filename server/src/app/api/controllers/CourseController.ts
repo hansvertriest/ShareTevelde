@@ -33,7 +33,11 @@ class CourseController {
 					return res.status(200).send(course);
 				})
 				.catch((err) => {
-					return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
+					if (err.code === 11000) {
+						return res.status(412).send({code: 500, msg: 'Duplicate Course'});
+					}
+					this.logger.error('Unknown error occured while creating course.', err);
+					return res.status(500).send({code: 500, msg: 'Unknown error occured.'});
 				});
 			
 		} catch (error) {

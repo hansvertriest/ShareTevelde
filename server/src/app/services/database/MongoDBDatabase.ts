@@ -65,7 +65,7 @@ class MongoDBDatabase {
 		this.seeder.createAdmin();
 	}
 	if (users.filter((user) => user.role === 'user').length === 0) {
-		this.seeder.createUsers(10);
+		this.seeder.createUsers(5);
 	}	
   };
 }

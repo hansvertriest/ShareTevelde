@@ -2,7 +2,7 @@ import { default as express, NextFunction, Request, Response } from 'express';
 import { default as mongoose, Connection } from 'mongoose';
 
 import Logger, { ILogger } from '../../services/logger';
-import { AssignmentModel, IAssignment, AssignmentModelKeys } from '../../models/mongoose';
+import { AssignmentModel, IAssignment, AssignmentModelKeys, CourseModel } from '../../models/mongoose';
 import {DBOperations} from '../../services/database';
 
 class AssignmentController {
@@ -16,23 +16,30 @@ class AssignmentController {
 		try {
 			// get body
 			const { title, courseId, description } = req.body;
-		
+			
 			// create model
-			const course: IAssignment = new AssignmentModel({
+			const assignment: IAssignment = new AssignmentModel({
 				title,
 				courseId: mongoose.Types.ObjectId(courseId),
 				description,
 			});
 
+			// check if course exists
+			const check = await CourseModel.findOne({_id: mongoose.Types.ObjectId(courseId)})
+
 			// save model
-			await course.save()
-				.then((assignment) => {
-					return res.status(200).send(assignment);
-				})
-				.catch((err) => {
-					const error = { msg: err.message, code: 412 }
-					throw error;
-				});
+			if (check) {
+				await assignment.save()
+					.then((ass) => {
+						return res.status(200).send(ass);
+					})
+					.catch((err) => {
+						const error = { msg: err.message, code: 412 }
+						throw error;
+					});
+			}else {
+				throw { msg: 'Given course does not exist.', code: 404 }
+			}
 		} catch (error) {
 			if (error.code) return res.status(error.code).send(error);
 			this.logger.error('Unknown error occured while creating course.', error);

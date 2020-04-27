@@ -68,7 +68,12 @@ class PostController {
 			
 			// get course
 			const post: IPost = await PostModel.findById(mongoose.Types.ObjectId(id))
-				.populate('assignment')
+				.populate({
+					path: 'assignment',
+					populate: {
+						path: 'courseId',
+					},
+				})
 				.populate('pictures')
 				.populate('user', 'profile.username _id')
 				.exec();
@@ -99,7 +104,12 @@ class PostController {
 
 			// get posts
 			const post: IPost[] = await PostModel.find(filter)
-				.populate('assignment')
+				.populate({
+					path: 'assignment',
+					populate: {
+						path: 'courseId',
+					},
+				})
 				.populate('pictures')
 				.populate('user', 'profile.username _id')
 				.exec();
@@ -129,7 +139,12 @@ class PostController {
 
 			// get posts
 			const post: IPost[] = await PostModel.find(filter)
-				.populate('assignment')
+				.populate({
+					path: 'assignment',
+					populate: {
+						path: 'courseId',
+					},
+				})
 				.populate('pictures')
 				.populate('user', 'profile.username _id')
 				.exec();
@@ -307,7 +322,6 @@ class PostController {
 				agrees: [],
 				_createdAt: Date.now(),
 			}
-
 			// post feedback
 			await PostModel.updateOne(
 				{ _id: mongoose.Types.ObjectId(postId) },
@@ -315,7 +329,6 @@ class PostController {
 					$push : { feedback : feedback }
 				})
 				.then((resolve) => {
-					console.log(resolve);
 					if (resolve.n === 0) {
 						throw {code: 404, msg: 'Given post was not found.'}
 					} else if (resolve.nModified === '0') {

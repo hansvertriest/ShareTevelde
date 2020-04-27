@@ -151,7 +151,7 @@ class UserController {
 
 			// create filter
 			const filter = DBOperations.createFilter(sanitizedParams);
-			console.log(filter);
+			
 			// get users
 			let users: IUser[] = await UserModel.find(filter).select('profile id').exec();
 
