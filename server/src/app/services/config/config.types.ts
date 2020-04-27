@@ -39,4 +39,10 @@ export interface IConfig {
   server: IServerConfig;
   mongoDBConnection: string;
   auth: IAuthConfig;
+  adminCreds: IAdminCreds;
+}
+
+export interface IAdminCreds {
+	email: string;
+	pass: string;
 }

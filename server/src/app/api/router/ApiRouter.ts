@@ -7,8 +7,6 @@ import {
 	Router,
 } from 'express';
 import {
-	HelloController,
-	MessageController,
 	PostController,
 	PictureController,
 	UserController,
@@ -23,20 +21,12 @@ import {
 	ILogger,
 	GridFs
 } from '../../services';
-import {
-	runInThisContext
-} from 'vm';
-import {
-	decode
-} from 'punycode';
 
 class ApiRouter {
 	public router: Router;
 	private config: IConfig;
 	private authService: AuthService;
 
-	private helloController: HelloController;
-	private messageController: MessageController;
 	private postController: PostController;
 	private pictureController: PictureController;
 	private userController: UserController;
@@ -53,8 +43,6 @@ class ApiRouter {
 	}
 
 	private registerControllers(): void {
-		this.helloController = new HelloController();
-		this.messageController = new MessageController();
 		this.postController = new PostController();
 		this.pictureController = new PictureController();
 		this.userController = new UserController(this.config, this.authService);
@@ -98,7 +86,7 @@ class ApiRouter {
 					msg: 'JWT could not be verified'
 				});
 			}
-			if (decoded.role !== 'admin') {
+			if (decoded.role !== 'administrator') {
 				return res.status(401).send({
 					msg: 'No admin rights'
 				});

@@ -6,6 +6,7 @@ import {
   IServerConfig,
   ServerProtocol,
   IAuthConfig,
+  IAdminCreds,
 } from './config.types';
 
 class Config implements IConfig {
@@ -14,6 +15,7 @@ class Config implements IConfig {
   public server: IServerConfig;
   public mongoDBConnection: string;
   public auth: IAuthConfig;
+  public adminCreds: IAdminCreds;
 
   constructor() {
     dotenv.config();
@@ -54,7 +56,13 @@ class Config implements IConfig {
         clientId: process.env.AUTH_FACEBOOK_CLIENT_ID,
         clientSecret: process.env.AUTH_FACEBOOK_CLIENT_SECRET,
       },
-    };
+	};
+	
+	//admin credentials
+	this.adminCreds = {
+		email: process.env.ADMIN_EMAIL,
+		pass: process.env.ADMIN_PASS,
+	}
   }
 }
 

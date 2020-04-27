@@ -40,7 +40,7 @@ class App {
     }
     SwaggerMiddleware.load(this.app, __dirname);
     this.createPassport();
-    this.createRouter();
+	this.createRouter();
     this.app.use(this.clientErrorHandler);
     this.app.use(this.errorHandler);
   }
@@ -95,7 +95,7 @@ class App {
   }
 
   public start(): void {
-    this.server.listen(this.config.server.port, this.config.server.host);
+	this.server.listen(this.config.server.port, this.config.server.host);
   }
 
   public stop(): void {

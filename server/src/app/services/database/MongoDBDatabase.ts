@@ -1,21 +1,26 @@
 import { default as mongoose, Connection } from 'mongoose';
-import { default as faker } from 'faker';
 
 import { ILogger } from '../logger';
 import { IConfig } from '../config';
-import { IMessage, Message, IUser, UserModel, ICourse, CourseModel } from '../../models/mongoose';
+import { IUser, UserModel } from '../../models/mongoose';
+
+import { DBSeeder, IDBSeeder } from './DBSeeder';
 
 class MongoDBDatabase {
   private config: IConfig;
   private logger: ILogger;
-  public db: Connection;
+  private seeder: IDBSeeder;
+  public db: Connection; 
 
   constructor(logger: ILogger, config: IConfig) {
     this.logger = logger;
-    this.config = config;
+	this.config = config;
+	this.seeder = new DBSeeder(this.logger, this.config);
   }
 
   public connect(): Promise<any> {
+
+
     return new Promise<any>((resolve, reject) => {
       mongoose
         .connect(this.config.mongoDBConnection, {
@@ -51,113 +56,17 @@ class MongoDBDatabase {
         });
     });
   }
-
-  private UserCreate = async (
-    userName: string,
-    profileDescription: string,
-    postIds: string[],
-    profilePictureName: string,
-    linkFb: string,
-    linkInsta: string,
-    linkTwitter: string,
-  ) => {
-    const user = new UserModel({
-      userName,
-      profileDescription,
-      postIds,
-      profilePictureName,
-      linkFb,
-      linkInsta,
-      linkTwitter,
-    });
-    try {
-      const newUser = await user.save();
-      this.logger.info(`Message created with id ${newUser._id}`, {});
-    } catch (error) {
-      this.logger.error('An error occurred when creating a message', error);
-    }
-
-  }
-
-  private createUsers = async () => {
-    new Promise( async () => this.UserCreate(
-        faker.name.findName(),
-        faker.lorem.sentences(4),
-        [],
-        '02125be7bc1e82fdf7a34ba12b9f9063.jpg',
-        'https://www.facebook.com/jana.vanderborgt',
-        'https://twitter.com/lena_vdb',
-        'https://www.instagram.com/melina_torres_924/',
-      )
-    )
-  }
-
-  // private courseCreate = async (
-  //   courseTitle: string,
-  //   year: Date,
-  //   direction: string,
-  //   schoolyear: string,
-  // ) : Promise<void> => {
-  //   const course = new CourseModel({
-  //     courseTitle,
-  //     year,
-  //     direction,
-  //     schoolyear,
-  //   })
-  //   try {
-  //     const newUser = await course.save();
-  //     this.logger.info(`Course created with id ${newUser._id}`, {});
-  //   } catch (error) {
-  //     this.logger.error('An error occurred when creating a course', error);
-  //   }
-  // }
-
-  // private createCourses= async () => {
-
-  // }
-
-
-  private messageCreate = async (body: string) => {
-    const message = new Message({ body });
-
-    try {
-      const newMessage = await message.save();
-
-      this.logger.info(`Message created with id ${newMessage._id}`, {});
-    } catch (error) {
-      this.logger.error('An error occurred when creating a message', error);
-    }
-  };
-
-  private createMessages = async () => {
-    await Promise.all([
-      (async () => this.messageCreate(faker.lorem.paragraph()))(),
-      (async () => this.messageCreate(faker.lorem.paragraph()))(),
-      (async () => this.messageCreate(faker.lorem.paragraph()))(),
-      (async () => this.messageCreate(faker.lorem.paragraph()))(),
-      (async () => this.messageCreate(faker.lorem.paragraph()))(),
-      (async () => this.messageCreate(faker.lorem.paragraph()))(),
-      (async () => this.messageCreate(faker.lorem.paragraph()))(),
-      (async () => this.messageCreate(faker.lorem.paragraph()))(),
-      (async () => this.messageCreate(faker.lorem.paragraph()))(),
-    ]);
-  };
-
+  
   public seed = async () => {
-    // const messages = await Message.estimatedDocumentCount()
-    //   .exec()
-    //   .then(async (count) => {
-    //     if (count === 0) {
-    //       await this.createMessages();
-    //     }
-    //   });
-    // const users = await UserModel.estimatedDocumentCount()
-    //   .exec()
-    //   .then(async (count) => {
-    //     if (count === 0 ) {
-    //       await this.createUsers();
-    //     }
-    //   })
+	// get all users 
+	const users: IUser[] = await UserModel.find().exec();
+
+	if (users.filter((user) => user.role === 'administrator').length === 0) {
+		this.seeder.createAdmin();
+	}
+	if (users.filter((user) => user.role === 'user').length === 0) {
+		this.seeder.createUsers(10);
+	}	
   };
 }
 

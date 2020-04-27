@@ -748,6 +748,11 @@ is-plain-object@^2.0.3, is-plain-object@^2.0.4:
   dependencies:
     isobject "^3.0.1"
 
+is-typeof@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/is-typeof/-/is-typeof-1.0.3.tgz#7b2a4edb83b391a928b00e98938616c6b2972a2a"
+  integrity sha512-dke34TMGJd4uP0dEofsl5EvXiftafAE334qfZf1eyikyWTYaRpr/5ggH1uYWCtsBJ9gPmsaWLBD60g6nM34zEA==
+
 is-windows@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/is-windows/-/is-windows-1.0.2.tgz#d1850eb9791ecd18e6182ce12a30f396634bb19d"
@@ -1437,6 +1442,13 @@ supports-color@^6.1.0:
   integrity sha512-qe1jfm1Mg7Nq/NSh6XE24gPXROEVsWHxC1LIx//XNlD9iw7YZQGjZNjYN7xGaEG6iKdA8EtNFW6R0gjnVXp+wQ==
   dependencies:
     has-flag "^3.0.0"
+
+the@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/the/-/the-1.0.2.tgz#a1e00c99ec79b541a30d452ad6ff406c82ed3cb1"
+  integrity sha512-FElbqlkdZ62IToh74UK4eCQagGvbeqUWbQ/Feqdp8guiRjRADrHm5dmbNL5Lk1dqVsGCVPeIryYTjphrQIY7bw==
+  dependencies:
+    is-typeof "^1.0.3"
 
 to-object-path@^0.3.0:
   version "0.3.0"
