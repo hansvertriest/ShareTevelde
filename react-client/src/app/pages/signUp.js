@@ -1,8 +1,11 @@
 import { default as React, useState, useEffect } from 'react';
 
-import { useApi } from '../services/api.services';
 import { useAuth } from '../services/auth.service';
-import { ProfilePicture, SocialMediaField } from '../components/formComponents';
+import { PageTitle } from '../components/typography';
+import { InputFieldText, PrimaryButton, SecondaryButton, TertiaryButton } from '../components/formComponents';
+import { Logo } from '..//components/misc';
+
+import './SignUpInBox.scss';
 
 const SignUp = ({children}) => {
 	const { signUpLocal } = useAuth();
@@ -16,16 +19,53 @@ const SignUp = ({children}) => {
 			const errorField = document.getElementById('error-field');
 			errorField.innerHTML = response.msg;
 		});
-	}  
+	}
+
+	const goToLogin = async (ev) => {
+		ev.preventDefault();
+		// reroute
+	}
+
+	const registerGoogle = async (ev) => {
+		ev.preventDefault();
+		// reroute
+	}
+
+	const validateEmail = () => {
+		return true;
+	}
 
 	return (
-		<div>
+		<div className="page__signup">
+			<Logo margin="20px auto"/>
+			<div className="signup__title">
+				<PageTitle value="Registreren" />
+				<TertiaryButton  onClick={(ev) => goToLogin(ev)}>Al een account?</TertiaryButton>
+			</div>
 			<form id="signup-form" method="post" action="/auth/signup">
-				<input type="text" id="signup-email" name="email"/>
-				<input type="text" id="signup-password" name="password"/>
-				<input type="text" id="signup-password-confirmation" name="password"/>
-				<p id="error-field"></p>
-				<button type="submit" onClick={(ev) => submitSignUp(ev)}>SIGNUP</button>
+				<InputFieldText 
+					id="signup-email" 
+					name="email" 
+					placeholder="john.doe@email.com"
+					validate={() => validateEmail()}
+				/>
+				<InputFieldText 
+					type="password" 
+					id="signup-password" 
+					name="password" 
+					placeholder="Paswoord"
+				/>
+				<InputFieldText 
+					type="password" 
+					id="signup-password-confirmation" 
+					name="passwordConfirmation" 
+					placeholder="Paswoord bevestiging"
+				/>
+				<p className="error-field" id="error-field"></p>
+				<div className="signup__button-container">
+					<PrimaryButton  onClick={(ev) => submitSignUp(ev)}> Registreer </PrimaryButton>
+					<SecondaryButton  onClick={(ev) => registerGoogle(ev)}> Google </SecondaryButton>
+				</div>
 			</form>
 		</div>
 	);

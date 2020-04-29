@@ -1,7 +1,7 @@
 import { default as React, useState, useEffect } from 'react';
 
 
-import { useApi } from '../../services/';
+import { useApi } from '../../services';
 import { apiConfig } from '../../config';
 
 const ProfilePicture = (props) => {

@@ -1,0 +1,14 @@
+.tertiary-button {
+	color: var(--white-shade);
+	text-decoration: underline;
+	font-size: var(--font-size-small-lg);
+}
+
+.tertiary-button:hover {
+	color: var(--secondary-color);
+}
+
+.tertiary-button:active {
+	color: var(--secondary-color);
+	text-decoration: none;
+}

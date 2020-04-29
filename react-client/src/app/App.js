@@ -2,7 +2,7 @@ import React from 'react';
 import {BrowserRouter as Router, Redirect, Switch} from 'react-router-dom';
 
 import { HomePage, ProfileConfig, SignUp } from './pages';
-import { PageLayout } from './layouts';
+import { PageLayout, SignUpInLayout } from './layouts';
 import { RouteWithLayout } from './utilities';
 import * as Routes from './routes';
 import { ApiProvider, AuthProvider } from './services';
@@ -18,7 +18,7 @@ function App() {
             <Switch>
               <RouteWithLayout exact path={Routes.LANDING} component={HomePage} layout={PageLayout} />
               <RouteWithLayout exact path={Routes.PROFILECONFIG} component={ProfileConfig} layout={PageLayout} />
-              <RouteWithLayout exact path={Routes.AUTH_SIGNUP} component={SignUp} layout={PageLayout} />
+              <RouteWithLayout exact path={Routes.AUTH_SIGNUP} component={SignUp} layout={SignUpInLayout} />
               <Redirect from={Routes.HOME} to={Routes.LANDING} />
             </Switch>
           </Router>
