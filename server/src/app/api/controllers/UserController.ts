@@ -26,12 +26,24 @@ class UserController {
 	}
 
 	signupLocal = async ( req: Request, res: Response, next: NextFunction ): Promise<Response | void> => {
-		const { email, password, role } = req.body;
-
 		try {
+			const { email, password, passwordConfirmation, role } = req.body;
+			// check if valid email
+			const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+			if (!re.test(String(email).toLowerCase())) throw {code: 412, msg: 'Please provide a valid email.'}
+
+			// check if password is long enough
+			if (password.length < 10) throw {code: 412, msg: 'Please provide a longer password.'}
+
+			// check if everythin is present
+			if ( !email || !password || !passwordConfirmation) throw {code: 412, msg: 'Please provide al data.'};
+
+			// check if passwordConfirmation is correct
+			if (password !== passwordConfirmation) throw {code: 412, msg: 'Passwords don\'t match.'};
+
 			const hash = await this.authService.encrypt(password)
 				.catch(() =>{
-					const error = { code: 500, msg: 'failed to encrypt password' }
+					const error = { code: 500, msg: 'failed to encrypt password'}
 					throw error;
 			})
 	
@@ -61,12 +73,9 @@ class UserController {
 				avatar: user.profile.profileDescription,
 			});
 		} catch (error) {
-			if (error.code) {
-				res.status(error.code).json(error);
-			} else{
-				res.status(500).json(error);
-			}
-			this.logger.error(error.msg, error);
+			if (error.code) return res.status(error.code).send(error);
+			this.logger.error('Unknown error occured while creating post.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'});
 		}
 		
 	};

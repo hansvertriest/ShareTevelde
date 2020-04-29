@@ -54,7 +54,7 @@ class PostController {
 					return res.status(500).send({code: 500, msg: 'Unknown error occured.'});
 				});
 		}catch (error) {
-			if (error.code) return res.status(error.code).send(error);
+			if (error.code) return res.status(error.code).send(error.msg);
 			this.logger.error('Unknown error occured while creating post.', error);
 			return res.status(500).send({code: 500, msg: 'Unknown error occured.'});
 		}

@@ -89,8 +89,9 @@ class AuthService {
 
   public createToken(user: IUser): string {
     const payload = {
-      id: user._id,
-      role: user.role,
+		profile: user.profile,
+		id: user._id,
+		role: user.role,
     };
     return jwt.sign(payload, this.config.auth.jwt.secret, {
       expiresIn: 60 * 120,

@@ -12,14 +12,14 @@ const ApiProvider = ({children}) => {
   const [userProfile, setUSerProfile] = useState({});
 
   useEffect(() => {
-    fetch( `${BASE_URL}/user/${userId}`)
-      .then((res) => {
-        return res.json();
-      })
-      .then((json) => {
-        console.log('dd')
-        setUSerProfile(json);
-      })
+    // fetch( `${BASE_URL}/user/${userId}`)
+    //   .then((res) => {
+    //     return res.json();
+    //   })
+    //   .then((json) => {
+    //     console.log('dd')
+    //     setUSerProfile(json);
+    //   })
   }, [userId]);
 
   const refreshUserProfile = () => {
