@@ -9,7 +9,6 @@ import { Environment, IConfig } from '../config';
 import { IUser, UserModel } from '../../models/mongoose';
 import { Role, IVerifiedToken } from './auth.types';
 import { UnauthorizedError, ForbiddenError } from '../../utilities';
-import { errorMonitor } from 'events';
 
 class AuthService {
   private config: IConfig;
@@ -49,7 +48,7 @@ class AuthService {
               return done(null, false, { message: 'No user by that email' });
             }
 
-            return user.comparePassword(password, (isMatch: boolean) => {
+            return user.comparePassword(password, (err: any, isMatch: boolean) => {
               if (!isMatch) {
                 return done(null, false);
               }
@@ -121,7 +120,7 @@ class AuthService {
 
   public verifyToken = (token:string): IVerifiedToken => {
     try {
-      const decoded: string | object = jwt.verify(token, 'share_secret_Tevelde');
+      const decoded: string | object = jwt.verify(token, this.config.auth.jwt.secret);
       if (!decoded) {
         const error = { msg: 'Couldn\'t decode the token!' }
         throw error;

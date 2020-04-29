@@ -131,7 +131,8 @@ const userSchema: Schema = new Schema({
 
 userSchema.methods.comparePassword = function(candidatePassword: String, cb: Function) {
 	const user = this;
-	bcrypt.compare(candidatePassword, user.password, (err, isMatch) => {
+	bcrypt.compare(candidatePassword, user.localProvider.password, (err, isMatch) => {
+		console.log(isMatch);
 		if (err) return cb(err, null);
 		return cb(null, isMatch);
 	});

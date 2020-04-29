@@ -16,6 +16,7 @@ class Config implements IConfig {
   public mongoDBConnection: string;
   public auth: IAuthConfig;
   public adminCreds: IAdminCreds;
+  public jwt_secret: string;
 
   constructor() {
     dotenv.config();
