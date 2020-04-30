@@ -36,7 +36,7 @@ class UserController {
 			if (password.length < 10) throw {code: 412, msg: 'Please provide a longer password.'}
 
 			// check if everythin is present
-			if ( !email || !password || !passwordConfirmation) throw {code: 412, msg: 'Please provide al data.'};
+			if ( !email || !password || !passwordConfirmation) throw {code: 412, msg: 'Please provide all data.'};
 
 			// check if passwordConfirmation is correct
 			if (password !== passwordConfirmation) throw {code: 412, msg: 'Passwords don\'t match.'};
@@ -89,7 +89,10 @@ class UserController {
 					return next(err);
 				}
 				if (!user) {
-					return next(new NotFoundError());
+					return  res.status(404).json({
+						code: 404,
+						msg: 'Combination of email and password was not found.'
+					});
 				}
 				const token = this.authService.createToken(user);
 				return res.status(200).json({

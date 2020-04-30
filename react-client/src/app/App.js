@@ -1,7 +1,7 @@
 import React from 'react';
 import {BrowserRouter as Router, Redirect, Switch} from 'react-router-dom';
 
-import { HomePage, ProfileConfig, SignUp } from './pages';
+import { HomePage, ProfileConfig, SignUp, SignIn } from './pages';
 import { PageLayout, SignUpInLayout } from './layouts';
 import { RouteWithLayout } from './utilities';
 import * as Routes from './routes';
@@ -19,6 +19,7 @@ function App() {
               <RouteWithLayout exact path={Routes.LANDING} component={HomePage} layout={PageLayout} />
               <RouteWithLayout exact path={Routes.PROFILECONFIG} component={ProfileConfig} layout={PageLayout} />
               <RouteWithLayout exact path={Routes.AUTH_SIGNUP} component={SignUp} layout={SignUpInLayout} />
+              <RouteWithLayout exact path={Routes.AUTH_SIGNIN} component={SignIn} layout={SignUpInLayout} />
               <Redirect from={Routes.HOME} to={Routes.LANDING} />
             </Switch>
           </Router>

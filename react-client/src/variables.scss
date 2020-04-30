@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Nova+Mono&family=Poppins:wght@300;400;500;600&display=swap');
 
 :root {
+	// COLORS
 	--bg-color: #1C2440;
 	--bg-color-shade-light: #3F4765; 
 	--bg-color-shade-dark: #262D48; 
@@ -12,15 +13,20 @@
 	--white: #ECF0FF;
 	--white-shade: #7D849C;
 
+	// DIMENSIONS
 	--max-page-width: 1000px;
 	--min-page-width-lg: 1000px;
 	--min-page-width-sm: 100vw;
 	--breakpoint: 468;
 
+	// FONT FAMILIES
 	--font-family-logo: 'Nova Mono';
 	--font-family-page-title: 'Poppins';
 	--font-family-placeholder: 'Poppins';
 	--font-family-buttons: 'Poppins';
+
+	// FONT PROPERTIES
+	--font-spacing-placeholder-lg: 0.8px; 
 
 	--font-size-page-title-lg: 48px;
 	--font-size-logo-lg: 24px;

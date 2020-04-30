@@ -4,9 +4,7 @@ import React, {
 	useState
 } from 'react';
 import * as jwt from 'jsonwebtoken';
-import {
-	apiConfig
-} from '../config';
+import { apiConfig } from '../config';
 import {
 	toolBox
 } from '../utilities/';
@@ -14,15 +12,12 @@ import {
 const AuthContext = createContext();
 const useAuth = () => useContext(AuthContext);
 
-const AuthProvider = ({
-	children
-}) => {
+const AuthProvider = ({children}) => {
 
-	// Add verification trough api instead! api/auth/verify/:token
 	const verifyUserFromLocalStorage = () => {
-		if (JSON.parse(localStorage.getItem('mern:authUser'))) {
+		if (localStorage.getItem('mern:authUser')) {
 			try {
-				const token = JSON.parse(localStorage.getItem('mern:authUser')).token;
+				const token = localStorage.getItem('mern:authUser');
 				if (!token) {
 					throw new Error('Token is not present on localstorage!');
 				}
@@ -33,8 +28,9 @@ const AuthProvider = ({
 				if (decoded.exp > Date.now()) {
 					throw new Error('Token is expired!')
 				}
-				return JSON.parse(localStorage.getItem('mern:authUser'));
+				return decoded;
 			} catch (error) {
+				console.log(error);
 				return null;
 			}
 		}
@@ -43,7 +39,7 @@ const AuthProvider = ({
 
 	const [currentUser, setCurrentUser] = useState(verifyUserFromLocalStorage);
 
-	const signInLocal = async (email, password) => {
+	const signInLocal = async (email, password, succesCb, errorCb) => {
 		const url = `${apiConfig.baseURL}/auth/signin`;
 
 		const body = {
@@ -52,7 +48,7 @@ const AuthProvider = ({
 		};
 
 		const myHeaders = {
-			// 'Accept': 'application/json',
+			'Accept': 'application/json',
 			'Content-Type': 'application/json'
 		}
 		const options = {
@@ -63,15 +59,21 @@ const AuthProvider = ({
 		};
 
 		const response = await fetch(`${url}`, options);
-		const user = await response.json();
-
-		localStorage.setItem('mern:authUser', JSON.stringify(user));
-		setCurrentUser(user);
-
-		return user;
+		const user = await response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((response) => {
+				localStorage.setItem('mern:authUser', response.token);
+				setCurrentUser(verifyUserFromLocalStorage);
+				succesCb();
+			})
+			.catch((error) => {
+				errorCb(error);
+			})
 	}
 
-	const signUpLocal = async (email, password, passwordConfirmation, cb) => {
+	const signUpLocal = async (email, password, passwordConfirmation, succesCb, errorCb) => {
 		let url = `${apiConfig.baseURL}/auth/signup`;
 
 		const formData = new FormData();
@@ -101,11 +103,12 @@ const AuthProvider = ({
 				return toolBox.handleFetchError(res);
 			})
 			.then((response) => {
-				localStorage.setItem('mern:authUser', JSON.stringify(response.token));
+				localStorage.setItem('mern:authUser', response.token);
 				setCurrentUser(response);
+				succesCb();
 			})
 			.catch((error) => {
-				cb(error);
+				errorCb(error);
 			})
 	}
 

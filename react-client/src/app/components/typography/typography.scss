@@ -9,4 +9,10 @@
 .error-field {
 	color: var(--secondary-color);
 	font-size: var(--font-size-small-lg);
+	display: none;
+}
+
+
+.error-field--show {
+	display: inline;
 }

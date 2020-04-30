@@ -6,7 +6,7 @@ const PageTitle = (props) => {
 
 	return (
 		<h1 className="page-title">
-			{props.value}
+			{props.children}
 		</h1>
 	);
 };
