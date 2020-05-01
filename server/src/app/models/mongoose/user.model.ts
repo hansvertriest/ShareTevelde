@@ -137,8 +137,6 @@ userSchema.methods.comparePassword = function(candidatePassword: String, cb: Fun
 	});
 };
 
-
-
 const UserModel = mongoose.model < IUser > ('User', userSchema);
 
 const UserModelProperties = Object.keys(userSchema.paths);

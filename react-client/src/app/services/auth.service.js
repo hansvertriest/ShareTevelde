@@ -13,6 +13,7 @@ const AuthContext = createContext();
 const useAuth = () => useContext(AuthContext);
 
 const AuthProvider = ({children}) => {
+	const BASE_URL = `${apiConfig.baseURL}`;
 
 	const verifyUserFromLocalStorage = () => {
 		if (localStorage.getItem('mern:authUser')) {
@@ -40,7 +41,7 @@ const AuthProvider = ({children}) => {
 	const [currentUser, setCurrentUser] = useState(verifyUserFromLocalStorage);
 
 	const signInLocal = async (email, password, succesCb, errorCb) => {
-		const url = `${apiConfig.baseURL}/auth/signin`;
+		const url = `${BASE_URL}/auth/signin`;
 
 		const body = {
 			email,
@@ -74,7 +75,7 @@ const AuthProvider = ({children}) => {
 	}
 
 	const signUpLocal = async (email, password, passwordConfirmation, succesCb, errorCb) => {
-		let url = `${apiConfig.baseURL}/auth/signup`;
+		let url = `${BASE_URL}/auth/signup`;
 
 		const formData = new FormData();
 		formData.append('email', email);

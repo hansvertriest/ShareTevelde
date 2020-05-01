@@ -5,6 +5,7 @@ import Logger, { ILogger } from '../../services/logger';
 import { IPost, PostModel  } from '../../models/mongoose';
 import { PictureModel, IPicture,  AssignmentModel, IAssignment, IUser, IFeedback  } from '../../models/mongoose';
 import {DBOperations} from '../../services/database';
+import CourseController from './CourseController';
 
 interface IPostModifications {
 	assignment: IAssignment['_id'];
@@ -95,6 +96,8 @@ class PostController {
 		try {
 			// get parameters and keys
 			const params = req.query;
+			const limit = parseInt(req.query.limit)
+			const pageNr = parseInt(req.query.pageNr)
 
 			// sanitize parameters
 			const sanitizedParams: any = DBOperations.sanitizeParameters(params);
@@ -103,7 +106,7 @@ class PostController {
 			const filter = DBOperations.createFilter(sanitizedParams);
 
 			// get posts
-			const post: IPost[] = await PostModel.find(filter)
+			let posts: IPost[] = await PostModel.find(filter)
 				.populate({
 					path: 'assignment',
 					populate: {
@@ -113,9 +116,12 @@ class PostController {
 				.populate('pictures')
 				.populate('user', 'profile.username _id')
 				.exec();
+				
+			// paginate
+			if ( limit && pageNr) posts = DBOperations.paginate(posts, limit, pageNr);
 
-			if (post.length !== 0) {
-				return res.status(200).send(post);
+			if (posts.length !== 0) {
+				return res.status(200).send(posts);
 			} else {
 				throw {code: 404, msg: 'No posts found.'}
 			}

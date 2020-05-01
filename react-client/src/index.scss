@@ -2,51 +2,56 @@
 
 // CSS RESET
 * {
-	box-sizing: border-box;
+    box-sizing: border-box;
 }
 
-p{
-	margin: 0;
+p {
+    margin: 0;
 }
 
-textarea:focus, input:focus{
+textarea:focus,
+input:focus {
     outline: none;
 }
 
 // GLOBAL STYLING
 
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-	'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-	sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: var(--bg-color);
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--bg-color);
 }
 
 .page {
-	margin: 0 auto;
-	width: 33vw;
-	max-width: var(--max-page-width);
-	min-width: var(--min-page-width-lg);
-	grid-column-start: 2;
+    margin: 0 auto;
+    width: 33vw;
+    max-width: var(--max-page-width);
+    min-width: var(--min-page-width-lg);
+    grid-column-start: 2;
 }
 
 .page__main {
-	display: grid;
-	grid-template-columns: repeat(6, 1fr);
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+}
+
+.page__main--full-screen  {
+    height: 100vh;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 // small screen
-@media only screen and (max-width : var(--max-page-width)) {
-	.page {
-		min-width: var(--min-page-width-sm);
-	}
+@media only screen and (max-width : var(--breakpoint)) {
+    .page {
+        min-width: var(--min-page-width-sm);
+    }
 }
 
 // medium screen

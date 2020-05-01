@@ -6,7 +6,7 @@ const PageLayout = ({children}) => {
   return (
     <div className="page">
       <Header />
-      <main className="page__main">
+      <main className={`page__main `}>
         {children}
       </main>
       <Footer />

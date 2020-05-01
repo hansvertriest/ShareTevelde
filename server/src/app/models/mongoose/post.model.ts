@@ -1,8 +1,11 @@
 import {
 	default as mongoose,
 	Document,
-	Schema
+	Schema,
+	PaginateModel
 } from 'mongoose';
+
+import { default as paginate } from 'mongoose-paginate';
 
 import {
 	IAssignment
@@ -131,7 +134,7 @@ const postSchema: Schema = new Schema({
 	},
 });
 
-
+postSchema.plugin(paginate);
 const PostModel = mongoose.model < IPost > ('post', postSchema);
 
 // const AssignmentModelKeys = Object.keys(assignmentSchema.paths);

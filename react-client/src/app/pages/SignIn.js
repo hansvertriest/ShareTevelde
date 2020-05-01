@@ -36,13 +36,13 @@ const SignIn = ({children}) => {
 
 
 	return (
-		<div className="page__signup">
+		<div className="page__signin">
 			<Logo margin="20px auto"/>
-			<div className="signup__title">
+			<div className="signin__title">
 				<PageTitle> Login </PageTitle>
 				<TertiaryButton  href='/auth/signup'>Nog geen account?</TertiaryButton>
 			</div>
-			<form id="signup-form" method="post" action="/auth/signup">
+			<form id="signin-form" method="post" action="/auth/signup">
 				<InputFieldText 
 					id="signin-email" 
 					name="email" 
@@ -56,7 +56,7 @@ const SignIn = ({children}) => {
 				/>
 				<p className="error-field" id="error-field"></p>
 				<TertiaryButton  href="#">Wachtwoord vergeten?</TertiaryButton>
-				<div className="signup__button-container">
+				<div className="signin__button-container">
 					<PrimaryButton  onClick={(ev) => submitSignIn(ev)}> Login </PrimaryButton>
 					<SecondaryButton  onClick={(ev) => loginGoogle(ev)}> Google </SecondaryButton>
 				</div>

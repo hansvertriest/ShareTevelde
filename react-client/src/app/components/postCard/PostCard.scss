@@ -1,0 +1,14 @@
+.post-card {
+	width: 100%;
+	.post-card__img {
+		width: 100%;
+		height: 500px;
+		background-color: blue;
+		// transform: translate(-50%, -50%);
+
+		img {
+			width: 100%;
+			height: 100%;
+		}
+	}
+}

@@ -18,7 +18,7 @@ import {
 
 class DBOperations {
 	static sanitizeParameters(parameters: any, prefix: string = ''): any {
-		const paramKeys: string[] = Object.keys(parameters);
+		const paramKeys: string[] = Object.keys(parameters).filter((param: string) => ! ['pageNr', 'limit'].includes(param));
 		const sanitizedParams: any = {};
 
 		paramKeys.forEach((paramKey: string) => {
@@ -264,6 +264,10 @@ class DBOperations {
 					rej(err);
 				});
 		});
+	}
+
+	static paginate(docs: any[], limit: number, pageNr: number): any[] {
+		return docs.slice(pageNr * limit, (pageNr * limit) + limit);
 	}
 }
 

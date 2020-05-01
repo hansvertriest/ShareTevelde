@@ -4,9 +4,9 @@ import './footer.scss';
 
 const Footer = ({children}) => {
   return (
-    <header className="page__footer">
+    <footer className="page__footer">
       FOOTER
-    </header>
+    </footer>
   );
 };
 
