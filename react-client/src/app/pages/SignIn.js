@@ -1,4 +1,4 @@
-import { default as React, useState, useEffect } from 'react';
+import { default as React } from 'react';
 
 import { useAuth } from '../services';
 import { PageTitle } from '../components/typography';
@@ -42,7 +42,7 @@ const SignIn = ({children}) => {
 				<PageTitle> Login </PageTitle>
 				<TertiaryButton  href='/auth/signup'>Nog geen account?</TertiaryButton>
 			</div>
-			<form id="signin-form" method="post" action="/auth/signup">
+			<form id="signin-form" method="post" action="/auth/signin">
 				<InputFieldText 
 					id="signin-email" 
 					name="email" 

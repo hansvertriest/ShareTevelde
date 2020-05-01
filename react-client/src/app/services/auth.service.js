@@ -60,7 +60,7 @@ const AuthProvider = ({children}) => {
 		};
 
 		const response = await fetch(`${url}`, options);
-		const user = await response.json()
+		await response.json()
 			.then((res) => {
 				return toolBox.handleFetchError(res);
 			})
@@ -99,7 +99,7 @@ const AuthProvider = ({children}) => {
 		};
 
 		const response = await fetch(`${url}`, options);
-		const user = await response.json()
+		await response.json()
 			.then((res) => {
 				return toolBox.handleFetchError(res);
 			})

@@ -1,4 +1,4 @@
-import { default as React, useState, useContext, createContext, useEffect } from 'react';
+import { default as React, useState, useContext, createContext } from 'react';
 
 import { apiConfig } from '../config';
 import { toolBox } from '../utilities';
@@ -10,7 +10,7 @@ const ApiProvider = ({children}) => {
   const BASE_URL = `${apiConfig.baseURL}`;
 //  OLD=================
   const [userId, setUserId] = useState('5e81f5fae66709437c31577c'); // placeholder
-  const [userProfile, setUSerProfile] = useState({});
+  const [userProfile] = useState({});
 
 //   useEffect(() => {
 //     fetch( `${BASE_URL}/user/${userId}`)
@@ -32,8 +32,7 @@ const ApiProvider = ({children}) => {
 	const getPosts = async (filters, pageNr, limit) => {
 		// construct query
 		const url = `${BASE_URL}/post/all`;
-		const queryUrl = toolBox.parametersToQuery(url, filters, (pageNr && limit) ? { pageNr, limit } : undefined);
-		
+		const queryUrl = toolBox.parametersToQuery(url, filters, (pageNr !== undefined && limit !== undefined) ? { pageNr, limit } : undefined);
 		// fetch posts
 		const response = await toolBox.fetchWithStandardOptions(queryUrl, 'GET');
 		return response.json()
@@ -44,6 +43,7 @@ const ApiProvider = ({children}) => {
 				return res;
 			})
 			.catch((error) => {
+				console.log(error);
 				return undefined
 			})
 	}

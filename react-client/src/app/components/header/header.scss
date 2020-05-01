@@ -1,3 +1,5 @@
+@import '../../../variables.scss';
+
 .page__header {
 	display: flex;
 	justify-content:space-between;
@@ -7,10 +9,11 @@
 	}
 
 	img {
-		border: 2px solid var(--primary-color);
+		border: 2px solid $primary-color;
 		border-radius: 50%;
 		width: 51px;
 		height: 51px;
 		object-fit: cover;
+		box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
 	}
 }

@@ -1,24 +1,27 @@
+@import '../../../../variables.scss';
+
 .primary-button {
-	border: none;
-	background-color: var(--primary-color-shade-dark);
-	padding: 6px  10px;
-	width: 250px;
-	margin: 15px 0;
-	border-radius: 25px;
-	text-align: center;
-	font-family: var(--font-family-buttons);
-	text-transform: uppercase;
-	font-weight: 600;
-	font-size: var(--font-size-primary-button-lg);
-	color: var(--primary-color-shade-light);
-	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-	cursor:pointer;
+    border: none;
+    background-color: $primary-color-shade-dark;
+    padding: 6px 10px;
+    width: 250px;
+    max-width: 100%;
+    margin: 15px auto;
+    border-radius: 25px;
+    text-align: center;
+    font-family: $font-family-buttons;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: $font-size-primary-button-lg;
+    color: $primary-color-shade-light;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
 }
 
 .primary-button:hover {
-	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
 }
 
 .primary-button:active {
-	box-shadow: 0px 0px 3px var(--primary-color);
+    box-shadow: 0px 0px 3px $primary-color;
 }

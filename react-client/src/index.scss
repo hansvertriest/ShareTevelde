@@ -5,8 +5,10 @@
     box-sizing: border-box;
 }
 
-p {
+p, h2 {
     margin: 0;
+	font-weight: 300;
+	color:$white;
 }
 
 textarea:focus,
@@ -18,25 +20,27 @@ input:focus {
 
 body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
         'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
         sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: var(--bg-color);
+    background-color: $bg-color;
 }
 
 .page {
     margin: 0 auto;
     width: 33vw;
-    max-width: var(--max-page-width);
-    min-width: var(--min-page-width-lg);
-    grid-column-start: 2;
+    max-width: $max-page-width;
+    min-width: $min-page-width-lg;
+	grid-column-start: 2;
 }
 
 .page__main {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+	grid-template-columns: repeat(6, 1fr);
+	column-gap: normal;
+	
 }
 
 .page__main--full-screen  {
@@ -47,13 +51,26 @@ code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-// small screen
-@media only screen and (max-width : var(--breakpoint)) {
-    .page {
-        min-width: var(--min-page-width-sm);
+// medium screen
+@media only screen and (min-width : $breakpoint) and (max-width : $breakpoint-md) {
+	.page {
+        min-width: $min-page-width-md;
+        max-width: $min-page-width-md;
     }
 }
 
-// medium screen
+// small screen
+@media only screen and (min-width : $breakpoint-xsm) and (max-width : $breakpoint) {
+	.page {
+        min-width: $min-page-width-sm;
+        max-width: $min-page-width-sm;
+    }
+}
 
-// large screen
+// extra small screen
+@media only screen and (max-width : $breakpoint-xsm) {
+	.page {
+        min-width: $min-page-width-sm;
+        max-width: $min-page-width-sm;
+    }
+}

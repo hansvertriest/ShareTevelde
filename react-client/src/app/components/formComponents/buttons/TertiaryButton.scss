@@ -1,14 +1,16 @@
+@import '../../../../variables.scss';
+
 .tertiary-button {
-	color: var(--white-shade);
+	color: $white-shade;
 	text-decoration: underline;
-	font-size: var(--font-size-small-lg);
+	font-size: $font-size-small-lg;
 }
 
 .tertiary-button:hover {
-	color: var(--secondary-color);
+	color: $secondary-color;
 }
 
 .tertiary-button:active {
-	color: var(--secondary-color);
+	color: $secondary-color;
 	text-decoration: none;
 }

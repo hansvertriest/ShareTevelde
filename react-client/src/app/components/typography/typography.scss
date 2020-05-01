@@ -1,18 +1,66 @@
+@import '../../../variables.scss';
+
 .page-title {
-	color: var(--white);
-	font-family: var(--font-family-page-title);
+	color: $white;
+	font-family: $font-family-page-title;
 	font-weight: 400;
-	font-size: var(--font-size-page-title-lg);
+	font-size: $font-size-page-title-lg;
 	margin: 0;
 }
 
 .error-field {
-	color: var(--secondary-color);
-	font-size: var(--font-size-small-lg);
+	color: $secondary-color;
+	font-size: $font-size-small-lg;
 	display: none;
 }
 
 
 .error-field--show {
 	display: inline;
+}
+
+.kop-titel {
+	font-family: $font-family-h2;
+	font-size: $font-size-h2-lg;
+	color: $white;
+	text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+	margin-bottom: 20px;
+}
+
+.card-info {
+	font-size: $font-size-card-info;
+	font-weight: 200;
+	color: $white-shade;
+	span {
+		color: $primary-color;
+	}
+}
+
+
+// small screen
+@media only screen and (min-width : $breakpoint-xsm) and (max-width : $breakpoint) {
+    .page-title {
+		font-size: $font-size-page-title-lg;
+	}
+	
+	.error-field {
+	}
+	
+	
+	.error-field--show {
+	}
+}
+
+// extra small screen
+@media only screen and (max-width : $breakpoint-xsm) {
+    .page-title {
+		font-size: $font-size-page-title-xsm;
+	}
+	
+	.error-field {
+	}
+	
+	
+	.error-field--show {
+	}
 }

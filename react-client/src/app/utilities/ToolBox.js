@@ -1,7 +1,7 @@
 class ToolBox {
 	handleFetchError = (res) => {
 		if (res.code) {
-			throw {msg: res.msg};
+			throw {msg: res.msg}; // eslint-disable-line no-throw-literal
 		}
 		return res;
 	}
@@ -10,12 +10,11 @@ class ToolBox {
 		let query = '?';
 
 		Object.keys(params).forEach((key) => {
-			query = query + `${key}=${params[key]}` + '&';
+			query = query + `${key}=${params[key]}&`;
 		});
-
 		if (pageParams) 
 			Object.keys(pageParams).forEach((key) => {
-				query = query + `${key}=${pageParams[key]}` + '&';
+				query = query + `${key}=${pageParams[key]}&`;
 			});
 		
 			query = query.substring(0, query.length - 1);

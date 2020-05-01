@@ -1,4 +1,4 @@
-import { default as React, useState, useEffect } from 'react';
+import { default as React } from 'react';
 
 import { useAuth } from '../services';
 import { PageTitle } from '../components/typography';
@@ -19,7 +19,8 @@ const SignUp = ({children}) => {
 
 		signUpLocal(
 			email, 
-			password, 
+			password,
+			passwordConfirmation,
 			(response) => {
 
 			},
@@ -36,6 +37,7 @@ const SignUp = ({children}) => {
 	}
 
 	const validateEmail = (ev) => {
+		// eslint-disable-next-line no-useless-escape
 		const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		if (re.test(String(ev.target.value).toLowerCase()) && ev.target.value.length > 0) {
 			return {

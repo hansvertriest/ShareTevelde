@@ -1,14 +1,47 @@
+@import '../../../variables.scss';
+
 .post-card {
 	width: 100%;
+	margin: 20px 0;
+
 	.post-card__img {
 		width: 100%;
-		height: 500px;
-		background-color: blue;
-		// transform: translate(-50%, -50%);
-
+		background-color: $bg-color-shade-light;
+		border-radius: $radius-lg;
 		img {
 			width: 100%;
 			height: 100%;
+			border-radius: $radius-lg;
+			box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
 		}
+	}
+
+	.post-card__info {
+		z-index: -1;
+		position: relative;
+		bottom: 200px;
+		padding: 30px 20px;
+		background-color: $bg-color-shade-dark;
+		border-radius: $radius-lg;
+		box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+		transition: bottom 0.4s ease-out;
+		
+		.info__footer {
+			display: flex;
+			justify-content: space-between;
+			align-items:center;
+			
+			.info__footer__likes {
+				display: flex;
+				align-items:center;
+				img {
+					width: 30px;
+					margin-right: 10px;
+				}
+			}
+		}
+
+		
 	}
 }

@@ -1,7 +1,5 @@
 import { default as React } from 'react';
 
-import { Footer, Header } from '../components';
-
 const SignUpInLayout = ({children}) => {
   return (
     <div className="page">

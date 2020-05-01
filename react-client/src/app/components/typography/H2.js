@@ -2,13 +2,13 @@ import { default as React } from 'react';
 
 import './typography.scss';
 
-const PageTitle = (props) => {
+const KopTitel = (props) => {
 
 	return (
-		<h1 className="page-title">
+		<h2 className="kop-titel">
 			{props.children}
-		</h1>
+		</h2>
 	);
 };
 
-export default PageTitle;
+export default KopTitel;
