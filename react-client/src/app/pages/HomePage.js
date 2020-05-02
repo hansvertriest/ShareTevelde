@@ -1,8 +1,8 @@
 import { default as React, useState, useEffect, useLayoutEffect} from 'react';
-import { default as debounce } from 'debounce'; 
 
 import { useApi } from '../services';
 import { PostCard } from '../components/postCard';
+import { SearchContainer } from '../components/formComponents';
 import './HomePage.scss';
 
 const HomePage = ({children}) => {
@@ -11,38 +11,18 @@ const HomePage = ({children}) => {
 	const postsLimit = 2;
 
 	const [posts, setPosts] = useState([]);
-	console.log('Before postPqge');
 	const [postPage, setPostPage] = useState(0);
 	const [isFetchingPosts, setIsFetchingPosts] = useState(false);
-	const [updatePostPage, setUpdatePostPage] = useState(false);
-	
-	// loading new posts
-	// const loadNextPages = 
-	// 	debounce(() => {
-	// 		if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight ) {
-	// 			console.log('--------------')
-	// 			loadNewPage();
-	// 		}
-	// 	}, 250);
+	const [updatePostPage, setUpdatePostPage] = useState(false); // set to true when next page hast to be loaded
 
-	const loadNextPages = () => {
+	// if scrolled to bottom update postPage
+	const checkIfBottomOfPage = () => {
 		if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && !isFetchingPosts) {
-			// console.log('--------------')
-			// setIsFetchingPosts(true);
-			// loadNewPage();
 			setUpdatePostPage(true);
 		}
 	}
 
-	const loadNewPage = () => {
-		console.log('page' + postPage + 1);
-		setPostPage(postPage + 1);
-	}
-
-	// fetching posts
-
 	// set dimensions of pictures
-
 	const setSquareDimensions = () => {
 		const pictures = document.getElementsByClassName('post-card__img');
 		const elementsAmount = pictures.length;
@@ -51,37 +31,59 @@ const HomePage = ({children}) => {
 		}
 	}
 
+	const updateLoadingText = (text) => {
+		const element = document.querySelector('.loading-text p');
+		element.innerHTML = text;
+		
+		const iconElement = document.querySelector('.loading-text img');
+		iconElement.style.display = 'none';
+	}
 
 	// init page
 
 	useLayoutEffect(() => {
-		console.log('effect 1')
+		// listener for checking if bottom of page
+		window.addEventListener('scroll', checkIfBottomOfPage);
 		
+		// listener for setting square dimensions
 		window.addEventListener('resize', () => {
 			setSquareDimensions();
 		});
 
 	}, []);
 
+	// Fetch posts when the page is updated
 	useEffect(() => {
-		console.log('effect 2')
-		
-		window.addEventListener('scroll', loadNextPages);
-		// fetch the posts
 		const fetchPosts = async (page) => {
+			// get docs
 			const docs = await getPosts({}, page, postsLimit);
-			const postElements = docs.map((doc) => {
-				return <PostCard key={doc._id} id={`post-card__${doc._id}`} postData={doc}/>
-			});
-			console.log('fetching' + postPage);
-			setPosts([...posts ,...postElements]);
-			setIsFetchingPosts(false);
-			setSquareDimensions();
+
+			// if no posts were found 
+			if(docs.code === 404) {
+				updateLoadingText('Geen berichten meer gevonden.');
+			} else if (docs.code) {
+				updateLoadingText('Oepsiepoepsie! Er is een fout opgetreden tijden het ophalen van de berichten.');
+			} else {
+				// construct jsx elements
+				const postElements = docs.map((doc) => {
+					return <PostCard key={doc._id} id={`post-card__${doc._id}`} postData={doc}/>
+				});
+	
+				// update elements
+				setPosts([...posts ,...postElements]);
+	
+				// conclude fetching
+				setIsFetchingPosts(false);
+	
+				// set dimensions of new posts
+				setSquareDimensions();
+			}
 		}
 
 		fetchPosts(postPage);
 	}, [postPage])
 
+	// update page when updatePostPage is set to true
 	useEffect(() => {
 		if (updatePostPage) setPostPage(postPage + 1);
 		setUpdatePostPage(false);
@@ -90,13 +92,17 @@ const HomePage = ({children}) => {
 
 
 	return (
-		<div className="posts-container">
-			{posts}
-			<div className="loading-text">
-				<p>Berichten worden geladen...</p>
-				<img src="./icons/loader.svg" als="loading-icon"></img>
+		<div className="page__main-container">
+			<div className="posts-container">
+				{posts}
+				<div className="loading-text">
+					<p>Berichten worden geladen...</p>
+					<img src="./icons/loader.svg" als="loading-icon"></img>
+				</div>
 			</div>
-			<button onClick={() =>loadNewPage()}>Haha</button>
+			<div className="aside-container">
+				<SearchContainer />
+			</div>
 		</div>
   	);
 };

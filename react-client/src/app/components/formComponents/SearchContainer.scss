@@ -1,0 +1,109 @@
+@import '../../../variables.scss';
+
+.search-container {
+	width: 100%;
+
+	.search-container__input {
+		width: 100%;
+		background-color: $bg-color-shade-light;
+        border-radius: $radius-lg;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        border: none;
+        height: 43px;
+        width: 100%;
+		padding: 5px 20px;
+		margin-top: 10px;
+		position:relative;
+		top: 10px;
+
+		font-family: $font-family-placeholder;
+		font-size: $font-size-small-lg;
+		font-weight: 300;
+		letter-spacing: $font-spacing-placeholder-lg;
+        color: $white;
+	}
+
+	.search-results {
+		padding: 10px;
+		padding-top: 20px;
+		background-color: $bg-color-shade-dark;
+
+		.no-results {
+			font-size: 14px;
+			margin-bottom: 10px;
+			color: $white-shade;
+			margin-left: 10px;
+		}
+		
+		.search-results__users {
+			max-height: 220px;
+			overflow:auto;
+			margin-bottom: 20px;
+
+			.kop-titel {
+				font-size: 18px;
+			}
+
+			.search-result-user {
+				display: flex;
+				align-items:center;
+				height: 52px;
+				margin: 10px 0;
+				padding: 15px 10px;
+				img {
+					width: 45px;
+					height: 45px;
+					object-fit: cover;
+					border: 2px solid $primary-color;
+					border-radius: 50%;
+				}
+				p {
+					margin-left: 10px;
+					font-size: $font-size-xsmall-lg;
+					color: $white;
+				}
+			}
+
+			.search-result-user:hover {
+				background-color: $bg-color-shade-light;
+				border-radius: 5px;
+			}
+		}
+
+		.search-results__assignments {
+			.kop-titel {
+				font-size: 18px;
+			}
+			.search-result-assignment__title {
+				border-bottom: 1px solid $bg-color-shade-light;
+				font-size: 14px;
+				margin-bottom: 10px;
+				padding: 5px 10px;
+			}
+			.search-result-assignment__title:hover {
+				background-color: $bg-color-shade-light;
+				border-radius: 5px;
+			}
+		}
+	}
+}
+
+.search-container__input::-webkit-input-placeholder {
+    /* Chrome/Opera/Safari */
+    color: $white-shade;
+}
+
+.search-container__input::-moz-placeholder {
+    /* Firefox 19+ */
+    color: $white-shade;
+}
+
+.search-container__input:-ms-input-placeholder {
+    /* IE 10+ */
+    color: $white-shade;
+}
+
+.search-container__input:-moz-placeholder {
+    /* Firefox 18- */
+    color: $white-shade;
+}

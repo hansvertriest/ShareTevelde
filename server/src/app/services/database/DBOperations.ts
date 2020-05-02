@@ -26,7 +26,6 @@ class DBOperations {
 				const sanitizedArray = JSON.parse(parameters[paramKey]).map((str: string) => str.trim());
 				sanitizedParams[`${prefix}${paramKey}`] = sanitizedArray;
 			} else if (parameters[paramKey]) {
-				console.log(parameters[paramKey]);
 				sanitizedParams[`${prefix}${paramKey}`] = parameters[paramKey].trim();
 			}
 		});
@@ -40,11 +39,22 @@ class DBOperations {
 		const filter: any = (includeSoftDeleted) ? {} : {
 			softDeleted: false
 		};
+
 		paramKeys.forEach((paramKey: string) => {
-			const value = (Array.isArray(parameters[paramKey])) ? {
-				$in: parameters[paramKey]
-			} : parameters[paramKey];
-			filter[paramKey] = value;
+			if (Array.isArray(parameters[paramKey]))  {
+				const value = {$in: parameters[paramKey]};
+				filter[paramKey] = value;
+			} else if (paramKey.slice(-5) === ':like') {
+				const key = paramKey.slice(0, paramKey.length - 5);
+				const value = new RegExp(parameters[paramKey], "i") ;
+				filter[key] = value;
+			} else {
+				filter[paramKey] = parameters[paramKey]
+			}
+			// const value = (Array.isArray(parameters[paramKey])) 
+			// 	? {
+			// 		$in: parameters[paramKey]
+			// 	} : parameters[paramKey];
 		});
 		return filter;
 	}
@@ -267,6 +277,9 @@ class DBOperations {
 	}
 
 	static paginate(docs: any[], limit: number, pageNr: number): any[] {
+		if (docs.length <= limit) {
+			return docs;
+		}
 		return docs.slice(pageNr * limit, (pageNr * limit) + limit);
 	}
 }

@@ -44,7 +44,47 @@ const ApiProvider = ({children}) => {
 			})
 			.catch((error) => {
 				console.log(error);
-				return undefined
+				return error;
+			})
+	}
+
+	// USERS functions
+	const getUsers = async (filters, pageNr, limit) => {
+		// construct query
+		const url = `${BASE_URL}/user/all`;
+		const queryUrl = toolBox.parametersToQuery(url, filters, (pageNr !== undefined && limit !== undefined) ? { pageNr, limit } : undefined);
+		// fetch posts
+		const response = await toolBox.fetchWithStandardOptions(queryUrl, 'GET');
+		return response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
+	}
+
+	// ASSIGNMENTS functions
+	const getAssignments = async (filters, pageNr, limit) => {
+		// construct query
+		const url = `${BASE_URL}/assignment/all`;
+		const queryUrl = toolBox.parametersToQuery(url, filters, (pageNr !== undefined && limit !== undefined) ? { pageNr, limit } : undefined);
+		// fetch posts
+		const response = await toolBox.fetchWithStandardOptions(queryUrl, 'GET');
+		return response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
 			})
 	}
 
@@ -76,6 +116,8 @@ const ApiProvider = ({children}) => {
 			putTextToMongo, 
 			postImageToMongo,
 			getPosts,
+			getUsers,
+			getAssignments,
 			}}>
       	{children}
     	</ApiContext.Provider>

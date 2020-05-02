@@ -55,7 +55,7 @@ class PostController {
 					return res.status(500).send({code: 500, msg: 'Unknown error occured.'});
 				});
 		}catch (error) {
-			if (error.code) return res.status(error.code).send(error.msg);
+			if (error.code) return res.status(error.code).send(error);
 			this.logger.error('Unknown error occured while creating post.', error);
 			return res.status(500).send({code: 500, msg: 'Unknown error occured.'});
 		}
@@ -96,8 +96,8 @@ class PostController {
 		try {
 			// get parameters and keys
 			const params = req.query;
-			const limit = parseInt(req.query.limit)
-			const pageNr = parseInt(req.query.pageNr)
+			const limit = (req.query.limit) ? parseInt(req.query.limit) : undefined;
+			const pageNr = (req.query.pageNr) ? parseInt(req.query.pageNr) : undefined;
 
 			// sanitize parameters
 			const sanitizedParams: any = DBOperations.sanitizeParameters(params);
@@ -116,11 +116,13 @@ class PostController {
 				.populate('pictures')
 				.populate('user', 'profile.username _id')
 				.exec();
-				
+			
 			// paginate
-			if ( limit && pageNr) posts = DBOperations.paginate(posts, limit, pageNr);
+			if ( limit !== undefined && pageNr !== undefined){
+				 posts = DBOperations.paginate(posts, limit, pageNr);
+			}
 
-			if (posts.length !== 0) {
+			if (posts.length > 0) {
 				return res.status(200).send(posts);
 			} else {
 				throw {code: 404, msg: 'No posts found.'}

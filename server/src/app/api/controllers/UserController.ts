@@ -157,6 +157,8 @@ class UserController {
 		try{
 			// get parameters and keys
 			const params = req.query;
+			const limit = (req.query.limit) ? parseInt(req.query.limit) : undefined;
+			const pageNr = (req.query.limit) ? parseInt(req.query.pageNr) : undefined;
 
 			// sanitize parameters
 			const sanitizedParams: any = DBOperations.sanitizeParameters(params, 'profile.');
@@ -166,7 +168,11 @@ class UserController {
 			
 			// get users
 			let users: IUser[] = await UserModel.find(filter).select('profile id').exec();
-
+			
+			// paginate
+			if ( limit !== undefined && pageNr !== undefined){
+				users = DBOperations.paginate(users, limit, pageNr);
+			}
 			// send response
 			if (users.length > 0) {
 				return res.status(200).json(users);

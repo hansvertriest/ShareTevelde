@@ -1,27 +1,39 @@
 @import '../../variables.scss';
 
-.posts-container {
-	grid-column: span 4;
+.page__main-container {
+	grid-column: span 6;
+    display: grid;
+	grid-template-columns: repeat(6, 1fr);
+	column-gap: 20px;
 
-	.loading-text {
-		display: flex;
-		flex-direction: column;
-		align-items:center;
-		border-top: 2px solid $bg-color-shade-dark;
-		p {
-			color: $bg-color-shade-light;
-			font-weight: 400;
-			text-align: center;
-			padding: 20px;
-		}
-		img {
-			width: 20px;
-
-			animation: rotating 2s cubic-bezier(0.5, 0, 0, 0.6);
-    		animation-iteration-count: infinite;
+	.posts-container {
+		grid-column: span 4;
+		.loading-text {
+			display: flex;
+			flex-direction: column;
+			align-items:center;
+			border-top: 2px solid $bg-color-shade-dark;
+			p {
+				color: $bg-color-shade-light;
+				font-weight: 400;
+				text-align: center;
+				padding: 20px;
+			}
+			img {
+				width: 20px;
+	
+				animation: rotating 2s cubic-bezier(0.5, 0, 0, 0.6);
+				animation-iteration-count: infinite;
+			}
 		}
 	}
+
+	.aside-container {
+		grid-column: span 2;
+	}
 }
+
+
 
 @keyframes rotating {
 	from {

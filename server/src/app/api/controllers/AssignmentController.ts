@@ -75,6 +75,8 @@ class AssignmentController {
 		try {
 			// get parameters and keys
 			const params = req.query;
+			const limit = (req.query.limit) ? parseInt(req.query.limit) : undefined;
+			const pageNr = (req.query.pageNr) ? parseInt(req.query.pageNr) : undefined;
 
 			// sanitize parameters
 			const sanitizedParams: any = DBOperations.sanitizeParameters(params);
@@ -83,10 +85,15 @@ class AssignmentController {
 			const filter = DBOperations.createFilter(sanitizedParams);
 
 			// get assignments
-			const assignments: IAssignment[] = await AssignmentModel
+			let assignments: IAssignment[] = await AssignmentModel
 				.find(filter)
 				.populate('courseId')
 				.exec();
+
+			// paginate
+			if ( limit !== undefined && pageNr !== undefined){
+				assignments = DBOperations.paginate(assignments, limit, pageNr);
+		   	}
 
 			// check output and send response
 			if (assignments.length > 0) {

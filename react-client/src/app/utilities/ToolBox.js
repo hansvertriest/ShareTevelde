@@ -1,7 +1,7 @@
 class ToolBox {
 	handleFetchError = (res) => {
 		if (res.code) {
-			throw {msg: res.msg}; // eslint-disable-line no-throw-literal
+			throw {code: res.code, msg: res.msg}; // eslint-disable-line no-throw-literal
 		}
 		return res;
 	}
