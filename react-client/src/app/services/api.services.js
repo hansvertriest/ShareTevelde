@@ -29,9 +29,9 @@ const ApiProvider = ({children}) => {
   }
 // =====================
 	// POSTS functions
-	const getPosts = async (filters, pageNr, limit) => {
+	const getPosts = async (filters, pageNr, limit, filtered = false) => {
 		// construct query
-		const url = `${BASE_URL}/post/all`;
+		const url = (filtered) ? `${BASE_URL}/post/all/filtered` : `${BASE_URL}/post/all`;
 		const queryUrl = toolBox.parametersToQuery(url, filters, (pageNr !== undefined && limit !== undefined) ? { pageNr, limit } : undefined);
 		// fetch posts
 		const response = await toolBox.fetchWithStandardOptions(queryUrl, 'GET');

@@ -1,8 +1,8 @@
-import { default as React, useState, useEffect, useLayoutEffect} from 'react';
+import { default as React, useState, useEffect, useLayoutEffect, Fragment} from 'react';
 
 import { useApi } from '../services';
 import { PostCard } from '../components/postCard';
-import { SearchContainer } from '../components/formComponents';
+import { SearchContainer, FilterContainer } from '../components/formComponents';
 import './HomePage.scss';
 
 const HomePage = ({children}) => {
@@ -14,12 +14,20 @@ const HomePage = ({children}) => {
 	const [postPage, setPostPage] = useState(0);
 	const [isFetchingPosts, setIsFetchingPosts] = useState(false);
 	const [updatePostPage, setUpdatePostPage] = useState(false); // set to true when next page hast to be loaded
+	const [filter, setFilter] = useState(undefined);
 
 	// if scrolled to bottom update postPage
 	const checkIfBottomOfPage = () => {
 		if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && !isFetchingPosts) {
 			setUpdatePostPage(true);
 		}
+	}
+
+	// apply filters
+	const applyFilters = async (ev, classFilter, schoolYearFilter) => {
+		setFilter({direction: classFilter, schoolyear: schoolYearFilter});
+		setPostPage(0);
+		setPosts([]);
 	}
 
 	// set dimensions of pictures
@@ -55,8 +63,9 @@ const HomePage = ({children}) => {
 	// Fetch posts when the page is updated
 	useEffect(() => {
 		const fetchPosts = async (page) => {
+			console.log(postPage);
 			// get docs
-			const docs = await getPosts({}, page, postsLimit);
+			const docs = (filter) ?  await getPosts(filter, page, postsLimit, true) : await getPosts({}, page, postsLimit) ;
 
 			// if no posts were found 
 			if(docs.code === 404) {
@@ -70,7 +79,11 @@ const HomePage = ({children}) => {
 				});
 	
 				// update elements
-				setPosts([...posts ,...postElements]);
+				if (filter && postPage === 0) {
+					setPosts([...postElements]);
+				} else {
+					setPosts([...posts ,...postElements]);
+				}
 	
 				// conclude fetching
 				setIsFetchingPosts(false);
@@ -81,7 +94,7 @@ const HomePage = ({children}) => {
 		}
 
 		fetchPosts(postPage);
-	}, [postPage])
+	}, [postPage, filter])
 
 	// update page when updatePostPage is set to true
 	useEffect(() => {
@@ -90,18 +103,31 @@ const HomePage = ({children}) => {
 	}, [updatePostPage]);
 
 
-
 	return (
 		<div className="page__main-container">
+			
+			<div className="aside-container aside-container--top">
+				<SearchContainer />
+				<FilterContainer onApply={applyFilters} position="top" />
+			</div>
 			<div className="posts-container">
 				{posts}
 				<div className="loading-text">
-					<p>Berichten worden geladen...</p>
-					<img src="./icons/loader.svg" als="loading-icon"></img>
+					{(posts.length > 0)
+					?
+						<Fragment>
+							<p>Berichten worden geladen...</p>
+							<img src="./icons/loader.svg" als="loading-icon"></img>
+						</Fragment>
+					:
+						<p>Geen berichten om te tonen.</p>
+					}
+					
 				</div>
 			</div>
-			<div className="aside-container">
+			<div className="aside-container aside-container--right">
 				<SearchContainer />
+				<FilterContainer onApply={applyFilters} position="right" />
 			</div>
 		</div>
   	);

@@ -6,7 +6,7 @@ const PrimaryButton = (props) => {
 	return(
 		<button
 			className="primary-button"
-			id={props.id || ''}
+			// id={props.id || ''}
 			onClick={props.onClick}
 		>
 			{props.children}

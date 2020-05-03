@@ -124,6 +124,7 @@ class ApiRouter {
 		this.router.put('/post', this.verifyJwt, this.postController.updateOwn);
 		this.router.get('/post', this.postController.getById);
 		this.router.get('/post/all', this.postController.getAll);
+		this.router.get('/post/all/filtered', this.postController.getAllFiltered);
 		this.router.get('/post/softDeleted/all', this.verifyJwtAndCheckAdmin, this.postController.getAllAndSoftDeleted);
 		this.router.delete('/post/own', this.verifyJwt, this.postController.softDeleteOwn);
 		this.router.delete('/post/byId', this.verifyJwtAndCheckAdmin, this.postController.softDeleteById);

@@ -9,6 +9,7 @@ const PostCard = (props) => {
 
 	const [data] = useState(props.postData);
 
+	console.log(props.postData._id)
 	// when picture is loaded
 	const pictureOnload = () => {
 		const loadingText = document.querySelector('.loading-text p');

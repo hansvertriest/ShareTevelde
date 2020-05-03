@@ -1,0 +1,67 @@
+@import '../../../variables.scss';
+
+.filter-container {
+	display:flex;
+	flex-direction: column;
+	.filter-container__header {
+		position: relative;
+		z-index:1;
+		margin-top: 20px;
+		padding: 5px 10px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		background-color: $bg-color-shade-dark;
+		border-radius: $radius-lg;
+		box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+		.kop-titel {
+			margin: 0;
+		}
+
+		img {
+			height: 18px;
+		}
+	}
+
+	.filter-container__header:hover {
+		background-color: $bg-color-shade-light;
+		cursor: pointer;
+	}
+
+	.filter-container__filter-body {
+		background-color: $bg-color-shade-dark;
+		padding: 20px 10px;
+		position: relative;
+		bottom: 10px;
+		box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+		border-radius: $radius-lg;
+
+		.kop-titel {
+			font-size: 18px;
+		}
+
+		.tussen-titel {
+			font-size: 14px;
+		}
+		
+		.primary-button {
+			font-size: 14px;
+			width: auto;
+			padding-left: 30px;
+			padding-right: 30px;
+			margin-left: auto !important;
+			margin-right: auto !important;
+		}
+	}
+
+	.filter-container__filter-body--hide {
+		display: none;
+	}
+
+	.filter-button-group {
+		display: flex;
+		justify-content: space-around;
+		flex-wrap: wrap;
+	}
+}

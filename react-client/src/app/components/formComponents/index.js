@@ -4,7 +4,9 @@ import InputFieldText from './InputFieldText';
 import PrimaryButton from './buttons/PrimaryButton';
 import SecondaryButton from './buttons/SecondaryButton';
 import TertiaryButton from './buttons/TertiaryButton';
+import OptionButton from './buttons/OptionButton';
 import SearchContainer from './SearchContainer';
+import FilterContainer from './FilterContainer';
 
 export {
 	ProfilePicture,
@@ -12,6 +14,8 @@ export {
 	InputFieldText,
 	PrimaryButton,
 	TertiaryButton,
+	OptionButton,
 	SecondaryButton,
-	SearchContainer
+	SearchContainer,
+	FilterContainer
 }

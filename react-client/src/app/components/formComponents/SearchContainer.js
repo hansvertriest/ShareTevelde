@@ -67,7 +67,6 @@ const SearchContainer = (props) => {
 			setAssignmentResults(undefined)
 		}
 	}
-
 	return(
 		<div 
 		className="search-container"

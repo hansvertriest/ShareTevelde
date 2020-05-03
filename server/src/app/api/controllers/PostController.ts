@@ -2,10 +2,10 @@ import { NextFunction, Request, Response } from 'express';
 import { default as mongoose, Connection, mongo } from 'mongoose';
 
 import Logger, { ILogger } from '../../services/logger';
-import { IPost, PostModel  } from '../../models/mongoose';
-import { PictureModel, IPicture,  AssignmentModel, IAssignment, IUser, IFeedback  } from '../../models/mongoose';
+import { IPost, PostModel } from '../../models/mongoose';
+import { PictureModel, IPicture,  AssignmentModel, IAssignment, ICourse, CourseModel, IFeedback  } from '../../models/mongoose';
 import {DBOperations} from '../../services/database';
-import CourseController from './CourseController';
+import { exec } from 'child_process';
 
 interface IPostModifications {
 	assignment: IAssignment['_id'];
@@ -13,6 +13,10 @@ interface IPostModifications {
 	pictures: IPicture['_id'][];
 }
 
+interface IPostFilter {
+	direction?: string;
+	schoolyear?: string;
+}
 
 class PostController {
 	private logger: Logger;
@@ -111,12 +115,57 @@ class PostController {
 					path: 'assignment',
 					populate: {
 						path: 'courseId',
-					},
+					}
 				})
 				.populate('pictures')
 				.populate('user', 'profile.username _id')
+				.sort([['_createdAt', 'desc']])
 				.exec();
 			
+			// paginate
+			if ( limit !== undefined && pageNr !== undefined){
+				 posts = DBOperations.paginate(posts, limit, pageNr);
+			}
+
+			if (posts.length > 0) {
+				return res.status(200).send(posts);
+			} else {
+				throw {code: 404, msg: 'No posts found.'}
+			}
+		} catch (error) {
+			if (error.code) return res.status(error.code).send(error);
+			this.logger.error('Unknown error occured while getting post.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
+		}
+	}
+
+	public getAllFiltered = async (req: Request, res: Response, next: NextFunction): Promise<Response<any>> => {
+		try {
+			// get parameters and keys
+			const params = req.query;
+			const limit = (req.query.limit) ? parseInt(req.query.limit) : undefined;
+			const pageNr = (req.query.pageNr) ? parseInt(req.query.pageNr) : undefined;
+			const { direction, schoolyear } = req.query;
+
+			// sanitize parameters
+			const sanitizedParams: any = DBOperations.sanitizeParameters(params);
+
+			// create filter
+			const filter: IPostFilter = DBOperations.createFilter(sanitizedParams);
+
+			// get fitting courses
+			let courses: ICourse[] = await CourseModel.find(filter)
+				.select('_id')
+				.exec()
+
+			const courseIds = courses.map((course) => course._id);
+
+			// get corresponding assignments
+			const assignmentIds = await DBOperations.getWithIds(AssignmentModel, 'courseId', courseIds, true)
+
+			// get corresponding posts
+			let posts: IPost[] = await DBOperations.getPostsWithIds(PostModel, 'assignment', assignmentIds)
+
 			// paginate
 			if ( limit !== undefined && pageNr !== undefined){
 				 posts = DBOperations.paginate(posts, limit, pageNr);
@@ -155,6 +204,7 @@ class PostController {
 				})
 				.populate('pictures')
 				.populate('user', 'profile.username _id')
+				.sort([['_createdAt', 'desc']])
 				.exec();
 
 			if (post.length > 0) {

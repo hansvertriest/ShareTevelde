@@ -276,6 +276,46 @@ class DBOperations {
 		});
 	}
 
+	static getWithIds(model: any, idKey: string, ids: string[], formatToIds: boolean = false): Promise<any[]> {
+		let results: any[] = [];
+		return new Promise((resolve, reject) => {
+			ids.forEach(async (id, index) => {
+				const collection: any[] = await model.find({[idKey]: id })
+					.exec()
+				results.push(...collection);
+
+				if (index === ids.length - 1) {
+					if (formatToIds) results = results.map((result) => result._id);
+					resolve(results);
+				}
+			});
+		});
+	}
+
+	static getPostsWithIds(model: any, idKey: string, ids: string[]): Promise<any[]> {
+		let results: any[] = [];
+		return new Promise((resolve, reject) => {
+			ids.forEach(async (id, index) => {
+				const collection: any[] = await model.find({[idKey]: id })
+					.populate({
+						path: 'assignment',
+						populate: {
+							path: 'courseId',
+						}
+					})
+					.populate('pictures')
+					.populate('user', 'profile.username _id')
+					.sort([['_createdAt', 'desc']])
+					.exec();
+				results.push(...collection);
+
+				if (index === ids.length - 1) {
+					resolve(results);
+				}
+			});
+		});
+	}
+
 	static paginate(docs: any[], limit: number, pageNr: number): any[] {
 		if (docs.length <= limit) {
 			return docs;

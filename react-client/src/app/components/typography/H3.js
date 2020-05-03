@@ -2,13 +2,13 @@ import { default as React } from 'react';
 
 import './typography.scss';
 
-const H2 = (props) => {
+const H3 = (props) => {
 
 	return (
-		<h2 className="kop-titel">
+		<h2 className="tussen-titel">
 			{props.children}
 		</h2>
 	);
 };
 
-export default H2;
+export default H3;
