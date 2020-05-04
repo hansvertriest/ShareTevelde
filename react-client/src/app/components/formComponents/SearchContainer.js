@@ -2,7 +2,7 @@ import { default as React, useState } from 'react';
 
 import { apiConfig } from '../../config';
 import { useApi } from '../../services';
-import { H2 } from '../typography';
+import { H3 } from '../typography';
 import './SearchContainer.scss';
 
 const SearchContainer = (props) => {
@@ -84,7 +84,7 @@ const SearchContainer = (props) => {
 				? 
 				<div className="search-results">
 					<div className="search-results__users">
-						<H2>Gebruikers</H2>	
+						<H3>Gebruikers</H3>	
 						{
 							(userResults && userResults[0] && userResults.length > 0) 
 							? userResults
@@ -92,7 +92,7 @@ const SearchContainer = (props) => {
 						}
 					</div>
 					<div className="search-results__assignments">
-						<H2>Opdrachten</H2>	
+						<H3>Opdrachten</H3>	
 						{
 							(assignmentResults && assignmentResults[0] && assignmentResults.length > 0) 
 							? assignmentResults

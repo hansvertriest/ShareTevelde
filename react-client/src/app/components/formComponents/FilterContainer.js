@@ -1,21 +1,16 @@
-import { default as React, useState } from 'react';
+import { default as React, useState, useEffect } from 'react';
 
-import { apiConfig } from '../../config';
-import { useApi } from '../../services';
 import { H2, H3 } from '../typography';
 import { OptionButton, PrimaryButton } from '../formComponents';
 import './FilterContainer.scss';
 
 const FilterContainer = (props) => {
-	const BASE_URL = `${apiConfig.baseURL}`;
-
 	const [filterIcon, setFilterIcon] = useState('filter-disabled');
+	const [classFilter, setClassFilter] = useState([]);
+	const [schoolYearFilter, setSchoolYearFilter] = useState([]);
 
-	let classFilter = [];
-	let schoolYearFilter = [];
-
+	// when filter is clicked open the container
 	const openFilterContainer = (ev) => {
-		console.log('dd')
 		const filters = document.getElementById(`filter-container__filter-body-${props.position}`);
 		if (filters.classList.contains('filter-container__filter-body--hide')){
 			filters.classList.remove('filter-container__filter-body--hide');
@@ -24,36 +19,45 @@ const FilterContainer = (props) => {
 		}
 	}
 
-	const enableClassButton = (ev) => {
+	// when 'richting' option button is clicked
+ 	const enableClassButton = (ev) => {
 		ev.preventDefault();
 		const btn = ev.target;
 		if (btn.classList.contains('option-button--enabled')){
 			btn.classList.remove('option-button--enabled');
-			classFilter = classFilter.filter((filter) => filter !== btn.value);
+			setClassFilter(classFilter.filter((filter) => filter !== btn.value));
 		} else {
 			btn.classList.add('option-button--enabled');
-			classFilter.push(btn.value);
+			setClassFilter([...classFilter, btn.value]);
 		}
 		
 	}
 
+	// when 'academiejaar' option button is clicked
 	const enableSchoolYearButton = (ev) => {
 		ev.preventDefault();
 		const btn = ev.target;
 		if (btn.classList.contains('option-button--enabled')){
 			btn.classList.remove('option-button--enabled');
-			schoolYearFilter = schoolYearFilter.filter((filter) => filter !== btn.value);
+			console.log(schoolYearFilter)
+			setSchoolYearFilter(schoolYearFilter.filter((filter) => filter !== btn.value));
 		} else {
 			btn.classList.add('option-button--enabled');
-			schoolYearFilter.push(btn.value);
+			setSchoolYearFilter([...schoolYearFilter, btn.value]);
+			console.log(schoolYearFilter)
 		}
 	}
 
+	// when apply button is clicked
 	const applyFilter = (ev) => {
 		ev.preventDefault();
 		setFilterIcon('filter');
 		props.onApply(ev, classFilter, schoolYearFilter);
+
 	}
+
+	useEffect(() => {
+	}, [schoolYearFilter]);
 
 	return(
 		<div 

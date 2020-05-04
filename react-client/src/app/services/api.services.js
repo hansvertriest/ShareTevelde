@@ -33,6 +33,7 @@ const ApiProvider = ({children}) => {
 		// construct query
 		const url = (filtered) ? `${BASE_URL}/post/all/filtered` : `${BASE_URL}/post/all`;
 		const queryUrl = toolBox.parametersToQuery(url, filters, (pageNr !== undefined && limit !== undefined) ? { pageNr, limit } : undefined);
+		console.log(queryUrl)
 		// fetch posts
 		const response = await toolBox.fetchWithStandardOptions(queryUrl, 'GET');
 		return response.json()

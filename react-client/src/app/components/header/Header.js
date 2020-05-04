@@ -1,8 +1,9 @@
-import { default as React } from 'react';
+import { default as React, Fragment } from 'react';
 
 import { apiConfig } from '../../config';
 import { useAuth } from '../../services';
 import { Logo } from '../misc';
+import { TertiaryButton } from '../formComponents';
 
 import './header.scss';
 
@@ -15,8 +16,18 @@ const Header = ({children}) => {
 
   	return (
 		<header className="page__header">
-			<Logo />
-			<img src={profilePictureUrl} alt="Profile"/>
+		<Logo />
+			{				
+				(currentUser) 
+				?
+					<Fragment>
+						<img src={profilePictureUrl} alt="Profile"/>
+					</Fragment>
+				: 
+					<p>
+						<TertiaryButton href="/auth/signup">Registreren</TertiaryButton> | <TertiaryButton href="/auth/signin">Login</TertiaryButton>
+					</p>
+			}
 		</header>
  	);
 };

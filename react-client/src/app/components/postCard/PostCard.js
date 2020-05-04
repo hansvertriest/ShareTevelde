@@ -9,7 +9,7 @@ const PostCard = (props) => {
 
 	const [data] = useState(props.postData);
 
-	console.log(props.postData._id)
+	console.log(props.postData.assignment.courseId.direction, props.postData.assignment.courseId.schoolyear)
 	// when picture is loaded
 	const pictureOnload = () => {
 		const loadingText = document.querySelector('.loading-text p');
