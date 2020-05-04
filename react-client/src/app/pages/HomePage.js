@@ -3,6 +3,7 @@ import { default as React, useState, useEffect, useLayoutEffect, Fragment} from 
 import { useApi } from '../services';
 import { PostCard } from '../components/postCard';
 import { SearchContainer, FilterContainer } from '../components/formComponents';
+import { Menu } from '../components/menu'
 import './HomePage.scss';
 
 const HomePage = ({children}) => {
@@ -135,6 +136,7 @@ const HomePage = ({children}) => {
 				</div>
 			</div>
 			<div className="aside-container aside-container--right">
+				<Menu position="right"/>
 				<SearchContainer />
 				<FilterContainer onApply={applyFilters} position="right" />
 			</div>

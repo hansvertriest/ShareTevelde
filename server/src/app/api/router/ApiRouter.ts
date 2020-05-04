@@ -22,6 +22,8 @@ import {
 	GridFs
 } from '../../services';
 
+import {default as multer, memoryStorage } from 'multer';
+
 class ApiRouter {
 	public router: Router;
 	private config: IConfig;
@@ -107,7 +109,20 @@ class ApiRouter {
 
 		this.router.get('/picture/byname/:filename', this.pictureController.show);
 		this.router.get('/picture/info', this.pictureController.getPictureInfo);
-		this.router.post('/picture', GridFs.createStorage().single('picture'), this.verifyJwt, this.pictureController.upload);
+		this.router.post(
+			'/picture',
+			this.verifyJwt, 
+			multer({ storage: memoryStorage() }).single('picture'),
+			GridFs.resizeAndUploadPostPic,
+			this.pictureController.upload
+		);
+		this.router.post(
+			'/image', 
+			this.verifyJwt, 
+			multer({ storage: memoryStorage() }).single('picture'),
+			GridFs.resizeAndUploadProfilePic, 
+			this.pictureController.uploadImage
+		);
 
 		this.router.get('/user/all', this.userController.getAll);
 		this.router.get('/user/softDeleted/all', this.verifyJwtAndCheckAdmin, this.userController.getAllAndSoftDeleted);

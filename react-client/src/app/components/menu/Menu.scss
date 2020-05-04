@@ -1,0 +1,34 @@
+@import '../../../variables.scss';
+
+.menu {
+	.menu__actions {
+		margin-top: 12px;
+		padding: 4px 8px;
+		background-color: $bg-color-shade-dark;
+		border-radius: $radius-lg;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+		.menu-actions__button {
+			display: block;
+			margin: 6px 0;
+			text-decoration: none;
+			font-family: 'Poppins';
+			font-weight: 300;
+			color: $white;
+			font-size: 18px;
+			padding: 4px 8px;
+			border-radius: 4px;
+		}
+
+		.menu-actions__button:hover {
+			background-color: $bg-color-shade-light;
+		}
+	}
+
+	.menu__divider {
+		height: 1px;
+		width: 100%;
+		background-color: $bg-color;
+		margin: 4px 0;
+	}
+}

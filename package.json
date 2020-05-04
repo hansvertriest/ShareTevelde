@@ -20,5 +20,8 @@
     "server:build": "cd server && yarn build && cpy **/*.* --cwd=dist ../../dist --parents && cpy ./package.production.json ../../dist/ --parents",
     "serve:build": "cross-env NODE_ENV=Production NODE_SERVER_PORT=8082 node ./dist/index.js",
     "watch": "concurrently \"cd server && yarn watch:serve\" \"cd react-client && yarn start\""
+  },
+  "dependencies": {
+    "sharp": "^0.25.2"
   }
 }
