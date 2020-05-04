@@ -9,7 +9,8 @@ const PostCard = (props) => {
 
 	const [data] = useState(props.postData);
 
-	console.log(props.postData.assignment.courseId.direction, props.postData.assignment.courseId.schoolyear)
+	// console.log(props.postData.assignment.courseId.direction, props.postData.assignment.courseId.schoolyear)
+	
 	// when picture is loaded
 	const pictureOnload = () => {
 		const loadingText = document.querySelector('.loading-text p');
@@ -22,7 +23,21 @@ const PostCard = (props) => {
   	return (
 		<div className="post-card" id={props.id} >
 			<div className="post-card__img" > 
+				<div className="post-card-img__header">
+					<div className="post-card-img-header__profile-container">
+						<img 
+							src={(data.user.profile.profilePictureName)
+								? `${BASE_URL}/picture/byname/${data.user.profile.profilePictureName}`
+								: ''
+							}
+							alt="profile"	
+						/>
+						<p>{data.user.profile.username}</p>
+					</div>
+					{/* Insert link button */}
+				</div>
 				<img 
+					className="post-card-img__project-pic"
 					src={(data)
 						? `${BASE_URL}/picture/byname/${data.pictures[0].filename}`
 						: ''

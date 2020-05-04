@@ -276,27 +276,35 @@ class DBOperations {
 		});
 	}
 
-	static getWithIds(model: any, idKey: string, ids: string[], formatToIds: boolean = false): Promise<any[]> {
+	static async getWithIds(model: any, idKey: string, ids: string[], formatToIds: boolean = false): Promise<any[]> {
 		let results: any[] = [];
-		return new Promise((resolve, reject) => {
-			ids.forEach(async (id, index) => {
-				const collection: any[] = await model.find({[idKey]: id })
+		// return new Promise((resolve, reject) => {
+		// 	ids.forEach(async (id, index) => {
+		// 		const collection: any[] = await model.find({[idKey]: id })
+		// 			.exec()
+		// 			.catch((err: any)=> reject(err));
+		// 		results.push(...collection);
+
+		// 		if (index === ids.length - 1) {
+		// 			if (formatToIds) results = results.map((result) => result._id);
+		// 			resolve(results);
+		// 		}
+		// 	});
+		// });		
+		for(let i = 0; i < ids.length; i++) {
+			const collection: any[] = await model.find({[idKey]: ids[i] })
 					.exec()
 				results.push(...collection);
-
-				if (index === ids.length - 1) {
-					if (formatToIds) results = results.map((result) => result._id);
-					resolve(results);
-				}
-			});
-		});
+		}
+		if (formatToIds) results = results.map((result) => result._id);
+		return results;
 	}
 
-	static getPostsWithIds(model: any, idKey: string, ids: string[]): Promise<any[]> {
+	static async getPostsWithIds(model: any, idKey: string, ids: string[]): Promise<any[]> {
 		let results: any[] = [];
-		return new Promise((resolve, reject) => {
-			ids.forEach(async (id, index) => {
-				const collection: any[] = await model.find({[idKey]: id })
+
+			for(let i = 0; i < ids.length; i++) {
+				const collection: any[] = await model.find({'assignment': ids[i] })
 					.populate({
 						path: 'assignment',
 						populate: {
@@ -304,16 +312,12 @@ class DBOperations {
 						}
 					})
 					.populate('pictures')
-					.populate('user', 'profile.username _id')
+					.populate('user', 'profile.username profile.profilePictureName _id')
 					.sort([['_createdAt', 'desc']])
-					.exec();
-				results.push(...collection);
-
-				if (index === ids.length - 1) {
-					resolve(results);
-				}
-			});
-		});
+					.exec()
+					results.push(...collection);
+			}
+			return results;
 	}
 
 	static paginate(docs: any[], limit: number, pageNr: number): any[] {

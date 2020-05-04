@@ -118,7 +118,7 @@ class PostController {
 					}
 				})
 				.populate('pictures')
-				.populate('user', 'profile.username _id')
+				.populate('user', 'profile.username profile.profilePictureName _id')
 				.sort([['_createdAt', 'desc']])
 				.exec();
 			
@@ -157,14 +157,15 @@ class PostController {
 			let courses: ICourse[] = await CourseModel.find(filter)
 				.select('_id')
 				.exec()
-
 			const courseIds = courses.map((course) => course._id);
+			if (courseIds.length < 0) throw {code: 404, msg: 'No posts found. {c}'};
 
 			// get corresponding assignments
-			const assignmentIds = await DBOperations.getWithIds(AssignmentModel, 'courseId', courseIds, true)
-
+			const assignmentIds = await DBOperations.getWithIds(AssignmentModel, 'courseId', courseIds, true);
+			if (assignmentIds.length < 0) throw {code: 404, msg: 'No posts found. {a}'};
+			
 			// get corresponding posts
-			let posts: IPost[] = await DBOperations.getPostsWithIds(PostModel, 'assignment', assignmentIds)
+			let posts: IPost[] = await DBOperations.getPostsWithIds(PostModel, 'assignment', assignmentIds);
 
 			// paginate
 			if ( limit !== undefined && pageNr !== undefined){
