@@ -3,9 +3,17 @@ import { default as React, useState } from 'react';
 import { apiConfig } from '../../config';
 import { H2 } from '../typography';
 import './Menu.scss';
+import { useApi } from '../../services';
 
 const Menu = (props) => {
 	const BASE_URL = `${apiConfig.baseURL}`;
+	const { getNotifications } = useApi();
+
+	const [notifications, setNotifications] = useState();
+
+	const fetchNotifications = async () => {
+		const getNotificationsnotificqtions = await getNotifications({}, 0, 10);
+	}
 
   	return (
 		<div className="menu">

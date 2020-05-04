@@ -107,14 +107,14 @@ class ApiRouter {
 		this.router.post('/auth/signup', this.userController.signupLocal);
 		this.router.post('/auth/verify', this.verifyJwt, this.userController.sendOk);
 
-		this.router.get('/picture/byname/:filename', this.pictureController.show);
+		this.router.get('/image/byname/:filename', this.pictureController.show);
 		this.router.get('/picture/info', this.pictureController.getPictureInfo);
 		this.router.post(
 			'/picture',
 			this.verifyJwt, 
 			multer({ storage: memoryStorage() }).single('picture'),
 			GridFs.resizeAndUploadPostPic,
-			this.pictureController.upload
+			this.pictureController.uploadPicture
 		);
 		this.router.post(
 			'/image', 

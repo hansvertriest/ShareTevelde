@@ -77,7 +77,7 @@ export class DBSeeder implements IDBSeeder {
 	}
 
 	public async createUsers (amount: number): Promise<void> {
-		const profilePictures = ['684f090a29dba7382fe3c24c13a1509b.jpg', '19440edf4033e9b03284ae9cee216f60.jpg', '4cce574359d80df320804a1be271bdf8.jpg', '1d90f4c2dc041f5b6277086ee4007e1f.jpg', '1138fba843cc5d78e0dcc75269dd22c1.jpg', 'e9923ac76f62a648f614d4785c29caa1.jpg'];
+		const profilePictures = ['8bf0ecc14a1e42a8ec03764a42d057e4.jpg','719bf847e80e849587082a12a0686020.jpg','2212a2ce096ac911698f4bfe1d93a1c4.jpg','0c9d4c986a42c3fbb2e299c0921b3517.jpg','c1f6094f370f13e08f14a73081e21ee7.jpg','cdec35132b1f54bec013ae2de375a2bc.jpg'];
 		for (let i = 0; i < amount; i++) {
 			const email = `${faker.name.findName().replace(' ', '.')}@gmail.com`;
 			const username = faker.name.findName();

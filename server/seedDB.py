@@ -62,7 +62,21 @@ for i in range(len(assignment_titles)):
 	assignment_loader.run()
 
 # CREATE POSTS
-post_pictures = ['5e982c7d68849619dc5ba682', '5ea28c53a7ed76058468d9dd', '5eafd54f46f295416c4286c7', '5eafd58246f295416c4286d6', '5eafd59c46f295416c4286ef', '5eafd5ad46f295416c428708', '5eafd5c546f295416c42870e', '5eafd5d146f295416c428714', '5eafd5e846f295416c42871a', '5eafd5f846f295416c428721', '5eafd61446f295416c428739', '5eafd65046f295416c428751', '5eafd65b46f295416c428769', '5eafd67346f295416c42877d', '5eafd68546f295416c428782', '5eafd68d46f295416c428787', '5eafd69846f295416c42878c', '5eafd6ae46f295416c428794', '5eafd6bb46f295416c42879c', '5eafd6c646f295416c4287a3']
+post_pictures = [
+	'5eb0408be4b1b252ec0cffde',
+	'5eb040d3e4b1b252ec0cffe1',
+	'5eb040e7e4b1b252ec0cffe4',
+	'5eb040f8555e010fe0073df5',
+	'5eb04104f7cc15384845b937',
+	'5eb0410df7cc15384845b93a',
+	'5eb0411b436f242bd8ee9cb0',
+	'5eb043d829534f55dce2852a',
+	'5eb043f729534f55dce2852d',
+	'5eb0441529534f55dce28530',
+	'5eb0443629534f55dce28533',
+	'5eb0444f29534f55dce28536',
+	'5eb0446e29534f55dce28539'
+]
 
 print 'Creating 4 posts per user.'
 post_loader = TextLoader(duration=len(users))
@@ -84,4 +98,5 @@ for t in range(len(users)):
 				'urlToProject': 'www.google.com'.encode("utf-8"),
 			}
 			r_new_post = requests.post(url = url_post, data = data, headers = post_headers)
-	post_loader.run()
+			
+			post_loader.run()

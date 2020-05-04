@@ -14,6 +14,7 @@ interface ILocalProvider {
 interface INotification {
 	content: string;
 	destinationUrl: string;
+	senderUser: IUser['_id'];
 	_createdAt: number;
 }
 
@@ -113,6 +114,11 @@ const userSchema: Schema = new Schema({
 		},
 		destinationToUrl: {
 			type: String,
+		},
+		senderUser: {
+			type: Schema.Types.ObjectId,
+			ref: 'User',
+			required: true,
 		},
 		_createdAt: {
 			type: Number,

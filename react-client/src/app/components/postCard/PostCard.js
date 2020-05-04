@@ -10,7 +10,6 @@ const PostCard = (props) => {
 	const [data] = useState(props.postData);
 
 	// console.log(props.postData.assignment.courseId.direction, props.postData.assignment.courseId.schoolyear)
-	
 	// when picture is loaded
 	const pictureOnload = () => {
 		const loadingText = document.querySelector('.loading-text p');
@@ -27,7 +26,7 @@ const PostCard = (props) => {
 					<div className="post-card-img-header__profile-container">
 						<img 
 							src={(data.user.profile.profilePictureName)
-								? `${BASE_URL}/picture/byname/${data.user.profile.profilePictureName}`
+								? `${BASE_URL}/image/byname/${data.user.profile.profilePictureName}`
 								: ''
 							}
 							alt="profile"	
@@ -39,7 +38,7 @@ const PostCard = (props) => {
 				<img 
 					className="post-card-img__project-pic"
 					src={(data)
-						? `${BASE_URL}/picture/byname/${data.pictures[0].filename}`
+						? `${BASE_URL}/image/byname/${data.pictures[0].filename}`
 						: ''
 					}
 					alt="Post"

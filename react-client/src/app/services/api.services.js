@@ -89,6 +89,26 @@ const ApiProvider = ({children}) => {
 			})
 	}
 
+	// NOTIFICQTIONS functions
+	const getNotifications = async (filters, pageNr, limit) => {
+		// construct query
+		const url = `${BASE_URL}/assignment/all`;
+		const queryUrl = toolBox.parametersToQuery(url, filters, (pageNr !== undefined && limit !== undefined) ? { pageNr, limit } : undefined);
+		// fetch posts
+		const response = await toolBox.fetchWithStandardOptions(queryUrl, 'GET');
+		return response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
+	}
+
   	const putTextToMongo = ( formData, apiUrl ) => {
     	return fetch( `${BASE_URL}/${apiUrl}`, {
         	method: 'put',
@@ -119,6 +139,7 @@ const ApiProvider = ({children}) => {
 			getPosts,
 			getUsers,
 			getAssignments,
+			getNotifications,
 			}}>
       	{children}
     	</ApiContext.Provider>

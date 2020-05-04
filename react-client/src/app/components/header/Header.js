@@ -11,7 +11,7 @@ const Header = ({children}) => {
 	const { currentUser } = useAuth();
 
 	const profilePictureUrl = (currentUser && currentUser.profile.profilePictureName) 
-		? `${apiConfig.baseURL}/picture/byname/${currentUser.profile.profilePictureName}`
+		? `${apiConfig.baseURL}/image/byname/${currentUser.profile.profilePictureName}`
 		: './images/defaultProfilePicture.jpg';
 
   	return (

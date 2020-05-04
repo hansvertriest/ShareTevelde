@@ -47,7 +47,7 @@ class PictureController {
 		}
 	}
 
-	public upload = async (req: Request, res: Response, next: NextFunction): Promise < Response < any >> => {
+	public uploadPicture = async (req: Request, res: Response, next: NextFunction): Promise < Response < any >> => {
 		try {
 			if (req.file) {
 				const {

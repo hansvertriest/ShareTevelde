@@ -228,13 +228,14 @@ class DBOperations {
 		});
 	}
 
-	static sendNotificiationToAll(content: string, destinationUrl: string): Promise < any > {
+	static sendNotificiationToAll(content: string, destinationUrl: string, senderUser:string = ''): Promise < any > {
 		const query = {
 			role: 'user'
 		};
 		const notification: INotification = {
 			content,
 			destinationUrl,
+			senderUser: mongoose.Types.ObjectId(senderUser),
 			_createdAt: Date.now(),
 		}
 		return new Promise < any > ((res, rej) => {

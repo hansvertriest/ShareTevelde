@@ -16,10 +16,10 @@ class NotificationController {
 	public sendAll = async (req: Request, res: Response, next: NextFunction) : Promise<Response<any>> => {
 		try{
 			// get body 
-			const { content, destinationUrl } = req.body;
+			const { content, destinationUrl, token } = req.body;
 
 			// send notification
-			DBOperations.sendNotificiationToAll(content, destinationUrl)
+			DBOperations.sendNotificiationToAll(content, destinationUrl, token.id)
 				.then((resolve) => {
 					if (resolve.n === 0) {
 						throw {code: 404, msg: 'No courses were found.'}
@@ -42,16 +42,26 @@ class NotificationController {
 		try {
 			// get body
 			const { token } = req.body;
+			const limit = (req.query.limit) ? parseInt(req.query.limit) : undefined;
+			const pageNr = (req.query.limit) ? parseInt(req.query.pageNr) : undefined;
 
 			//get notifications
-			const notifications = await UserModel.findOne({_id: mongoose.Types.ObjectId(token.id)})
+			let userNotification = await UserModel.findOne({_id: mongoose.Types.ObjectId(token.id)})
 				.select('notifications')
+				.populate('notifications.senderUser', 'profile.profilePictureName')
+				.exec()
+
+			// paginate
+			let notifications = (userNotification) ? userNotification.notifications : null;
+			if ( limit !== undefined && pageNr !== undefined){
+				notifications = DBOperations.paginate(userNotification.notifications, limit, pageNr);
+			}
 
 			// check output and send response
 			if (notifications) {
 				return res.status(200).send(notifications);
 			} else {
-				throw {code: 404, msg: 'No notifications for given user'}
+				throw {code: 404, msg: 'No notifications for given user', id: token.id}
 			}
 
 		} catch (error) {
