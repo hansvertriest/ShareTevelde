@@ -113,6 +113,22 @@ const AuthProvider = ({children}) => {
 			})
 	}
 
+	const refresh = async () => {
+		let url = `${BASE_URL}/auth/refresh`;
+		const response = await toolBox.fetchWithStandardOptions(url, 'GET', undefined, true);
+		await response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((response) => {
+				localStorage.setItem('mern:authUser', response.token);
+				setCurrentUser(verifyUserFromLocalStorage);
+			})
+			.catch((error) => {
+				console.log('Couldn\'t update token.;');
+			})
+	}
+
 	const logout = async () => {
 		localStorage.setItem('mern:authUser', null);
 		return true;
@@ -123,7 +139,8 @@ const AuthProvider = ({children}) => {
 				currentUser,
 				signInLocal,
 				signUpLocal,
-				logout
+				logout,
+				refresh,
 			}
 		} > {
 			children

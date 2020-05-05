@@ -2,10 +2,11 @@ import { default as express, NextFunction, Request, Response } from 'express';
 import { default as mongoose, Connection } from 'mongoose';
 
 import Logger, { ILogger } from '../../services/logger';
-import { UserModel, IUser, IProfile } from '../../models/mongoose';
+import { UserModel, IUser, IProfile, NotificationType } from '../../models/mongoose';
 import { AuthService, IConfig,  } from '../../services';
 import { NotFoundError } from '../../utilities';
 import {DBOperations} from '../../services/database';
+import { info } from 'winston';
 
 
 interface IUserModifications {
@@ -63,7 +64,7 @@ class UserController {
 			const user: IUser = await newUser.save();
 	
 			const token = this.authService.createToken(user);
-			DBOperations.sendNotificationToUser(user.id, 'Welkom bij ShareTevelde!')
+			DBOperations.sendNotificationToUser(user.id, 'Welkom bij ShareTevelde!', '', '', NotificationType['Info']);
 			return res.status(200).json({
 				id: user.id,
 				email: user.email, 
@@ -106,6 +107,24 @@ class UserController {
 			},
 		)(req, res, next);
 	};
+
+	public refreshToken = async ( req: Request, res: Response,  next: NextFunction ): Promise<Response<any>> => {
+		try {
+			const { token } = req.body;
+			const { stayLoggedin } = req.query;
+
+			const user: IUser = await UserModel.findById({_id: mongoose.Types.ObjectId(token.id)})
+			if (!user) throw {code: 404, msg: 'User does not exist.'}
+			const expiresIn: number = (stayLoggedin) ? this.config.auth.jwt_expiresIn : token.exp ;
+			const newToken = this.authService.createToken(user, expiresIn);
+
+			return res.status(200).send({token: newToken});
+		} catch (error) {
+			if (error.msg) return res.status(error.code).send(error);
+			this.logger.error('Error while getting user by id.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
+		}
+	}
 
 	public getById = async ( req: Request, res: Response,  next: NextFunction ): Promise<Response<any>> => {
 		try {

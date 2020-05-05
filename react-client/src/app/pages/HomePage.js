@@ -1,6 +1,6 @@
 import { default as React, useState, useEffect, useLayoutEffect, Fragment} from 'react';
 
-import { useApi } from '../services';
+import { useApi, useAuth } from '../services';
 import { PostCard } from '../components/postCard';
 import { SearchContainer, FilterContainer } from '../components/formComponents';
 import { Menu } from '../components/menu'
@@ -8,6 +8,7 @@ import './HomePage.scss';
 
 const HomePage = ({children}) => {
 	const { getPosts } = useApi();
+	const { currentUser, refresh } = useAuth();
 
 	const postsLimit = 2;
 
@@ -103,6 +104,9 @@ const HomePage = ({children}) => {
 		} else if (postPage) {
 			fetchPosts(postPage);
 		}
+		if (currentUser) {
+			refresh()
+		}
 	}, [postPage, filter])
 
 	// update page when updatePostPage is set to true
@@ -136,7 +140,11 @@ const HomePage = ({children}) => {
 				</div>
 			</div>
 			<div className="aside-container aside-container--right">
-				<Menu position="right"/>
+				{
+					(currentUser)
+					? <Menu position="right"/>
+					: null
+				}
 				<SearchContainer />
 				<FilterContainer onApply={applyFilters} position="right" />
 			</div>

@@ -87,14 +87,14 @@ class AuthService {
     );
   };
 
-  public createToken(user: IUser): string {
+  public createToken(user: IUser, expiresIn: number|undefined = undefined ): string {
     const payload = {
 		profile: user.profile,
 		id: user._id,
 		role: user.role,
     };
     return jwt.sign(payload, this.config.auth.jwt.secret, {
-      expiresIn: 60 * 120,
+      expiresIn: (expiresIn) ? expiresIn : this.config.auth.jwt_expiresIn,
     });
   }
 
@@ -121,7 +121,7 @@ class AuthService {
 
   public verifyToken = (token:string): IVerifiedToken => {
     try {
-      const decoded: string | object = jwt.verify(token, this.config.auth.jwt.secret);
+	  const decoded: string | object = jwt.verify(token, this.config.auth.jwt.secret);
       if (!decoded) {
         const error = { msg: 'Couldn\'t decode the token!' }
         throw error;
@@ -132,7 +132,8 @@ class AuthService {
       }
       return {
         verified: true,
-        id: decoded.id,
+		id: decoded.id,
+		exp: decoded.exp,
         role: decoded.role,
       };
     } catch (error) {

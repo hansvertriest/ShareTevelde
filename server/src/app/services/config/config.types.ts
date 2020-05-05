@@ -20,6 +20,7 @@ export interface IServerConfig {
 export interface IAuthConfig {
   bcryptSalt: number;
   jwt: IJwtConfig;
+  jwt_expiresIn: number;
   facebook?: IFacebookConfig;
 }
 

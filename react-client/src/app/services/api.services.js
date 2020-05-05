@@ -33,7 +33,6 @@ const ApiProvider = ({children}) => {
 		// construct query
 		const url = (filtered) ? `${BASE_URL}/post/all/filtered` : `${BASE_URL}/post/all`;
 		const queryUrl = toolBox.parametersToQuery(url, filters, (pageNr !== undefined && limit !== undefined) ? { pageNr, limit } : undefined);
-		console.log(queryUrl)
 		// fetch posts
 		const response = await toolBox.fetchWithStandardOptions(queryUrl, 'GET');
 		return response.json()
@@ -90,12 +89,12 @@ const ApiProvider = ({children}) => {
 	}
 
 	// NOTIFICQTIONS functions
-	const getNotifications = async (filters, pageNr, limit) => {
+	const getNotifications = async (pageNr, limit, attachToken) => {
 		// construct query
-		const url = `${BASE_URL}/assignment/all`;
-		const queryUrl = toolBox.parametersToQuery(url, filters, (pageNr !== undefined && limit !== undefined) ? { pageNr, limit } : undefined);
+		const url = `${BASE_URL}/notification/all`;
+		const queryUrl = toolBox.parametersToQuery(url, {}, (pageNr !== undefined && limit !== undefined) ? { pageNr, limit } : undefined);
 		// fetch posts
-		const response = await toolBox.fetchWithStandardOptions(queryUrl, 'GET');
+		const response = await toolBox.fetchWithStandardOptions(queryUrl, 'GET', undefined, attachToken);
 		return response.json()
 			.then((res) => {
 				return toolBox.handleFetchError(res);

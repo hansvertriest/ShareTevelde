@@ -13,6 +13,7 @@ import {
 	ILike,
 	IAgree,
 	INotification,
+	NotificationType,
 	UserModel
 } from '../../models/mongoose';
 
@@ -228,13 +229,14 @@ class DBOperations {
 		});
 	}
 
-	static sendNotificiationToAll(content: string, destinationUrl: string, senderUser:string = ''): Promise < any > {
+	static sendNotificiationToAll(content: string, destinationUrl: string, senderUser:string = '', type: NotificationType): Promise < any > {
 		const query = {
 			role: 'user'
 		};
 		const notification: INotification = {
 			content,
 			destinationUrl,
+			type,
 			senderUser: mongoose.Types.ObjectId(senderUser),
 			_createdAt: Date.now(),
 		}
@@ -253,13 +255,15 @@ class DBOperations {
 		});
 	}
 
-	static sendNotificationToUser(userId: string, content: string, destinationUrl: string = ''): Promise < any > {
+	static sendNotificationToUser(userId: string, content: string, destinationUrl: string = '', senderUser:string = '', type: NotificationType): Promise < any > {
 		const query = {
 			_id: mongoose.Types.ObjectId(userId)
 		};
 		const notification: INotification = {
 			content,
 			destinationUrl,
+			type,
+			senderUser: mongoose.Types.ObjectId(senderUser),
 			_createdAt: Date.now(),
 		}
 		return new Promise < any > ((res, rej) => {

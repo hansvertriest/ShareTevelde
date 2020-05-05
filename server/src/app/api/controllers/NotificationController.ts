@@ -16,10 +16,11 @@ class NotificationController {
 	public sendAll = async (req: Request, res: Response, next: NextFunction) : Promise<Response<any>> => {
 		try{
 			// get body 
-			const { content, destinationUrl, token } = req.body;
+			const { content, destinationUrl, type, token } = req.body;
+			if (!content || !destinationUrl || !type) throw {code: 412, msg: 'Requireed parameters missing.'}
 
 			// send notification
-			DBOperations.sendNotificiationToAll(content, destinationUrl, token.id)
+			DBOperations.sendNotificiationToAll(content, destinationUrl, token.id, type)
 				.then((resolve) => {
 					if (resolve.n === 0) {
 						throw {code: 404, msg: 'No courses were found.'}

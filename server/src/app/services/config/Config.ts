@@ -52,7 +52,8 @@ class Config implements IConfig {
       jwt: {
         secret: process.env.AUTH_JWT_SECRET || 'share_secret_Tevelde',
         session: Boolean(process.env.AUTH_JWT_SESSION || true),
-      },
+	  },
+	  jwt_expiresIn: parseInt(process.env.JWT_EXPIRESIN),
       facebook: {
         clientId: process.env.AUTH_FACEBOOK_CLIENT_ID,
         clientSecret: process.env.AUTH_FACEBOOK_CLIENT_SECRET,

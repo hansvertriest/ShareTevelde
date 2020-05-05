@@ -22,12 +22,18 @@ class ToolBox {
 		return url + query;
 	}
 
-	fetchWithStandardOptions = async (url, method, customization) => {
-		
+	fetchWithStandardOptions = async (url, method, customization, attatchToken = false) => {
+		const token = (attatchToken) ? localStorage.getItem('mern:authUser') : undefined;
 		const myHeaders = {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
 		}
+		if (token){
+			myHeaders['Authorization'] = `Bearer ${token}`;
+			url = url + '/';
+		}
+		console.log({url, myHeaders});
+
 		const options = {
 			method: method || 'GET',
 			headers: (customization) ? customization.headers : myHeaders,

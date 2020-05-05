@@ -11,10 +11,18 @@ interface ILocalProvider {
 	password: string;
 }
 
+enum NotificationType {
+	Info = 'info',
+	Agree = 'agree',
+	Like = 'like',
+	Comment = 'comment'
+}
+
 interface INotification {
 	content: string;
 	destinationUrl: string;
 	senderUser: IUser['_id'];
+	type: NotificationType;
 	_createdAt: number;
 }
 
@@ -120,6 +128,12 @@ const userSchema: Schema = new Schema({
 			ref: 'User',
 			required: true,
 		},
+		type: {
+			type: String,
+			enum : ['info','agree', 'comment', 'like'],
+			default: 'info',
+			required: true,
+		},
 		_createdAt: {
 			type: Number,
 			required: true,
@@ -152,6 +166,7 @@ export {
 	IUser,
 	IProfile,
 	INotification,
+	NotificationType,
 	UserModel,
 	userSchema,
 	UserModelProperties,
