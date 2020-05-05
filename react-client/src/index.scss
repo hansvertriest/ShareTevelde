@@ -11,6 +11,10 @@ p, h2 {
 	color:$white;
 }
 
+a {
+	text-decoration: none;
+}
+
 textarea:focus,
 input:focus {
     outline: none;

@@ -10,6 +10,7 @@ const PostCard = (props) => {
 	const [data] = useState(props.postData);
 
 	// console.log(props.postData.assignment.courseId.direction, props.postData.assignment.courseId.schoolyear)
+	
 	// when picture is loaded
 	const pictureOnload = () => {
 		const loadingText = document.querySelector('.loading-text p');
@@ -33,7 +34,11 @@ const PostCard = (props) => {
 						/>
 						<p>{data.user.profile.username}</p>
 					</div>
-					{/* Insert link button */}
+					{
+						(props.postData.urlToProject)
+						? <a className="post-card-img-header__url" target="blank" href={`https://${props.postData.urlToProject}`}><img src="./icons/url.svg" alt="Full project url" /></a>
+						: null
+					}
 				</div>
 				<img 
 					className="post-card-img__project-pic"

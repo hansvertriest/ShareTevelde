@@ -3,11 +3,12 @@ import { default as React, useState, useEffect } from 'react';
 import { apiConfig } from '../../config';
 import { H2 } from '../typography';
 import './Menu.scss';
-import { useApi } from '../../services';
+import { useApi, useAuth } from '../../services';
 
 const Menu = (props) => {
 	const BASE_URL = `${apiConfig.baseURL}`;
 	const { getNotifications } = useApi();
+	const { logout } = useAuth();
 
 	const [notifications, setNotifications] = useState();
 
@@ -33,13 +34,13 @@ const Menu = (props) => {
 		fetchNotifications();
 	}, []);
   	return (
-		<div className="menu">
+		<div className="menu" id={props.id}>
 			<div className="menu__actions">
 				 <a className="menu-actions__button" href={`/`}>Profiel</a>
 				 <a className="menu-actions__button" href={`/`}>Nieuwe post</a>
 				 <a className="menu-actions__button" href={`/`}>Profiel bewerken</a>
 				 <a className="menu-actions__button" href={`/`}>Privacy</a>
-				 <a className="menu-actions__button" href={`/`}>Uitloggen</a>
+				 <a className="menu-actions__button" href={`/auth/signin`} onClick={logout}>Uitloggen</a>
 			</div>
 			<div className="menu__divider"></div>
 			<div className="menu__notifications">

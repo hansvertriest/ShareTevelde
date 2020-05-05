@@ -14,6 +14,15 @@ const Header = ({children}) => {
 		? `${apiConfig.baseURL}/image/byname/${currentUser.profile.profilePictureName}`
 		: './images/defaultProfilePicture.jpg';
 
+	const toggleMenu = () => {
+		const menu = document.getElementById('menu-top');
+		if (menu.classList.contains('menu-top--show')) {
+			menu.classList.remove('menu-top--show');
+		} else {
+			menu.classList.add('menu-top--show');
+		}
+	}
+
   	return (
 		<header className="page__header">
 		<Logo />
@@ -21,7 +30,7 @@ const Header = ({children}) => {
 				(currentUser) 
 				?
 					<Fragment>
-						<img src={profilePictureUrl} alt="Profile"/>
+						<img src={profilePictureUrl} alt="Profile" onClick={toggleMenu}/>
 					</Fragment>
 				: 
 					<p>

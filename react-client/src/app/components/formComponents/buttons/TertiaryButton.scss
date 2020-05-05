@@ -14,3 +14,17 @@
 	color: $secondary-color;
 	text-decoration: none;
 }
+
+// small screen
+@media only screen and (min-width : $breakpoint-xsm) and (max-width : $breakpoint) {
+}
+
+
+// extra small screen
+@media only screen and (max-width : $breakpoint-xsm) {
+	.tertiary-button {
+		color: $white-shade;
+		text-decoration: underline;
+		font-size: 12px;
+	}
+}

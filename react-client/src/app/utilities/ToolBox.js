@@ -32,7 +32,6 @@ class ToolBox {
 			myHeaders['Authorization'] = `Bearer ${token}`;
 			url = url + '/';
 		}
-		console.log({url, myHeaders});
 
 		const options = {
 			method: method || 'GET',

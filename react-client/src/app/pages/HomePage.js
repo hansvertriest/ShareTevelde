@@ -35,9 +35,11 @@ const HomePage = ({children}) => {
 	// set dimensions of pictures
 	const setSquareDimensions = () => {
 		const pictures = document.getElementsByClassName('post-card__img');
+		const pictureHeaders = document.getElementsByClassName('post-card-img__header ');
 		const elementsAmount = pictures.length;
 		for (let i = 0; i < elementsAmount; i++) {
 			pictures.item(i).style.height = `${pictures.item(i).offsetWidth}px`;
+			pictureHeaders.item(i).style.width = `${pictures.item(i).offsetWidth}px`;
 		}
 	}
 
@@ -94,10 +96,6 @@ const HomePage = ({children}) => {
 		}
 	}
 
-	// useEffect(() => {
-	// 	fetchPosts(postPage);
-	// }, [postPage])
-
 	useEffect(() => {
 		if (filter) {
 			fetchPosts(postPage);
@@ -121,6 +119,11 @@ const HomePage = ({children}) => {
 		<div className="page__main-container">
 			
 			<div className="aside-container aside-container--top">
+				{
+					(currentUser)
+					? <Menu id="menu-top"/>
+					: null
+				}
 				<SearchContainer />
 				<FilterContainer onApply={applyFilters} position="top" />
 			</div>
@@ -142,7 +145,7 @@ const HomePage = ({children}) => {
 			<div className="aside-container aside-container--right">
 				{
 					(currentUser)
-					? <Menu position="right"/>
+					? <Menu id="menu-right"/>
 					: null
 				}
 				<SearchContainer />
