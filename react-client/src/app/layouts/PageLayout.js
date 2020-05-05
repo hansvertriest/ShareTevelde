@@ -9,7 +9,7 @@ const PageLayout = ({children}) => {
       <main className={`page__main `}>
         {children}
       </main>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };

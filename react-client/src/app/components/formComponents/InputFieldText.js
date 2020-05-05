@@ -4,7 +4,6 @@ import './InputFieldText.scss';
 
 const InputFieldText = (props) => {
 	const [style, setStyle] = useState({});
-
 	/* Validate
 			ev = event
 			errorContainerId = when not provided no error will be shown 
@@ -48,8 +47,9 @@ const InputFieldText = (props) => {
 				placeholder={props.placeholder} 
 				name={props.name}
 				autoComplete={props.autoComplete || 'off'}
-				onChange={(props.validate) ? (ev) => validate(ev) : null}
-				onBlur={(props.validate) ? (ev) => validate(ev, props.showErrors || false) : null}
+				onChange={(props.validate) ? (ev) => validate(ev) : (props.onChange) ? props.onChange : null}
+				onBlur={(props.validate) ? (ev) => validate(ev, props.showErrors || false) : (props.onBlur) ? props.onBlur : null}
+				onClick={(props.onClick) ? props.onClick : null}
 				>
 			</input>
 			<p className="error-field" id={`${props.id}-error`}></p>

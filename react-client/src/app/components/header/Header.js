@@ -4,11 +4,13 @@ import { apiConfig } from '../../config';
 import { useAuth } from '../../services';
 import { Logo } from '../misc';
 import { TertiaryButton } from '../formComponents';
+// import { NEWPOST } from '../routes';
 
 import './header.scss';
 
 const Header = ({children}) => {
 	const { currentUser } = useAuth();
+
 
 	const profilePictureUrl = (currentUser && currentUser.profile.profilePictureName) 
 		? `${apiConfig.baseURL}/image/byname/${currentUser.profile.profilePictureName}`

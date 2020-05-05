@@ -3,6 +3,7 @@ import { default as React } from 'react';
 import { useAuth } from '../services';
 import { PageTitle } from '../components/typography';
 import { InputFieldText, PrimaryButton, SecondaryButton, TertiaryButton } from '../components/formComponents';
+import { AUTH_SIGNIN } from '../routes';
 import { Logo } from '../components/misc';
 
 import './SignUpIn.scss';
@@ -88,7 +89,7 @@ const SignUp = ({children}) => {
 				<PageTitle> Registreer </PageTitle>
 				<TertiaryButton href='/auth/signin' >Al een account?</TertiaryButton>
 			</div>
-			<form id="signup-form" method="post" action="/auth/signup">
+			<form id="signup-form" method="post" action={AUTH_SIGNIN}>
 				<InputFieldText 
 					id="signup-email" 
 					name="email" 

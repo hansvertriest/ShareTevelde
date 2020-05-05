@@ -22,7 +22,6 @@ const SearchContainer = (props) => {
 				</div>
 			)
 		});
-		console.log(elements);
 		setUserResults(elements);
 	}
 

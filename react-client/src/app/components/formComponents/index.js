@@ -7,6 +7,7 @@ import TertiaryButton from './buttons/TertiaryButton';
 import OptionButton from './buttons/OptionButton';
 import SearchContainer from './SearchContainer';
 import FilterContainer from './FilterContainer';
+import InputFieldTextWithResults from './InputFieldTextWithResults';
 
 export {
 	ProfilePicture,
@@ -17,5 +18,6 @@ export {
 	OptionButton,
 	SecondaryButton,
 	SearchContainer,
-	FilterContainer
+	FilterContainer,
+	InputFieldTextWithResults
 }

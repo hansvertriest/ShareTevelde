@@ -6,11 +6,18 @@ class ToolBox {
 		return res;
 	}
 
+	
+	/**
+	 *@param url url onwhich query has to be added
+	 *@param params object of arrays 
+	 *@param pageParams ? {pageNr, limit}
+	 * @memberof ToolBox
+	 */
 	parametersToQuery = (url, params, pageParams = undefined) => {
 		let query = '?';
 
 		Object.keys(params).forEach((key) => {
-			let value = (params[key].length > 1) ? JSON.stringify(params[key]) : params[key] ;
+			let value = (params[key].length > 1) ? JSON.stringify(params[key]) : params[key];
 			query = query + `${key}=${value}&`;
 		});
 		if (pageParams) 

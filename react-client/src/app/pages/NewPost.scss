@@ -1,0 +1,70 @@
+@import '../../variables.scss';
+
+.page__new-post {
+	grid-column: span 6;
+    display: grid;
+	grid-template-columns: repeat(6, 1fr);
+	column-gap: 20px;
+
+	.post-form-container {
+		grid-column: span 4;
+
+		.post-form-container__assignment-section {
+			grid-column: span 6;
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+			column-gap: 20px;
+
+			.assignment-section__course, .assignment-section__assignment {
+				grid-column: span 2;
+			}
+		}
+	}
+	.aside-container {
+		grid-column: span 2;
+		margin-top: 10px;
+	}
+
+	.aside-container--top {
+		display: none;	
+	}
+
+	.aside-container--right {
+		display: block;
+	}
+}
+
+// small screen
+@media only screen and (min-width : $breakpoint-xsm) and (max-width : $breakpoint) {
+	.page__new-post {
+		.post-form-container {
+			grid-column: span 6;
+		}
+		.aside-container--top {
+			display: block;
+			grid-column: span 6;
+		}
+	
+		.aside-container--right {
+			display: none;
+		}
+	}	
+}
+
+
+// extra small screen
+@media only screen and (max-width : $breakpoint-xsm) {
+	.page__new-post {
+		.post-form-container {
+			grid-column: span 6;
+		}
+		.aside-container--top {
+			display: block;
+			grid-column: span 6;
+		}
+	
+		.aside-container--right {
+			display: none;
+		}
+	}
+}

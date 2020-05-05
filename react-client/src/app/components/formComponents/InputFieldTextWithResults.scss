@@ -1,0 +1,52 @@
+
+@import '../../../variables.scss';
+.text-input-label{
+	.text-input-label {
+		font-size: $font-size-label-lg;
+	}
+}
+
+.input-container{
+	position: relative;
+	z-index: 1;
+}
+
+.search-results {
+	display: none;
+	padding: 10px 10px;
+	padding-top: 10px;
+	position: relative;
+	bottom: 20px;
+	background-color: $bg-color-shade-dark;
+	border-radius: $radius-lg;
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+	.search-results__option {
+		margin: 12px 0px;
+		padding: 8px 10px;
+		border-radius: 5px;;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		.option__title {
+			font-size: 14px;
+		}
+		.option__info {
+			font-size: 10px;
+			color: $secondary-color;
+			flex-shrink: 0;
+		}
+	}
+	.search-results__option:hover {
+		background-color: $bg-color-shade-light;
+		cursor: pointer;
+	}
+
+	.no-results {
+		font-size: 14px;
+		margin: 20px 10px;
+	}
+}
+
+.search-results--show {
+	display: block;
+}

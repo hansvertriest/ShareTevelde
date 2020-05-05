@@ -24,7 +24,6 @@ const ApiProvider = ({children}) => {
 //   }, [userId]);
 
   const refreshUserProfile = () => {
-    console.log(554)
     setUserId(userId);
   }
 // =====================
@@ -88,7 +87,27 @@ const ApiProvider = ({children}) => {
 			})
 	}
 
-	// NOTIFICQTIONS functions
+	// COURSES functions
+	const getCourses = async (filters, pageNr, limit) => {
+		// construct query
+		const url = `${BASE_URL}/course/all`;
+		const queryUrl = toolBox.parametersToQuery(url, filters, (pageNr !== undefined && limit !== undefined) ? { pageNr, limit } : undefined);
+		// fetch posts
+		const response = await toolBox.fetchWithStandardOptions(queryUrl, 'GET');
+		return response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
+	}
+
+	// NOTIFICaTIONS functions
 	const getNotifications = async (pageNr, limit, attachToken) => {
 		// construct query
 		const url = `${BASE_URL}/notification/all`;
@@ -139,6 +158,7 @@ const ApiProvider = ({children}) => {
 			getUsers,
 			getAssignments,
 			getNotifications,
+			getCourses,
 			}}>
       	{children}
     	</ApiContext.Provider>
