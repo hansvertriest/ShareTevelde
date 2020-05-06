@@ -173,6 +173,23 @@ const ApiProvider = ({children}) => {
 			})
 	}
 
+	// PICTURES functions
+  	const uploadImage = async ( formData ) => {
+		const url = `${apiConfig.baseURL}/image`;
+		const response = await toolBox.fetchWithStandardOptionsImage(url, 'POST', formData, true);
+		return response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
+  	}
+
   	const putTextToMongo = ( formData, apiUrl ) => {
     	return fetch( `${BASE_URL}/${apiUrl}`, {
         	method: 'put',
@@ -183,23 +200,13 @@ const ApiProvider = ({children}) => {
       	});
   	}
 
-  	const postImageToMongo = ( formData ) => {
-    	return fetch(`${apiConfig.baseURL}/pictures`, {
-			method: 'post',
-			body: formData,
-			headers: { encType: 'multipart/form-data' },
-		}).then((res) => {
-			return res.json();
-		})
-  	}
-
 
   	return (
     	<ApiContext.Provider value={{
 			userProfile, 
 			refreshUserProfile, 
 			putTextToMongo, 
-			postImageToMongo,
+			uploadImage,
 			getPosts,
 			getUsers,
 			getAssignments,

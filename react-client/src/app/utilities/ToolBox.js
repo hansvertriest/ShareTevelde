@@ -50,6 +50,26 @@ class ToolBox {
 		return fetch(`${url}`, options);
 	}
 
+	fetchWithStandardOptionsImage = async (url, method, formData, attatchToken = false) => {
+		const token = (attatchToken) ? localStorage.getItem('mern:authUser') : undefined;
+		const myHeaders = {
+			encType: 'multipart/form-data'
+		}
+		if (token) {
+			myHeaders['Authorization'] = `Bearer ${token}`;
+			url = url + '/';
+		}
+		
+		const options = {
+			method: method || 'GET',
+			headers: myHeaders,
+			body: formData,
+			redirect: 'follow',
+		};
+
+		return fetch(`${url}`, options);
+	}
+
 
 }
 

@@ -16,7 +16,8 @@ const NewPost = ({children}) => {
 	const [courseId, setCourseId] = useState(undefined);
 	const [assignmentId, setAssignmentId] = useState(undefined);
 	
-	const [pictures, setPictures] = useState([<UploadPicture key="0" index="0"/>]);
+	const [pictures, setPictures] = useState([]);
+	const [updatePictures, setUpdatePictures] = useState(true);
 
 	// searchCourse
 	const searchCourse = async (input) => {
@@ -111,7 +112,20 @@ const NewPost = ({children}) => {
 		return undefined;
 	}
 
+	// when a photo is selected render new blank picture
+	const createNextCard = () => {
+		setUpdatePictures(true);
+	}
 
+	useEffect(() => {
+		if (updatePictures) {
+			const nextIndex = (pictures) ? pictures.length : 0;
+			const newPictures = [...pictures, <UploadPicture key={nextIndex} index={nextIndex} onSelected={createNextCard}/>]
+	
+			setPictures(newPictures);
+		}
+		setUpdatePictures(false);
+	}, [updatePictures]);
 
 	return (
 		<div className="page__new-post">
@@ -124,7 +138,7 @@ const NewPost = ({children}) => {
 			</div>
 			<div className="post-form-container">
 				<PageTitle>Nieuwe Post</PageTitle>
-				<form>
+				<form encType="multipart/form-data" action="/" method="post">
 					<div className="post-form-container__assignment-section">
 						<div className="assignment-section__course">
 							<InputFieldTextWithResults 
