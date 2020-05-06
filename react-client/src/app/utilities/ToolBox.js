@@ -35,20 +35,22 @@ class ToolBox {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
 		}
-		if (token){
+		if (token) {
 			myHeaders['Authorization'] = `Bearer ${token}`;
 			url = url + '/';
 		}
-
+		
 		const options = {
 			method: method || 'GET',
-			headers: (customization) ? customization.headers : myHeaders,
-			body: (customization) ? JSON.stringify(customization.body) : undefined,
+			headers: (customization && customization.headers) ? customization.headers : myHeaders,
+			body: (customization && customization.body) ? JSON.stringify(customization.body) : undefined,
 			redirect: 'follow',
 		};
 
 		return fetch(`${url}`, options);
 	}
+
+
 }
 
 const toolbox = new ToolBox()

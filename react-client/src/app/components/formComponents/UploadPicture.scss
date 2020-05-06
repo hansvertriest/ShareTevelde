@@ -1,0 +1,22 @@
+@import '../../../variables.scss';
+
+.picture-upload {
+	grid-column: span 4;
+
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+
+	.picture-upload__picture-container {
+		grid-column: span 1;
+		background-color: $bg-color-shade-light;
+		border-radius: $radius-lg;
+
+		display:flex;
+		flex-direction: column;
+		
+		.picture-container--empty {
+			margin: auto;
+			width: 30%;
+		}
+	}
+}

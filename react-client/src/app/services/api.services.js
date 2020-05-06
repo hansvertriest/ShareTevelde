@@ -52,7 +52,7 @@ const ApiProvider = ({children}) => {
 		// construct query
 		const url = `${BASE_URL}/user/all`;
 		const queryUrl = toolBox.parametersToQuery(url, filters, (pageNr !== undefined && limit !== undefined) ? { pageNr, limit } : undefined);
-		// fetch posts
+		// fetch users
 		const response = await toolBox.fetchWithStandardOptions(queryUrl, 'GET');
 		return response.json()
 			.then((res) => {
@@ -72,8 +72,31 @@ const ApiProvider = ({children}) => {
 		// construct query
 		const url = `${BASE_URL}/assignment/all`;
 		const queryUrl = toolBox.parametersToQuery(url, filters, (pageNr !== undefined && limit !== undefined) ? { pageNr, limit } : undefined);
-		// fetch posts
+		// fetch assignments
 		const response = await toolBox.fetchWithStandardOptions(queryUrl, 'GET');
+		return response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
+	}
+
+	const createNewAssignment = async (courseId, title, description ) => {
+		const url = `${BASE_URL}/assignment`;
+
+		const body = {
+			courseId,
+			title,
+			description,
+		}	
+
+		const response = await toolBox.fetchWithStandardOptions(url, 'POST', {body}, true);
 		return response.json()
 			.then((res) => {
 				return toolBox.handleFetchError(res);
@@ -92,8 +115,31 @@ const ApiProvider = ({children}) => {
 		// construct query
 		const url = `${BASE_URL}/course/all`;
 		const queryUrl = toolBox.parametersToQuery(url, filters, (pageNr !== undefined && limit !== undefined) ? { pageNr, limit } : undefined);
-		// fetch posts
+		// fetch courses
 		const response = await toolBox.fetchWithStandardOptions(queryUrl, 'GET');
+		return response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
+	}
+
+	const createNewCourse = async (courseTitle, schoolyear, direction) => {
+		const url = `${BASE_URL}/course`;
+
+		const body = {
+			courseTitle,
+			schoolyear,
+			direction
+		}	
+
+		const response = await toolBox.fetchWithStandardOptions(url, 'POST', {body}, true);
 		return response.json()
 			.then((res) => {
 				return toolBox.handleFetchError(res);
@@ -159,6 +205,8 @@ const ApiProvider = ({children}) => {
 			getAssignments,
 			getNotifications,
 			getCourses,
+			createNewCourse,
+			createNewAssignment,
 			}}>
       	{children}
     	</ApiContext.Provider>

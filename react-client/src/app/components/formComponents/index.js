@@ -8,6 +8,7 @@ import OptionButton from './buttons/OptionButton';
 import SearchContainer from './SearchContainer';
 import FilterContainer from './FilterContainer';
 import InputFieldTextWithResults from './InputFieldTextWithResults';
+import UploadPicture from './UploadPicture';
 
 export {
 	ProfilePicture,
@@ -19,5 +20,6 @@ export {
 	SecondaryButton,
 	SearchContainer,
 	FilterContainer,
-	InputFieldTextWithResults
+	InputFieldTextWithResults,
+	UploadPicture
 }
