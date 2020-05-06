@@ -11,7 +11,7 @@
 	z-index: 1;
 }
 
-.search-results {
+.form-search-results {
 	display: none;
 	padding: 10px 10px;
 	padding-top: 10px;
@@ -20,7 +20,7 @@
 	background-color: $bg-color-shade-dark;
 	border-radius: $radius-lg;
 	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-	.search-results__option {
+	.form-search-results__option {
 		margin: 12px 0px;
 		padding: 8px 10px;
 		border-radius: 5px;;
@@ -36,7 +36,7 @@
 			flex-shrink: 0;
 		}
 	}
-	.search-results__option:hover {
+	.form-search-results__option:hover {
 		background-color: $bg-color-shade-light;
 		cursor: pointer;
 	}
@@ -47,6 +47,6 @@
 	}
 }
 
-.search-results--show {
+.form-search-results--show {
 	display: block;
 }

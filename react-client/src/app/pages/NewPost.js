@@ -24,7 +24,7 @@ const NewPost = ({children}) => {
 			? courses.map((course) => {
 				return (
 					<div 
-						className="search-results__option" 
+						className="form-search-results__option" 
 						key={course._id} 
 						onClick={
 							() => {
@@ -55,7 +55,7 @@ const NewPost = ({children}) => {
 				? assignments.map((assignment) => {
 					return (
 						<div 
-							className="search-results__option" 
+							className="form-search-results__option" 
 							key={assignment._id} 
 							onClick={
 								() => {
