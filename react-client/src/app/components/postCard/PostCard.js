@@ -1,4 +1,4 @@
-import { default as React, useState } from 'react';
+import { default as React, useState, useEffect } from 'react';
 
 import { apiConfig } from '../../config';
 import { H2 } from '../../components/typography';
@@ -20,9 +20,26 @@ const PostCard = (props) => {
 		infoContainer.style.bottom = "10px";
 	}
 
+	// set dimensions of picture
+	const setSquareDimensions = () => {
+		const picture = document.getElementById(`post-card__img-${props.id}`);
+		const pictureHeader = document.querySelector(`#post-card__img-${props.id} .post-card-img__header`);
+		picture.style.height = `${picture.offsetWidth}px`;
+		pictureHeader.style.width = `${picture.offsetWidth}px`;
+	}
+
+	useEffect(() => {
+		setSquareDimensions();
+
+		// listener for setting square dimensions
+		window.addEventListener('resize', () => {
+			setSquareDimensions();
+		});
+	}, []);
+
   	return (
 		<div className="post-card" id={props.id} >
-			<div className="post-card__img" > 
+			<div className="post-card__img" id={`post-card__img-${props.id}`}> 
 				<div className="post-card-img__header">
 					<div className="post-card-img-header__profile-container">
 						<img 

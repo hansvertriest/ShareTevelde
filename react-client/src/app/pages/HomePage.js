@@ -32,17 +32,6 @@ const HomePage = ({children}) => {
 		setFilter({direction: classFilter, schoolyear: schoolYearFilter});
 	}
 
-	// set dimensions of pictures
-	const setSquareDimensions = () => {
-		const pictures = document.getElementsByClassName('post-card__img');
-		const pictureHeaders = document.getElementsByClassName('post-card-img__header ');
-		const elementsAmount = pictures.length;
-		for (let i = 0; i < elementsAmount; i++) {
-			pictures.item(i).style.height = `${pictures.item(i).offsetWidth}px`;
-			pictureHeaders.item(i).style.width = `${pictures.item(i).offsetWidth}px`;
-		}
-	}
-
 	const updateLoadingText = (text) => {
 		const element = document.querySelector('.loading-text p');
 		element.innerHTML = text;
@@ -56,12 +45,6 @@ const HomePage = ({children}) => {
 	useLayoutEffect(() => {
 		// listener for checking if bottom of page
 		window.addEventListener('scroll', checkIfBottomOfPage);
-		
-		// listener for setting square dimensions
-		window.addEventListener('resize', () => {
-			setSquareDimensions();
-		});
-
 	}, []);
 
 	// Fetch posts when the page is updated
@@ -90,9 +73,6 @@ const HomePage = ({children}) => {
 
 			// conclude fetching
 			setIsFetchingPosts(false);
-
-			// set dimensions of new posts
-			setSquareDimensions();
 		}
 	}
 
