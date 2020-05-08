@@ -47,6 +47,29 @@ const ApiProvider = ({children}) => {
 			})
 	}
 
+	const createPosts = async ( assignmentId, urlToProject, pictures) => {
+		const url = `${BASE_URL}/post`;
+		// create body 
+		const body = {
+			assignmentId,
+			urlToProject,
+			pictures,
+		}
+		// fetch posts
+		const response = await toolBox.fetchWithStandardOptions(url, 'POST', {body}, true);
+		return response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
+	}
+
 	// USERS functions
 	const getUsers = async (filters, pageNr, limit) => {
 		// construct query
@@ -153,7 +176,7 @@ const ApiProvider = ({children}) => {
 			})
 	}
 
-	// NOTIFICaTIONS functions
+	// NOTIFICATIONS functions
 	const getNotifications = async (pageNr, limit, attachToken) => {
 		// construct query
 		const url = `${BASE_URL}/notification/all`;
@@ -188,6 +211,29 @@ const ApiProvider = ({children}) => {
 				console.log(error);
 				return error;
 			})
+	  }
+	  
+	  const uploadPictureWithFilename = async ( title, description, filename ) => {
+		const url = `${BASE_URL}/picture/filename`;
+
+		const body = {
+			title,
+			description,
+			filename,
+		}	
+
+		const response = await toolBox.fetchWithStandardOptions(url, 'POST', {body}, true);
+		return response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
   	}
 
   	const putTextToMongo = ( formData, apiUrl ) => {
@@ -207,7 +253,9 @@ const ApiProvider = ({children}) => {
 			refreshUserProfile, 
 			putTextToMongo, 
 			uploadImage,
+			uploadPictureWithFilename,
 			getPosts,
+			createPosts,
 			getUsers,
 			getAssignments,
 			getNotifications,

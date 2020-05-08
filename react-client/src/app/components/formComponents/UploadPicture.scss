@@ -7,6 +7,8 @@
 	grid-template-columns: repeat(2, 1fr);
 	grid-gap: 20px;
 
+	margin: 10px 0;
+
 	.picture-upload__picture-container {
 		grid-column: span 1;
 		background-color: $bg-color-shade-light;
@@ -65,5 +67,121 @@
 			}
 		}
 
+	}
+
+	.picture-upload__text-container {
+		grid-column: span 1;
+		.title-input {
+			background-color: transparent;
+			border: none;
+			font-size: $font-size-h2-lg;
+			color: $white;
+			font-family: 'Roboto Condensed';
+		}
+
+		.title-input::placeholder {
+			color: $bg-color-shade-light;
+		}
+
+		.description-input {
+			background-color: transparent;
+			border: none;
+			font-size: $font-size-small-lg;
+			color: $white;
+			width: 100%;
+			margin-top: 10px;
+			font-family: 'Poppins';
+			border-left: 2px solid $bg-color-shade-light;
+			padding: 5px;
+			overflow: auto;
+		}
+
+		.description-input::placeholder {
+			color: $bg-color-shade-light;
+		}
+	}
+}
+
+// small screen
+@media only screen and (min-width : $breakpoint-xsm) and (max-width : $breakpoint) {
+	.picture-upload {
+		grid-column: span 4;
+	
+		grid-template-columns: repeat(1, 1fr);
+		grid-gap: 0px;
+	
+		.picture-upload__picture-container {
+			grid-column: span 1;
+			
+			.picture-container--displayed {
+				
+			}
+	
+			.picture-container--empty {
+			}
+	
+			input {
+			}
+	
+			.picture-container-button {
+				p {
+				}
+			}
+	
+		}
+	
+		.picture-upload__text-container {
+			padding: 10px;
+			.title-input {
+				font-size: $font-size-h2-lg;
+			}
+	
+			.title-input::placeholder {
+				
+			}
+		}
+	}
+	
+}
+
+
+// extra small screen
+@media only screen and (max-width : $breakpoint-xsm) {
+	.picture-upload {
+		grid-column: span 4;
+	
+		grid-template-columns: repeat(1, 1fr);
+		grid-gap: 0px;
+	
+		.picture-upload__picture-container {
+			grid-column: span 1;
+			
+			.picture-container--displayed {
+				
+			}
+	
+			.picture-container--empty {
+			}
+	
+			input {
+			}
+	
+			.picture-container-button {
+				p {
+				}
+			}
+	
+		}
+	
+		.picture-upload__text-container {
+			padding: 10px;
+			.title-input {
+				font-size: $font-size-h2-lg;
+			}
+	
+			.title-input::placeholder {
+				
+			}
+		}
 	}
 }

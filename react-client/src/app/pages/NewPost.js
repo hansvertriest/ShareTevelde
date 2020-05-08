@@ -8,16 +8,23 @@ import { InputFieldTextWithResults, InputFieldText, UploadPicture } from '../com
 // import { ProfilePicture, SocialMediaField } from '../components/formComponents';
 
 import './NewPost.scss';
+import { toolBox } from '../utilities';
 
 const NewPost = ({children}) => {
-	const { getCourses, getAssignments, createNewCourse, createNewAssignment } = useApi();
+	const { getCourses, getAssignments, createNewCourse, createNewAssignment, uploadPictureWithFilename,createPosts } = useApi();
 	const { currentUser } = useAuth();
 
+	const [picturesElements, setPicturesElements] = useState([]);
+
+	// post data
 	const [courseId, setCourseId] = useState(undefined);
 	const [assignmentId, setAssignmentId] = useState(undefined);
+	const [url, setUrl] = useState(undefined);
+	const [imageNames, setImageNames] = useState([]);
 	
-	const [pictures, setPictures] = useState([]);
+	// update triggers
 	const [updatePictures, setUpdatePictures] = useState(true);
+	const [updateImageNames, setUpdateImageNames] = useState(false);
 
 	// searchCourse
 	const searchCourse = async (input) => {
@@ -99,7 +106,7 @@ const NewPost = ({children}) => {
 		return undefined;
 	}
 
-	// create new course
+	// create new assignment
 	const createAssignment = async () => {
 		const title = document.getElementById('assignment-input-create-form__title').value;
 		const description = document.getElementById('assignment-input-create-form__description').value;
@@ -113,19 +120,49 @@ const NewPost = ({children}) => {
 	}
 
 	// when a photo is selected render new blank picture
-	const createNextCard = () => {
+	const createNextCard = async (imageName) => {
+		setUpdateImageNames(imageName);
 		setUpdatePictures(true);
+	}
+
+	const uploadPost = async (ev) => {
+		ev.preventDefault();
+		// gather picture data
+		let pictures = [];
+		for (let index = 0; index < picturesElements.length; index++) {
+			const title = document.getElementById(`title-${index}`).value;
+			const description = document.getElementById(`description-${index}`).value;
+			const filename = imageNames[index];
+			// only upload when img is present
+			if (filename) {
+				const picture = await uploadPictureWithFilename(title, description, filename);
+				pictures.unshift(picture._id);
+			}
+		}
+		pictures = JSON.stringify(pictures);
+
+		if (assignmentId && pictures.length > 0) {
+
+			const post = await createPosts(assignmentId, url, pictures);
+			console.log(post);
+		}
+
 	}
 
 	useEffect(() => {
 		if (updatePictures) {
-			const nextIndex = (pictures) ? pictures.length : 0;
-			const newPictures = [...pictures, <UploadPicture key={nextIndex} index={nextIndex} onSelected={createNextCard}/>]
+			const nextIndex = (picturesElements) ? picturesElements.length : 0;
+			const newPictures = [...picturesElements, <UploadPicture key={nextIndex} index={nextIndex} onSelected={createNextCard}/>]
 	
-			setPictures(newPictures);
+			setPicturesElements(newPictures);
+			setUpdatePictures(false);
 		}
-		setUpdatePictures(false);
-	}, [updatePictures]);
+		if (updateImageNames) {
+			const newImages = [...imageNames, updateImageNames]
+			setImageNames(newImages);
+			setUpdateImageNames(undefined);
+		}
+	}, [updatePictures, updateImageNames]);
 
 	return (
 		<div className="page__new-post">
@@ -200,14 +237,16 @@ const NewPost = ({children}) => {
 						<Label>Link naar volledig project</Label>
 						<InputFieldText
 							placeholder="https:// ... "
+							onChange={(ev) => setUrl(ev.target.value)}
 						/>
 					</div>
 					<div className="post-form-container__pictures-section">
 						<Label>Foto's</Label>
 						
-						{pictures}
+						{picturesElements}
 
 					</div>
+					<button type="submit" onClick={uploadPost}> Upload post</button>
 				</form>
 			</div>
 			<div className="aside-container aside-container--right">
@@ -217,6 +256,7 @@ const NewPost = ({children}) => {
 					: null
 				}
 			</div>
+				
 		</div>
 	);
 };

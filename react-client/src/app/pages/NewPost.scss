@@ -100,7 +100,6 @@
 		}
 
 		.post-form-container__pictures-section {
-			
 		}
 		.post-form-container__assignment-section, .post-form-container__url-section, .post-form-container__pictures-section {
 			margin-bottom: 40px;
@@ -136,6 +135,15 @@
 				}
 			}
 		}
+
+		.post-form-container__url-section {
+			.input-container {
+				grid-column: span 4!important;
+			}
+		}
+		.post-form-container__url-section {
+			grid-column: span 4;
+		}
 		.aside-container--top {
 			display: block;
 			grid-column: span 6;
@@ -155,9 +163,15 @@
 			grid-column: span 6;
 
 			.post-form-container__assignment-section {
-				.assignment-section__course, .assignment-section__assignment {
+				.assignment-section__course, .assignment-section__assignment, .post-form-container__url-section {
 					grid-column: span 6;
 				}
+			}
+		}
+
+		.post-form-container__url-section {
+			.input-container {
+				grid-column: span 4 !important;
 			}
 		}
 		.aside-container--top {

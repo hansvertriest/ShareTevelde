@@ -28,24 +28,18 @@ const UploadPicture = (props) => {
 	const onFileSelected = async () => {
 		// get elements
 		const input = document.getElementById(`upload-${props.index}`);
-		const target = document.getElementById('picture-container');
 
 		const formData = new FormData();
 		formData.append('picture', input.files[0]);
 
 		const image = await uploadImage(formData);
 		setFilename(image.filename);
-
-		// swap styles
-		target.classList.remove('picture-container--empty')
-		target.classList.add('picture-container--displayed')
-
-		// props.onSelected()
+		props.onSelected(image.filename)
 	}
 
 	useEffect(() => {
+		window.addEventListener('resize', setDimension)
 		setDimension();
-		console.log(filename)
 	}, [filename]);
 	
 	return(
@@ -55,20 +49,37 @@ const UploadPicture = (props) => {
 					className=" picture-container picture-container--empty"
 					id="picture-container"
 					src={ (filename) ? `${BASE_URL}/image/byname/${filename}` : "./icons/upload.svg"}
-					alt="Upload icon"	
+					alt="Upload icon"
+					onLoad={
+						(filename) 
+						?() => {
+							// swap styles
+							const target = document.querySelector(`#picture-container-${props.index} #picture-container`);
+							target.classList.remove('picture-container--empty')
+							target.classList.add('picture-container--displayed')
+						}
+						: undefined
+					}
 				/>
 				<div className="picture-container-button">
 					{
 						(props.imageName)
-						? <p>Afbeelding wijzigen</p>
+						? <p>Afbeelding wijzigen</p> 
 						: <p>Upload afbeelding</p>
 					}
 				</div>
 				<input type="file" id={`upload-${props.index}`} onChange={onFileSelected}/>
 			</div>
 			<div className="picture-upload__text-container">
-				<input type="text" id={`title-${props.index}`} placeholder="Titel van jouw foto" />
-				<input type="textarea" id={`description-${props.index}`} placeholder="Eventuele omschrijving van de foto." />
+				<input type="text" id={`title-${props.index}`} className={'title-input'} placeholder="Titel van jouw foto" />
+				<textarea 
+					id={`description-${props.index}`} 
+					className={'description-input'} 
+					placeholder="Eventuele omschrijving van de foto." 
+					rows="4" cols="60"
+					maxLength="200"
+					>
+					</ textarea>
 			</div>
 		</div>
 	);

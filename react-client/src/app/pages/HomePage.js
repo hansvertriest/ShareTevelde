@@ -10,7 +10,7 @@ const HomePage = ({children}) => {
 	const { getPosts } = useApi();
 	const { currentUser, refresh } = useAuth();
 
-	const postsLimit = 5;
+	const postsLimit = 2;
 
 	const [posts, setPosts] = useState([]);
 	const [postPage, setPostPage] = useState(0);
@@ -21,6 +21,7 @@ const HomePage = ({children}) => {
 	// if scrolled to bottom update postPage
 	const checkIfBottomOfPage = () => {
 		if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && !isFetchingPosts) {
+			setIsFetchingPosts(true);
 			setUpdatePostPage(true);
 		}
 	}
@@ -91,8 +92,9 @@ const HomePage = ({children}) => {
 	useEffect(() => {
 		if (updatePostPage) {
 			setPostPage(postPage + 1);
+			console.log(postPage)
+			setUpdatePostPage(false);
 		}
-		setUpdatePostPage(false);
 	}, [updatePostPage]);
 
 	return (
