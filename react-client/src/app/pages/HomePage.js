@@ -51,6 +51,7 @@ const HomePage = ({children}) => {
 	// Fetch posts when the page is updated
 
 	const fetchPosts = async (page) => {
+		console.log(page);
 		// get docs
 		const docs = (filter) ?  await getPosts(filter, page, postsLimit, true) : await getPosts({}, page, postsLimit) ;
 
@@ -78,24 +79,25 @@ const HomePage = ({children}) => {
 	}
 
 	useEffect(() => {
-		if (filter) {
-			fetchPosts(postPage);
-		} else if (postPage) {
-			fetchPosts(postPage);
+		// BIJ FILTER GAAT RR TWEE KEER OMDAT UPDATEPAGE
+		const func = async() => {
+			// First if : when filter is first applied.
+			// filter can't be used as a condition because the setPostPage will trigger this effect and
+			// because of the existence of a filter, the fetchpost will run for a second time. 
+			if (filter && postPage === 0) {
+				await fetchPosts(postPage);
+				setPostPage(postPage + 1);
+			} else if (updatePostPage) {
+				await fetchPosts(postPage);
+				setPostPage(postPage + 1);
+				setUpdatePostPage(false);
+			}
+			if (currentUser) {
+				refresh()
+			}
 		}
-		if (currentUser) {
-			refresh()
-		}
-	}, [postPage, filter])
-
-	// update page when updatePostPage is set to true
-	useEffect(() => {
-		if (updatePostPage) {
-			setPostPage(postPage + 1);
-			console.log(postPage)
-			setUpdatePostPage(false);
-		}
-	}, [updatePostPage]);
+		func();
+	}, [updatePostPage, filter])
 
 	return (
 		<div className="page__main-container">

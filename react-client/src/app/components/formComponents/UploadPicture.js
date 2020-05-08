@@ -34,6 +34,7 @@ const UploadPicture = (props) => {
 
 		const image = await uploadImage(formData);
 		setFilename(image.filename);
+		console.log(image.fileName);
 		props.onSelected(image.filename)
 	}
 

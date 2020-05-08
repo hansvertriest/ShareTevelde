@@ -121,6 +121,7 @@ const NewPost = ({children}) => {
 
 	// when a photo is selected render new blank picture
 	const createNextCard = async (imageName) => {
+		console.log(imageName);
 		setUpdateImageNames(imageName);
 		setUpdatePictures(true);
 	}
