@@ -14,6 +14,7 @@ const NewPost = ({children}) => {
 	const { getCourses, getAssignments, createNewCourse, createNewAssignment, uploadPictureWithFilename,createPosts } = useApi();
 	const { currentUser } = useAuth();
 
+	// component collections
 	const [picturesElements, setPicturesElements] = useState([]);
 
 	// post data
@@ -25,6 +26,9 @@ const NewPost = ({children}) => {
 	// update triggers
 	const [updatePictures, setUpdatePictures] = useState(true);
 	const [updateImageNames, setUpdateImageNames] = useState(false);
+	
+	// temp data container
+	const [oldImage, setOldImage] = useState(undefined);;
 
 	// searchCourse
 	const searchCourse = async (input) => {
@@ -120,8 +124,8 @@ const NewPost = ({children}) => {
 	}
 
 	// when a photo is selected render new blank picture
-	const createNextCard = async (imageName) => {
-		console.log(imageName);
+	const createNextCard = async (imageName, oldImage = undefined) => {
+		if (oldImage) setOldImage(oldImage);
 		setUpdateImageNames(imageName);
 		setUpdatePictures(true);
 	}
@@ -151,18 +155,37 @@ const NewPost = ({children}) => {
 	}
 
 	useEffect(() => {
-		if (updatePictures) {
+		if (updatePictures && updateImageNames) {
+			if (oldImage) {
+				// no new element is created
+				// update imageNames
+				const currentImages =  
+					imageNames.map((imageName) => {
+						if (imageName === oldImage) {return oldImage}
+						return imageName;
+					})
+				const newImages = [...currentImages];
+				setImageNames(newImages);
+				setOldImage(undefined);
+				setUpdateImageNames(undefined);
+			} else {
+				// create new picture element
+				const nextIndex = (picturesElements) ? picturesElements.length : 0;
+				const newPictures = [...picturesElements, <UploadPicture key={nextIndex} index={nextIndex} onSelected={createNextCard}/>]
+				setPicturesElements(newPictures);
+				
+				// update imageNames
+				const newImages = [...imageNames, updateImageNames]
+				setImageNames(newImages);
+				setUpdateImageNames(undefined);
+			}
+			setUpdatePictures(false);
+		} else if (updatePictures && picturesElements.length === 0) {
+			// create new picture element
 			const nextIndex = (picturesElements) ? picturesElements.length : 0;
 			const newPictures = [...picturesElements, <UploadPicture key={nextIndex} index={nextIndex} onSelected={createNextCard}/>]
-	
 			setPicturesElements(newPictures);
-			setUpdatePictures(false);
-		}
-		if (updateImageNames) {
-			const newImages = [...imageNames, updateImageNames]
-			setImageNames(newImages);
-			setUpdateImageNames(undefined);
-		}
+		} 
 	}, [updatePictures, updateImageNames]);
 
 	return (

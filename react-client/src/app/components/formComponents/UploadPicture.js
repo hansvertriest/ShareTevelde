@@ -11,6 +11,7 @@ const UploadPicture = (props) => {
 	const { uploadImage } = useApi();
 
 	const [filename, setFilename] = useState(undefined);
+	const [previousFilename, setPreviousFilename] = useState(undefined);
 
 	const setDimension = () => {
 		const container = document.getElementById(`picture-container-${props.index}`);
@@ -26,16 +27,20 @@ const UploadPicture = (props) => {
 	}
 
 	const onFileSelected = async () => {
-		// get elements
+		// get element
 		const input = document.getElementById(`upload-${props.index}`);
 
 		const formData = new FormData();
 		formData.append('picture', input.files[0]);
 
+		// upload picture
 		const image = await uploadImage(formData);
+
+		// save filename
+		setPreviousFilename(image.filename);
 		setFilename(image.filename);
-		console.log(image.fileName);
-		props.onSelected(image.filename)
+		console.log(previousFilename)
+		props.onSelected(image.filename, previousFilename)
 	}
 
 	useEffect(() => {
@@ -72,7 +77,7 @@ const UploadPicture = (props) => {
 				<input type="file" id={`upload-${props.index}`} onChange={onFileSelected}/>
 			</div>
 			<div className="picture-upload__text-container">
-				<input type="text" id={`title-${props.index}`} className={'title-input'} placeholder="Titel van jouw foto" />
+				<input type="text" id={`title-${props.index}`} className={'title-input'} placeholder="Titel van jouw foto" autoComplete="off" />
 				<textarea 
 					id={`description-${props.index}`} 
 					className={'description-input'} 
