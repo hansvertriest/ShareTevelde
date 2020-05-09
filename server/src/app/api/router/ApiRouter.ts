@@ -107,6 +107,7 @@ class ApiRouter {
 		this.router.post('/auth/signup', this.userController.signupLocal);
 		this.router.post('/auth/verify', this.verifyJwt, this.userController.sendOk);
 		this.router.get('/auth/refresh', this.verifyJwt, this.userController.refreshToken);
+		this.router.post('/auth/reset', this.verifyJwt, this.userController.resetPassword);
 
 		this.router.get('/image/byname/:filename', this.pictureController.show);
 		this.router.get('/picture/info', this.pictureController.getPictureInfo);

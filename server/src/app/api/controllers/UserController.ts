@@ -126,6 +126,41 @@ class UserController {
 		}
 	}
 
+	public resetPassword = async ( req: Request, res: Response,  next: NextFunction ): Promise<Response<any>> => {
+		try {
+			// get data
+			const { token, password } = req.body;
+
+			// check if password is long enough
+			if (password.length < 10) throw {code: 412, msg: 'Please provide a longer password.'}
+
+			// hash password
+			const hash = await this.authService.encrypt(password)
+				.catch(() =>{
+					const error = { code: 500, msg: 'failed to encrypt password'}
+					throw error;
+			})
+
+			await UserModel.updateOne(
+				{_id: mongoose.Types.ObjectId(token.id)},
+				{ 'localProvider.password': hash})
+				.then((resolve) => {
+					if (resolve.n === 0) {
+						throw {code: 404, msg: 'No users were found.'}
+					} else if (resolve.nModified === '0') {
+						throw {code: 500, msg: 'No modifications were made.'}
+					}
+					return res.status(200).send();
+				}).catch((error) => {
+					if (error.msg) return res.status(error.code).send(error);
+				});
+		} catch (error) {
+			if (error.msg) return res.status(error.code).send(error);
+			this.logger.error('Error while getting user by id.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
+		}
+	}
+
 	public getById = async ( req: Request, res: Response,  next: NextFunction ): Promise<Response<any>> => {
 		try {
 			const { id } = req.query;
