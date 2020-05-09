@@ -8,6 +8,7 @@ const useApi = () => useContext(ApiContext);
 
 const ApiProvider = ({children}) => {
   const BASE_URL = `${apiConfig.baseURL}`;
+  const socialMediums = ['linkFb', 'linkInsta', 'linkTwitter', 'linkYt', 'linkVimeo'];
 //  OLD=================
   const [userId, setUserId] = useState('5e81f5fae66709437c31577c'); // placeholder
   const [userProfile] = useState({});
@@ -280,6 +281,7 @@ const ApiProvider = ({children}) => {
 			getCourses,
 			createNewCourse,
 			createNewAssignment,
+			socialMediums,
 			}}>
       	{children}
     	</ApiContext.Provider>

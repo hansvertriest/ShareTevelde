@@ -80,6 +80,7 @@ class GridFs {
 								};
 							})
 							.on('finish', () => {
+								req.file.filename = fileName;
 								next();
 							})
 						)

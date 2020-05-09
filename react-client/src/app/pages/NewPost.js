@@ -260,7 +260,7 @@ const NewPost = ({children}) => {
 					<div className="post-form-container__url-section">
 						<Label>Link naar volledig project</Label>
 						<InputFieldText
-							placeholder="https:// ... "
+							defaultValue="www."
 							onChange={(ev) => setUrl(ev.target.value)}
 						/>
 					</div>

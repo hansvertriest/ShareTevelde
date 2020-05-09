@@ -117,6 +117,7 @@ class ApiRouter {
 			GridFs.resizeAndUploadPostPic,
 			this.pictureController.uploadPicture
 		);
+		this.router.post( '/picture/filename', this.verifyJwt, this.pictureController.uploadPictureWithFilename);
 		this.router.post(
 			'/image', 
 			this.verifyJwt, 

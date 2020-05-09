@@ -24,7 +24,11 @@ const pictureSchema: Schema = new Schema({
 		type: String,
 		required: true,
 	},
-  _createdAt: { type: Number, required: true, default: Date.now() },
+  _createdAt: { 
+	type: Number,
+	required: true,
+	default: () => { return new Date() }
+	},
 });
 
 const PictureModel = mongoose.model<IPicture>('Picture', pictureSchema);

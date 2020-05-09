@@ -67,7 +67,7 @@ const userSchema: Schema = new Schema({
 	_createdAt: {
 		type: Number,
 		required: true,
-		default: Date.now()
+		default: () => { return new Date() }
 	},
 	_modifiedAt: {
 		type: Number,
@@ -137,7 +137,7 @@ const userSchema: Schema = new Schema({
 		_createdAt: {
 			type: Number,
 			required: true,
-			default: Date.now()
+			default: () => { return new Date() }
 		},
 	}],
 	role: {

@@ -77,7 +77,7 @@ const postSchema: Schema = new Schema({
 		_createdAt: {
 			type: Number,
 			required: true,
-			default: Date.now()
+			default: () => { return new Date() }
 		},
 	}],
 
@@ -103,20 +103,20 @@ const postSchema: Schema = new Schema({
 			_createdAt: {
 				type: Number,
 				required: true,
-				default: Date.now()
+				default: () => { return new Date() }
 			},
 		}],
 		_createdAt: {
 			type: Number,
 			required: true,
-			default: Date.now()
+			default: () => { return new Date() }
 		},
 	}],
 
 	_createdAt: {
 		type: Number,
 		required: true,
-		default: Date.now()
+		default: () => { return new Date() }
 	},
 	_modifiedAt: {
 		type: Number,

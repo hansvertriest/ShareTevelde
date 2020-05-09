@@ -77,7 +77,6 @@ class CourseController {
 
 			// sanitize parameters
 			const sanitizedParams: any = DBOperations.sanitizeParameters(params);
-			console.log(sanitizedParams)
 			// create filter
 			const filter = DBOperations.createFilter(sanitizedParams);
 

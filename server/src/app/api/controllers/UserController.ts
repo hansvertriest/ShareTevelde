@@ -309,7 +309,7 @@ class UserController {
 					} else if (resolve.nModified === '0') {
 						throw {code: 500, msg: 'No modifications were made.'}
 					}
-					return res.status(200).send();
+					return res.status(200).send({});
 				}).catch((error) => {
 					if (error.msg) return res.status(error.code).send(error);
 				});

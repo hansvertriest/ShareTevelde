@@ -1,8 +1,8 @@
 import { default as React, useState, useEffect } from 'react';
 
-import './InputFieldText.scss';
+import './DropDown.scss';
 
-const InputFieldText = (props) => {
+const DropDown = (props) => {
 	const [style, setStyle] = useState({});
 	/* Validate
 			ev = event
@@ -39,23 +39,20 @@ const InputFieldText = (props) => {
 	}
 	return(
 		<div className="input-container">
-			<input 
+			<select
 				className="input-container__text-input"
-				type={props.type} 
 				id={props.id}
-				style={style}
 				placeholder={props.placeholder} 
 				name={props.name}
 				autoComplete={props.autoComplete || 'off'}
 				onChange={(props.validate) ? (ev) => validate(ev) : (props.onChange) ? props.onChange : null}
 				onBlur={(props.validate) ? (ev) => validate(ev, props.showErrors || false) : (props.onBlur) ? props.onBlur : null}
-				onClick={(props.onClick) ? props.onClick : null}
-				defaultValue={props.defaultValue}
 				>
-			</input>
+				{props.children}
+			</select>
 			<p className="error-field" id={`${props.id}-error`}></p>
 		</div>
 	);
 }
 
-export default InputFieldText;
+export default DropDown;

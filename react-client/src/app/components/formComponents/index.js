@@ -9,6 +9,8 @@ import SearchContainer from './SearchContainer';
 import FilterContainer from './FilterContainer';
 import InputFieldTextWithResults from './InputFieldTextWithResults';
 import UploadPicture from './UploadPicture';
+import TextArea from './TextArea';
+import DropDown from './DropDown';
 
 export {
 	ProfilePicture,
@@ -21,5 +23,7 @@ export {
 	SearchContainer,
 	FilterContainer,
 	InputFieldTextWithResults,
-	UploadPicture
+	UploadPicture,
+	TextArea,
+	DropDown
 }
