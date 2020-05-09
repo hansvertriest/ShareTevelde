@@ -141,7 +141,7 @@ const NewPost = ({children}) => {
 			// only upload when img is present
 			if (filename) {
 				const picture = await uploadPictureWithFilename(title, description, filename);
-				pictures.unshift(picture._id);
+				pictures.push(picture._id);
 			}
 		}
 		pictures = JSON.stringify(pictures);
@@ -164,7 +164,7 @@ const NewPost = ({children}) => {
 						if (imageName === oldImage) {return oldImage}
 						return imageName;
 					})
-				const newImages = [...currentImages];
+				const newImages = currentImages;
 				setImageNames(newImages);
 				setOldImage(undefined);
 				setUpdateImageNames(undefined);

@@ -90,6 +90,23 @@ const ApiProvider = ({children}) => {
 			})
 	}
 
+	const updateUser = async (body) => {
+		const url = `${BASE_URL}/user/token`;
+		// fetch users
+		const response = await toolBox.fetchWithStandardOptions(url, 'PUT', {body},true);
+		return response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
+	}
+
 	// ASSIGNMENTS functions
 	const getAssignments = async (filters, pageNr, limit) => {
 		// construct query
@@ -249,8 +266,9 @@ const ApiProvider = ({children}) => {
 
   	return (
     	<ApiContext.Provider value={{
-			userProfile, 
+			userProfile,
 			refreshUserProfile, 
+			updateUser, 
 			putTextToMongo, 
 			uploadImage,
 			uploadPictureWithFilename,

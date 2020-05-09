@@ -39,7 +39,6 @@ const UploadPicture = (props) => {
 		// save filename
 		setPreviousFilename(image.filename);
 		setFilename(image.filename);
-		console.log(previousFilename)
 		props.onSelected(image.filename, previousFilename)
 	}
 
