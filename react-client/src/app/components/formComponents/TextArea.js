@@ -1,9 +1,8 @@
-import { default as React, useState, useEffect } from 'react';
+import { default as React } from 'react';
 
 import './TextArea.scss';
 
 const TextArea = (props) => {
-	const [style, setStyle] = useState({});
 	/* Validate
 			ev = event
 			errorContainerId = when not provided no error will be shown 
@@ -43,7 +42,6 @@ const TextArea = (props) => {
 				className="input-container__textarea"
 				type={props.type} 
 				id={props.id}
-				style={style}
 				placeholder={props.placeholder} 
 				name={props.name}
 				autoComplete={props.autoComplete || 'off'}

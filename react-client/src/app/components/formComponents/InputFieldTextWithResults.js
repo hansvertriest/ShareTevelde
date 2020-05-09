@@ -1,4 +1,4 @@
-import { default as React, useState, useEffect, Fragment } from 'react';
+import { default as React, useState, Fragment } from 'react';
 
 import {InputFieldText, TertiaryButton } from './';
 import { H3, Label } from '../typography';

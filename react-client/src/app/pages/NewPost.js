@@ -4,11 +4,9 @@ import { useApi, useAuth } from '../services';
 import { Menu } from '../components/menu';
 import { PageTitle, Label } from '../components/typography';
 import { InputFieldTextWithResults, InputFieldText, UploadPicture } from '../components/formComponents';
-
-// import { ProfilePicture, SocialMediaField } from '../components/formComponents';
+import { PrimaryButton } from '../components/formComponents';
 
 import './NewPost.scss';
-import { toolBox } from '../utilities';
 
 const NewPost = ({children}) => {
 	const { getCourses, getAssignments, createNewCourse, createNewAssignment, uploadPictureWithFilename,createPosts } = useApi();
@@ -147,9 +145,7 @@ const NewPost = ({children}) => {
 		pictures = JSON.stringify(pictures);
 
 		if (assignmentId && pictures.length > 0) {
-
-			const post = await createPosts(assignmentId, url, pictures);
-			console.log(post);
+			await createPosts(assignmentId, (url !== 'www.') ? url : '', pictures);
 		}
 
 	}
@@ -270,7 +266,10 @@ const NewPost = ({children}) => {
 						{picturesElements}
 
 					</div>
-					<button type="submit" onClick={uploadPost}> Upload post</button>
+					<div className="post-form-container__submit-section">
+						<PrimaryButton type="submit" onClick={uploadPost}> Upload post</PrimaryButton>
+					</div>
+					
 				</form>
 			</div>
 			<div className="aside-container aside-container--right">

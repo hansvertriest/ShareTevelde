@@ -65,7 +65,7 @@ const FilterContainer = (props) => {
 		>
 			<div className="filter-container__header" onClick={(ev) => openFilterContainer(ev)}>
 				<H2>Filters</H2>	
-				<img className="search-container__filter" src={`./icons/${filterIcon}.svg`} />
+				<img className="search-container__filter" src={`./icons/${filterIcon}.svg`} alt="filter icon" />
 			</div>
 
 			<form className="filter-container__filter-body filter-container__filter-body--hide" id={`filter-container__filter-body-${props.position}`}>

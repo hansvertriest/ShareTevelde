@@ -115,8 +115,8 @@ const AuthProvider = ({children}) => {
 
 	const refresh = async () => {
 		let url = `${BASE_URL}/auth/refresh`;
+		// const queryUrl = toolBox.parametersToQuery(url, {stayedLoggedIn: false});
 		const response = await toolBox.fetchWithStandardOptions(url, 'GET', undefined, true);
-		const queryUrl = toolBox.parametersToQuery(url, {stayedLoggedIn: false});
 		await response.json()
 			.then((res) => {
 				return toolBox.handleFetchError(res);

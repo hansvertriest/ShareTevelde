@@ -178,12 +178,12 @@ const Profileconfig = ({children}) => {
 				<PageTitle>Profiel</PageTitle>
 				<div className="profile-form-container__profile-picture-section">
 					<div className="picture-container" onClick={onProfilePictureClick}>
-						<img src={`${BASE_URL}/image/byname/${currentUser.profile.profilePictureName}`} className="profile-picture"/>
-						<img src="./icons/camera.svg" className="overlay"/>
-						<input type="file" id={'upload-picture'} onChange={uploadPicture} accept="image/*"/>
+						<img src={`${BASE_URL}/image/byname/${currentUser.profile.profilePictureName}`} className="profile-picture" alt="profile"/>
+						<img src="./icons/camera.svg" className="overlay" alt="profile overlay"/>
+						<input type="file" id={'upload-picture'} onChange={uploadPicture} accept="image/*" />
 					</div>
 					<div className="username-container" id="username-container">
-						<img src="./icons/pen.svg"/>
+						<img src="./icons/pen.svg" alt="pen icon"/>
 						<input type="text" defaultValue={currentUser.profile.username} onBlur={uploadUsername}/>
 					</div>
 				</div>

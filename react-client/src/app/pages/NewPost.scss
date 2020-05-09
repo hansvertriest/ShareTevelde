@@ -108,6 +108,16 @@
 			grid-template-columns: repeat(4, 1fr);
 			column-gap: 20px;
 		}
+		.post-form-container__submit-section {
+			display: grid;
+			grid-template-columns: repeat(6, 1fr);
+			column-gap: 20px;
+			.primary-button {
+				grid-column-start: 3;
+				grid-column-end: 5;
+				margin: auto;
+			}
+		}
 	}
 	.aside-container {
 		grid-column: span 2;
@@ -135,6 +145,8 @@
 				}
 			}
 		}
+
+		
 
 		.post-form-container__url-section {
 			.input-container {

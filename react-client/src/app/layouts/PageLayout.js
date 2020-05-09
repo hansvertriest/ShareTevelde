@@ -1,6 +1,6 @@
 import { default as React } from 'react';
 
-import { Footer, Header } from '../components';
+import { Header } from '../components';
 
 const PageLayout = ({children}) => {
   return (

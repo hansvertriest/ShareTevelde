@@ -108,6 +108,26 @@ const ApiProvider = ({children}) => {
 			})
 	}
 
+	const getUserById = async (id) => {
+		// construct url
+		const url = `${BASE_URL}/user/`;
+		const queryUrl = toolBox.parametersToQuery(url, {id:[id]});
+
+		// fetch users
+		const response = await toolBox.fetchWithStandardOptions(queryUrl, 'GET', {});
+		return response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
+	}
+
 	// ASSIGNMENTS functions
 	const getAssignments = async (filters, pageNr, limit) => {
 		// construct query
@@ -270,6 +290,7 @@ const ApiProvider = ({children}) => {
 			userProfile,
 			refreshUserProfile, 
 			updateUser, 
+			getUserById,
 			putTextToMongo, 
 			uploadImage,
 			uploadPictureWithFilename,

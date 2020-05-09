@@ -1,9 +1,8 @@
-import { default as React, useState, useEffect } from 'react';
+import { default as React } from 'react';
 
 import './DropDown.scss';
 
 const DropDown = (props) => {
-	const [style, setStyle] = useState({});
 	/* Validate
 			ev = event
 			errorContainerId = when not provided no error will be shown 
