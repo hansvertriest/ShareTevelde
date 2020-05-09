@@ -32,6 +32,8 @@ const UploadPicture = (props) => {
 
 		const formData = new FormData();
 		formData.append('picture', input.files[0]);
+		formData.append('width', '500');
+		formData.append('height', '500');
 
 		// upload picture
 		const image = await uploadImage(formData);

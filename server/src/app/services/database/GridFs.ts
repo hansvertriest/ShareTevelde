@@ -54,12 +54,15 @@ class GridFs {
 		Resizes picture and uploads it to mongoDB
 	*/
 
-	public resizeAndUploadProfilePic = async (req: Request, res: Response, next: NextFunction): Promise < Response < any >> => {
+	public resizeAndUploadImage = async (req: Request, res: Response, next: NextFunction): Promise < Response < any >> => {
 		const input = req.file;
+		const dimensionX = (req.body.width && parseInt(req.body.width) <= 500) ? parseInt(req.body.width) : 200;
+		const dimensionY = (req.body.height && parseInt(req.body.height) <= 500) ? parseInt(req.body.height) : 200;
 		try {
+			if (dimensionX !== dimensionY) throw {code: 412, msg: 'Given dimensions must be square.'}
 			crypto.randomBytes(16, async (err, buf) => {
 				await sharp(input.buffer)
-					.resize(200, 200, {
+					.resize(dimensionX, dimensionY, {
 						fit: 'cover'
 					})
 					.toFormat("jpeg")

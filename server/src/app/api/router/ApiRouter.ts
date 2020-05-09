@@ -115,7 +115,7 @@ class ApiRouter {
 			'/picture',
 			this.verifyJwt, 
 			multer({ storage: memoryStorage() }).single('picture'),
-			GridFs.resizeAndUploadPostPic,
+			GridFs.resizeAndUploadImage,
 			this.pictureController.uploadPicture
 		);
 		this.router.post( '/picture/filename', this.verifyJwt, this.pictureController.uploadPictureWithFilename);
@@ -123,7 +123,7 @@ class ApiRouter {
 			'/image', 
 			this.verifyJwt, 
 			multer({ storage: memoryStorage() }).single('picture'),
-			GridFs.resizeAndUploadProfilePic, 
+			GridFs.resizeAndUploadImage, 
 			this.pictureController.uploadImage
 		);
 
