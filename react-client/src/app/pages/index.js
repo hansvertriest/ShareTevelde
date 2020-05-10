@@ -4,6 +4,7 @@ import SignUp from './SignUp';
 import SignIn from './SignIn';
 import NewPost from './NewPost';
 import Profile from './Profile';
+import Post from './Post';
 
 export {
 	HomePage,
@@ -11,5 +12,6 @@ export {
 	SignUp,
 	SignIn,
 	NewPost,
-	Profile
+	Profile,
+	Post
 }

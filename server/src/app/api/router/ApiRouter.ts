@@ -172,6 +172,7 @@ class ApiRouter {
 		
 		this.router.post('/notification/toAll', this.verifyJwtAndCheckAdmin, this.notificationController.sendAll);
 		this.router.get('/notification/all', this.verifyJwt, this.notificationController.get)
+		this.router.post('/notification', this.verifyJwt, this.notificationController.send)
 	}
 }
 

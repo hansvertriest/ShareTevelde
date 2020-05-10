@@ -1,12 +1,49 @@
 @import '../../variables.scss';
 
 .page__post {
+	grid-column: span 6;
+    display: grid;
+	grid-template-columns: repeat(6, 1fr);
+	column-gap: 20px;
+	.post-container {
+		grid-column: span 4;
 
+		.page-title {
+			margin-top: 10px;
+		}
+
+		.post-container__assignment-description {
+			margin: 40px 0;
+		}
+	}
+	.aside-container {
+		grid-column: span 2;
+		margin-top: 10px;
+	}
+
+	.aside-container--top {
+		display: none;	
+	}
+
+	.aside-container--right {
+		display: block;
+	}
 }
 
 // small screen
 @media only screen and (min-width : $breakpoint-xsm) and (max-width : $breakpoint) {
 	.page__post {
+		.post-container {
+			grid-column: span 6;
+		}
+		.aside-container--top {
+			display: block;
+			grid-column: span 6;
+		}
+	
+		.aside-container--right {
+			display: none;
+		}
 	}
 }
 
@@ -14,5 +51,16 @@
 // extra small screen
 @media only screen and (max-width : $breakpoint-xsm) {
 	.page__post {
+		.post-container {
+			grid-column: span 6;
+		}
+		.aside-container--top {
+			display: block;
+			grid-column: span 6;
+		}
+	
+		.aside-container--right {
+			display: none;
+		}
 	}
 }

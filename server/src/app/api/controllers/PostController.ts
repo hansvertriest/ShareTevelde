@@ -53,6 +53,7 @@ class PostController {
 
 			await post.save()
 				.then((response) => {
+					// send response
 					return res.status(200).send(response);
 				})
 				.catch((error) => {

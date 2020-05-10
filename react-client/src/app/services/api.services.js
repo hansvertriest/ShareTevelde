@@ -90,6 +90,26 @@ const ApiProvider = ({children}) => {
 			})
 	}
 
+	const getPostById = async (id) => {
+		// construct url
+		const url = `${BASE_URL}/post/`;
+		const queryUrl = toolBox.parametersToQuery(url, {id:[id]});
+
+		// fetch users
+		const response = await toolBox.fetchWithStandardOptions(queryUrl, 'GET', {});
+		return response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
+	}
+
 	// USERS functions
 	const getUsers = async (filters, pageNr, limit) => {
 		// construct query
@@ -334,6 +354,7 @@ const ApiProvider = ({children}) => {
 			getPosts,
 			getPostsOfUser,
 			createPost,
+			getPostById,
 			getUsers,
 			getAssignments,
 			getNotifications,

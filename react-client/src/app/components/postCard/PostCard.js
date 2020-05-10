@@ -58,15 +58,18 @@ const PostCard = (props) => {
 						: null
 					}
 				</div>
-				<img 
-					className="post-card-img__project-pic"
-					src={(data)
-						? `${BASE_URL}/image/byname/${data.pictures[0].filename}`
-						: ''
-					}
-					alt="Post"
-					onLoad={(ev) => pictureOnload()}
-				></img>
+				<a href={`/post/${data._id}`}>
+					<img 
+						className="post-card-img__project-pic"
+						src={(data)
+							? `${BASE_URL}/image/byname/${data.pictures[0].filename}`
+							: ''
+						}
+						alt="Post"
+						onLoad={(ev) => pictureOnload()}
+					></img>
+				</a>
+				
 			</div>
 			<div className="post-card__info">
 				<H2>{(data) ? data.assignment.title : undefined}</H2>

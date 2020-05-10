@@ -85,9 +85,9 @@ export class DBSeeder implements IDBSeeder {
 			const profilePictureName = profilePictures[i];
 			const password = 'test';
 			const role = 'user';
-			const linkFb = 'https://www.facebook.com/jana.vanderborgt';
-			const linkInsta = 'https://www.instagram.com/melina_torres_924/';
-			const linkTwitter = 'https://twitter.com/lena_vdb';
+			const linkFb = 'www.facebook.com/jana.vanderborgt';
+			const linkInsta = 'www.instagram.com/melina_torres_924/';
+			const linkTwitter = 'twitter.com/lena_vdb';
 			try {
 				const hash = await bcrypt.hash(password, this.config.auth.bcryptSalt)
 					.catch(() =>{
