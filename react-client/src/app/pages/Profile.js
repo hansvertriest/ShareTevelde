@@ -1,28 +1,60 @@
-import { default as React, useEffect, useState } from 'react';
+import { default as React, useEffect, useState, Fragment } from 'react';
 
 import { useAuth, useApi } from '../services';
-import { PageTitle } from '../components/typography';
+import { apiConfig } from '../config';
+
 import { Menu } from '../components/menu';
-import { InputFieldText, PrimaryButton, SecondaryButton, TertiaryButton } from '../components/formComponents';
-import { AUTH_SIGNUP } from '../routes';
-import { Logo } from '../components/misc';
+import { SocialMediumButton } from '../components/misc'
+import { PostThumbnail } from '../components/postThumb';
 
 import './Profile.scss';
 
 const Profile = (props) => {
-	const { getUserById } = useApi();
+	const BASE_URL = `${apiConfig.baseURL}`;
+
+	const { getPostsOfUser } = useApi();
+
+	const { getUserById, socialMediums } = useApi();
 	const { currentUser } = useAuth();
 
-	const [profile, setProfile] = useState(undefined);
+	const [user, setUser] = useState(undefined);
+	const [socialMediaButtons, setSocialMediaButtons] = useState([]);
+	const [postThumbnails, setPostThumbnails] = useState([]);
 
 	useEffect(() => {
 		const func = async () => {
 			// get user id
-			const profileId = props.match.params[0];
-	
-			if (profileId) {
-				const getProfile = await getUserById(profileId);
-				if (getProfile.profile) setProfile(getProfile);
+			const userId = props.match.params[0];
+			if (userId) {
+				const getUser = await getUserById(userId);
+				if (getUser.profile) setUser(getUser);
+				console.log(getUser);
+				
+				// create social media buttons
+				const profileKeys = Object.keys(getUser.profile);
+				const buttons = [];
+				profileKeys.forEach((key) => {
+					const imgName = key.replace('link', '');
+					if (socialMediums.includes(key)) {
+						buttons.push(
+							<SocialMediumButton 
+								key={key} 
+								url={getUser.profile[key]} 
+								imgName={imgName}
+							/>
+						)
+					}
+				});
+				setSocialMediaButtons(buttons);
+
+				// create post thumbnails
+				const posts = await getPostsOfUser(getUser._id);
+				const postElements = posts.map((post) => {
+					return (
+						<PostThumbnail postId={post._id} key={post._id} imgName={post.pictures[0].filename} />
+					)
+				});
+				setPostThumbnails(postElements);
 			}
 		}
 		
@@ -39,15 +71,29 @@ const Profile = (props) => {
 					: null
 				}
 			</div>
+			
 			<div className="profile-container">
 			{
-				(profile)
-				? 
-				<div></div>
-				: 
-				<p>Oeps hier is niets te zien!</p>
+			(user)
+			?
+			<Fragment>
+				<div className="profile-container__picture-section">
+					<img className="picture-section__picture" src={`${BASE_URL}/image/byname/${user.profile.profilePictureName}`} alt="profile"/>
+					<div className="picture-section__description">
+						<div className="username-container"><p className="username">{user.profile.username}</p></div>
+						<p className="description">{user.profile.profileDescription}</p>
+					</div>
+				</div>
+				<div className="profile-container__social-media">
+					{socialMediaButtons}
+				</div>
+				<div className="profile-container__posts">
+					{postThumbnails}
+				</div>
+			</Fragment>
+			: undefined
 			}
-
+			
 			</div>
 			
 			<div className="aside-container aside-container--right">

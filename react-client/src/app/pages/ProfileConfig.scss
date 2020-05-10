@@ -115,15 +115,16 @@
 					grid-column: span 2;
 				}
 				.medium-input-container {
-					grid-column: span 1;
+					grid-column: span 2;
 					display : flex;
 					align-items: center;
 					justify-content: space-between;
-					flex-wrap: wrap;
+					// flex-wrap: wrap;
 					img {
-						height: 43px;
+						width: 43px;
+						margin-right: 20px;
 					}
-					input {
+					.input-container {
 						width: 100%;
 					}
 				}

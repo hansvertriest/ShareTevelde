@@ -8,8 +8,7 @@ import { useApi, useAuth } from '../../services';
 const Menu = (props) => {
 	const BASE_URL = `${apiConfig.baseURL}`;
 	const { getNotifications } = useApi();
-	const { logout } = useAuth();
-
+	const { currentUser, logout } = useAuth();
 	const [notifications, setNotifications] = useState();
 
 	const fetchNotifications = async () => {
@@ -36,7 +35,7 @@ const Menu = (props) => {
   	return (
 		<div className="menu" id={props.id}>
 			<div className="menu__actions">
-				 <a className="menu-actions__button" href={`/`}>Profiel</a>
+				 <a className="menu-actions__button" href={`/profile/${currentUser.id}`}>Profiel</a>
 				 <a className="menu-actions__button" href={NEWPOST}>Nieuwe post</a>
 				 <a className="menu-actions__button" href={PROFILECONFIG}>Profiel bewerken</a>
 				 <a className="menu-actions__button" href={`/`}>Privacy</a>

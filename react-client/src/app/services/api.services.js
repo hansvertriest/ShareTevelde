@@ -48,7 +48,7 @@ const ApiProvider = ({children}) => {
 			})
 	}
 
-	const createPosts = async ( assignmentId, urlToProject, pictures) => {
+	const createPost = async ( assignmentId, urlToProject, pictures) => {
 		const url = `${BASE_URL}/post`;
 		// create body 
 		const body = {
@@ -58,6 +58,25 @@ const ApiProvider = ({children}) => {
 		}
 		// fetch posts
 		const response = await toolBox.fetchWithStandardOptions(url, 'POST', {body}, true);
+		return response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
+	}
+
+	const getPostsOfUser = async (userId) => {
+		// construct query
+		const url = `${BASE_URL}/post/all`;
+		const queryUrl = toolBox.parametersToQuery(url, {user: [userId]});
+		// fetch posts
+		const response = await toolBox.fetchWithStandardOptions(queryUrl, 'GET');
 		return response.json()
 			.then((res) => {
 				return toolBox.handleFetchError(res);
@@ -234,6 +253,24 @@ const ApiProvider = ({children}) => {
 			})
 	}
 
+	const sendNotification = async (notification) => {
+		// construct query
+		const url = `${BASE_URL}/notification`;
+		// fetch posts
+		const response = await toolBox.fetchWithStandardOptions(url, 'POST', {body: notification}, true);
+		return response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
+	}
+
 	// PICTURES functions
   	const uploadImage = async ( formData ) => {
 		const url = `${apiConfig.baseURL}/image`;
@@ -295,10 +332,12 @@ const ApiProvider = ({children}) => {
 			uploadImage,
 			uploadPictureWithFilename,
 			getPosts,
-			createPosts,
+			getPostsOfUser,
+			createPost,
 			getUsers,
 			getAssignments,
 			getNotifications,
+			sendNotification,
 			getCourses,
 			createNewCourse,
 			createNewAssignment,

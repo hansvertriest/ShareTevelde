@@ -35,13 +35,14 @@ const PostCard = (props) => {
 		window.addEventListener('resize', () => {
 			setSquareDimensions();
 		});
+		console.log(data);
 	}, []);
 
   	return (
 		<div className="post-card" id={props.id} >
 			<div className="post-card__img" id={`post-card__img-${props.id}`}> 
 				<div className="post-card-img__header">
-					<div className="post-card-img-header__profile-container">
+					<a className="post-card-img-header__profile-container" href={`/profile/${data.user._id}`}>
 						<img 
 							src={(data.user.profile.profilePictureName)
 								? `${BASE_URL}/image/byname/${data.user.profile.profilePictureName}`
@@ -50,7 +51,7 @@ const PostCard = (props) => {
 							alt="profile"	
 						/>
 						<p>{data.user.profile.username}</p>
-					</div>
+					</a>
 					{
 						(props.postData.urlToProject)
 						? <a className="post-card-img-header__url" target="blank" href={`https://${props.postData.urlToProject}`}><img src="./icons/url.svg" alt="Full project url" /></a>

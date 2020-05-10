@@ -1,0 +1,18 @@
+@import '../../variables.scss';
+
+.page__post {
+
+}
+
+// small screen
+@media only screen and (min-width : $breakpoint-xsm) and (max-width : $breakpoint) {
+	.page__post {
+	}
+}
+
+
+// extra small screen
+@media only screen and (max-width : $breakpoint-xsm) {
+	.page__post {
+	}
+}

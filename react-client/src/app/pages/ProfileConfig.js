@@ -95,8 +95,7 @@ const Profileconfig = ({children}) => {
 		// get values
 		const input = ev.target
 		const medium = input.id;
-		const url = input.value;
-		console.log(medium, url);
+		const url = input.value.replace('https://', '');
 		// validate 
 		const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
 			'((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
@@ -143,7 +142,6 @@ const Profileconfig = ({children}) => {
 	useEffect(() =>{
 		// refresh currentUser
 		refresh();
-		console.log(currentUser)
 
 		//get socialmedia
 		const elements = []
@@ -160,7 +158,6 @@ const Profileconfig = ({children}) => {
 				)
 			}
 		});
-		console.log(elements)
 		setSocialMedia(elements);
 
 	}, []);
