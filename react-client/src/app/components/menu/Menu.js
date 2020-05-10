@@ -15,14 +15,14 @@ const Menu = (props) => {
 		const notifications = await getNotifications(0, 10, true);
 		const notificationsElements = notifications.map((notification) => {
 			return(
-				<div className="notification" key={notification._id}>
+				<a className="notification" key={notification._id}>
 					{
 						(notification.type !== 'info') 
 						?<img className="notification__img" src={`${BASE_URL}/image/byname/${notification.senderUser.profile.profilePictureName}`} alt="profile"/>
 						: null
 					}
 					<p className="notification__content">{notification.content}</p>
-				</div>
+				</a>
 			);
 		});
 		setNotifications(notificationsElements)

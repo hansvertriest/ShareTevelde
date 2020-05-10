@@ -331,15 +331,24 @@ const ApiProvider = ({children}) => {
 			})
   	}
 
-  	const putTextToMongo = ( formData, apiUrl ) => {
-    	return fetch( `${BASE_URL}/${apiUrl}`, {
-        	method: 'put',
-        	body: formData,
-        	headers: { encType: 'multipart/form-data' },
-     	 }).then((res) => {
-        	return res.json();
-      	});
-  	}
+	// MISC functions
+	const sendLike = async (postId) => {
+		// construct query
+		const url = `${BASE_URL}/post/like`;
+		// fetch posts
+		const response = await toolBox.fetchWithStandardOptions(url, 'POST', {body: {id: postId}}, true);
+		return response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
+	}
 
 
   	return (
@@ -348,7 +357,6 @@ const ApiProvider = ({children}) => {
 			refreshUserProfile, 
 			updateUser, 
 			getUserById,
-			putTextToMongo, 
 			uploadImage,
 			uploadPictureWithFilename,
 			getPosts,
@@ -363,6 +371,7 @@ const ApiProvider = ({children}) => {
 			createNewCourse,
 			createNewAssignment,
 			socialMediums,
+			sendLike,
 			}}>
       	{children}
     	</ApiContext.Provider>

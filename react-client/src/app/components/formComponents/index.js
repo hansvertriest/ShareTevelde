@@ -2,6 +2,7 @@ import InputFieldText from './InputFieldText';
 import PrimaryButton from './buttons/PrimaryButton';
 import SecondaryButton from './buttons/SecondaryButton';
 import TertiaryButton from './buttons/TertiaryButton';
+import AwesomeButton from './buttons/AwesomeButton';
 import OptionButton from './buttons/OptionButton';
 import SearchContainer from './SearchContainer';
 import FilterContainer from './FilterContainer';
@@ -21,5 +22,6 @@ export {
 	InputFieldTextWithResults,
 	UploadPicture,
 	TextArea,
-	DropDown
+	DropDown,
+	AwesomeButton
 }

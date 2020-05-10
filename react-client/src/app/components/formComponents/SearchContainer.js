@@ -16,10 +16,10 @@ const SearchContainer = (props) => {
 	const generateUserResults = (docs) => {
 		const elements = docs.map((doc) => {
 			return (
-				<div className='search-result-user' key={doc._id}>
+				<a className='search-result-user' key={doc._id} href={`/profile/${doc._id}`}>
 					<img className='search-result-user__profile-pic' src={`${BASE_URL}/image/byname/${doc.profile.profilePictureName}`} alt="profile"/>
 					<p className='search-result-user__username'>{doc.profile.username}</p>
-				</div>
+				</a>
 			)
 		});
 		setUserResults(elements);

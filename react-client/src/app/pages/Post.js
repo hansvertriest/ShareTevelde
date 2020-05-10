@@ -6,16 +6,27 @@ import { Menu } from '../components/menu';
 import { Picture } from '../components/Picture';
 import { PageTitle, Subtitle } from '../components/typography';
 import { SearchContainer, FilterContainer, UploadPicture } from '../components/formComponents';
-import { PrimaryButton } from '../components/formComponents';
+import { AwesomeButton } from '../components/formComponents';
 
 import './Post.scss';
 
 const Post = (props) => {
-	const {getPostById } = useApi();
+	const { getPostById, sendLike } = useApi();
 	const { currentUser } = useAuth();
 
 	const [data, setData] = useState(undefined);
 	const [pictures, setPictures] = useState(undefined);
+	const [hasLiket, setHasLiket] = useState(undefined);
+
+	const refresh = () => {
+		
+	}
+
+	const giveLike = async () => {
+		await sendLike(data._id);
+		const newState = !hasLiket;
+		setHasLiket(newState);
+	}
 
 	useEffect(() => {
 		const func = async () => {
@@ -26,6 +37,12 @@ const Post = (props) => {
 				const getPost = await getPostById(postId);
 				if (getPost._id) setData(getPost);
 				console.log(getPost);
+
+				// set like button
+				const liketUsers = getPost.likes.map((like) => like.user)
+				if (hasLiket === undefined && liketUsers.includes(currentUser.id)) {
+					setHasLiket(true)
+				}
 
 				// create picture elements
 				const pictureElements = getPost.pictures.map((picture) => {
@@ -39,7 +56,7 @@ const Post = (props) => {
 		}
 
 		func();
-	}, []);
+	}, [hasLiket]);
 
 	return (
 		<div className="page__post">
@@ -63,6 +80,12 @@ const Post = (props) => {
 				</Fragment>
 				: undefined
 			}
+			<div className="post-container__feedback-container">
+				<div className="feedback-container__like">
+					{(data) ? <p className="like-number">{data.likes.length}</p> : undefined}
+					<AwesomeButton hasLiket ={hasLiket} onClick={giveLike}/>	
+				</div>
+			</div>
 			</div>
 
 			<div className="aside-container aside-container--right">
