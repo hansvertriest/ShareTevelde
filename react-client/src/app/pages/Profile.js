@@ -50,12 +50,14 @@ const Profile = (props) => {
 
 					// create post thumbnails
 					const posts = await getPostsOfUser(getUser._id);
-					const postElements = posts.map((post) => {
-						return (
-							<PostThumbnail postId={post._id} key={post._id} imgName={post.pictures[0].filename} />
-						)
-					});
-					setPostThumbnails(postElements);
+					if (posts.length > 0) {
+						const postElements = posts.map((post) => {
+							return (
+								<PostThumbnail postId={post._id} key={post._id} imgName={post.pictures[0].filename} />
+							)
+						});
+						setPostThumbnails(postElements);
+					}
 				}
 			}
 		}
@@ -82,15 +84,19 @@ const Profile = (props) => {
 				<div className="profile-container__picture-section">
 					<img className="picture-section__picture" src={`${BASE_URL}/image/byname/${user.profile.profilePictureName}`} alt="profile"/>
 					<div className="picture-section__description">
-						<div className="username-container"><p className="username">{user.profile.username}</p></div>
-						<p className="description">{user.profile.profileDescription}</p>
+						{(user.profile.username) ? <div className="username-container"><p className="username">{user.profile.username}</p></div>: undefined}
+						{user.profile.profileDescription ? <p className="description">{user.profile.profileDescription}</p>: undefined}
 					</div>
 				</div>
 				<div className="profile-container__social-media">
 					{socialMediaButtons}
 				</div>
 				<div className="profile-container__posts">
-					{postThumbnails}
+					{
+					(postThumbnails.length > 0)
+					? postThumbnails
+					: <p><strong>{user.profile.username}</strong> heeft nog geen posts.</p>
+					}
 				</div>
 			</Fragment>
 			: undefined

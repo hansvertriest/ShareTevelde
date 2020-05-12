@@ -10,7 +10,7 @@ import { AwesomeButton } from '../components/formComponents';
 import './Post.scss';
 
 const Post = (props) => {
-	const { getPostById, sendLike, postFeedback, getFeedback } = useApi();
+	const { getPostById, sendLike, postFeedback, getFeedback, deletePost } = useApi();
 	const { currentUser } = useAuth();
 
 	const [data, setData] = useState(undefined);
@@ -30,10 +30,22 @@ const Post = (props) => {
 
 	const giveFeedback = async (ev) => {
 		ev.preventDefault();
-		const value = document.getElementById('feedback__input') .value;
+		// get content
+		const value = document.getElementById('feedback__input').value;
+		// reset content
+		document.getElementById('feedback__input').value = '';
+		// upload feedback
 		if (value.length > 0) {
 			await postFeedback(value, data._id);
 			setUpdateFeedback(true)
+		}
+	}
+
+	const removePost = async () => {
+		// eslint-disable-next-line no-restricted-globals
+		const conf = confirm('Zeker dat je deze post wil verwijderen?');
+		if(conf) {
+			await deletePost(data._id);
 		}
 	}
 
@@ -45,6 +57,8 @@ const Post = (props) => {
 				// get post data
 				const getPost = await getPostById(postId);
 				if (getPost._id) setData(getPost);
+				
+				console.log(getPost.user._id === currentUser.id)
 
 				// set like button
 				const liketUsers = getPost.likes.map((like) => like.user)
@@ -77,7 +91,7 @@ const Post = (props) => {
 				feedback = feedback[0].feedback
 				const elements = feedback.map((comment) => {
 					return (
-						<Feedback key={comment._id} data={comment} onAgree={() => setUpdateFeedback(true)}/>
+						<Feedback key={comment._id} data={comment} onUpdate={() => setUpdateFeedback(true)}/>
 					);
 				});
 				setFeedback(elements);
@@ -94,6 +108,11 @@ const Post = (props) => {
 					(currentUser)
 					? <Menu id="menu-top"/>
 					: null
+				}
+				{
+					(data && data.user._id === currentUser.id)
+					? <p className="remove-post" onClick={removePost}>Verwijder deze post<img src="/icons/cross-blue.svg" /> </p>
+					:undefined
 				}
 			</div>
 
@@ -144,6 +163,12 @@ const Post = (props) => {
 					(currentUser)
 					? <Menu id="menu-right"/>
 					: null
+				}
+				
+				{
+					(data && data.user._id === currentUser.id)
+					? <p className="remove-post" onClick={removePost}>Verwijder deze post <img src="/icons/cross-blue.svg" /> </p>
+					:undefined
 				}
 			</div>
 				

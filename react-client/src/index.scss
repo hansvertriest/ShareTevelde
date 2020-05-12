@@ -20,6 +20,11 @@ input:focus {
     outline: none;
 }
 
+
+button:focus {outline:0;}
+
+input:focus {outline:0;}
+
 // GLOBAL STYLING
 
 body {

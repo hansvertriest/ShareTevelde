@@ -18,7 +18,7 @@ const SignUp = ({children}) => {
 		const password = document.getElementById('signup-password').value;
 		const passwordConfirmation = document.getElementById('signup-password-confirmation').value;
 
-		signUpLocal(
+		await signUpLocal(
 			email, 
 			password,
 			passwordConfirmation,
@@ -29,7 +29,10 @@ const SignUp = ({children}) => {
 			const errorField = document.getElementById('error-field');
 			errorField.innerHTML = response.msg;
 			errorField.style.display = 'block';
-		});
+		})
+			.then((repsonse) => {
+				window.location.href = "/profileconfig";
+			})
 	}
 
 	const registerGoogle = async (ev) => {

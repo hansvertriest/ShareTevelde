@@ -71,6 +71,27 @@ const ApiProvider = ({children}) => {
 			})
 	}
 
+	const deletePost = async (postId) => {
+		const url = `${BASE_URL}/post/own`;
+		// create body 
+		const body = {
+			id: postId
+		}
+		// fetch posts
+		const response = await toolBox.fetchWithStandardOptions(url, 'DELETE', {body}, true);
+		return response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
+	}
+
 	const getPostsOfUser = async (userId) => {
 		// construct query
 		const url = `${BASE_URL}/post/all`;
@@ -119,6 +140,27 @@ const ApiProvider = ({children}) => {
 		}
 		// fetch posts
 		const response = await toolBox.fetchWithStandardOptions(url, 'POST', {body}, true);
+		return response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
+	}
+
+	const deleteFeedback = async (feedbackId) => {
+		const url = `${BASE_URL}/post/feedback`;
+		// create body 
+		const body = {
+			feedbackId
+		}
+		// fetch posts
+		const response = await toolBox.fetchWithStandardOptions(url, 'DELETE', {body}, true);
 		return response.json()
 			.then((res) => {
 				return toolBox.handleFetchError(res);
@@ -426,8 +468,10 @@ const ApiProvider = ({children}) => {
 			getPosts,
 			getPostsOfUser,
 			createPost,
+			deletePost,
 			getPostById,
 			postFeedback,
+			deleteFeedback,
 			getFeedback,
 			postAgree,
 			getUsers,

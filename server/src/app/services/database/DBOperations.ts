@@ -257,13 +257,13 @@ class DBOperations {
 
 	static sendNotificationToUser(userId: string, content: string, destinationUrl: string = '', senderUser:string = '', type: NotificationType): Promise < any > {
 		const query = {
-			_id: mongoose.Types.ObjectId(userId)
+			'_id': mongoose.Types.ObjectId(userId)
 		};
 		const notification: INotification = {
 			content,
 			destinationUrl,
 			type,
-			senderUser: mongoose.Types.ObjectId(senderUser),
+			senderUser: (senderUser) ? mongoose.Types.ObjectId(senderUser) : undefined,
 			_createdAt: Date.now(),
 		}
 		return new Promise < any > ((res, rej) => {

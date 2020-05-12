@@ -72,8 +72,14 @@ class PostController {
 			const { id } = req.query;
 			if (id.length !== 24 ) throw {code: 412, msg: 'Incorrect id.'}
 			
-			// get course
-			const post: IPost = await PostModel.findById(mongoose.Types.ObjectId(id))
+			// // sanitize parameters
+			// const sanitizedParams: any = DBOperations.sanitizeParameters({id: mongoose.Types.ObjectId(id)});
+
+			// // create filter
+			// const filter = DBOperations.createFilter(sanitizedParams);
+			// console.log(filter)
+			// get post
+			const post: IPost = await PostModel.findOne({'_id': mongoose.Types.ObjectId(id), 'softDeleted': false})
 				.populate({
 					path: 'assignment',
 					populate: {
@@ -422,6 +428,9 @@ class PostController {
 					}
 				})
 				.then((resolve) => {
+					if (resolve.n === 0) {
+						throw {code: 404, msg: 'Given feedback was not found.'}
+					}
 					return res.status(200).send({});
 				})
 				.catch((error) =>{

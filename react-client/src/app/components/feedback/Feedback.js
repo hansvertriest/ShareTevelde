@@ -1,12 +1,13 @@
 import { default as React, useState, useEffect, Fragment } from 'react';
 
-import { useApi } from '../../services';
+import { useApi, useAuth } from '../../services';
 import { apiConfig } from '../../config';
 import './Feedback.scss';
 
 const Feedback = (props) => {
 	const BASE_URL = `${apiConfig.baseURL}`;
-	const { postAgree } = useApi();
+	const { postAgree, deleteFeedback } = useApi();
+	const { currentUser } = useAuth();
 
 	const [userProfile, setUserProfile] = useState(props.data.user.profile);
 
@@ -30,7 +31,12 @@ const Feedback = (props) => {
 
 	const sendAgree = async (ev) => {
 		await postAgree(props.data._id);
-		props.onAgree();
+		props.onUpdate();
+	}
+
+	const removeFeedback = async () => {
+		await deleteFeedback(props.data._id);
+		props.onUpdate();
 	}
 
 	return (
@@ -61,6 +67,12 @@ const Feedback = (props) => {
 					</p>
 					
 				</div>
+				{
+					(props.data.user._id === currentUser.id)
+					? <img className="feedback__delete" src="/icons/cross.svg" onClick={removeFeedback}/>
+					:undefined
+				}
+				
 			</Fragment>
 			: undefined
 			}

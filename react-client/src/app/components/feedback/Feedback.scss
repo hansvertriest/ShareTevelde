@@ -40,4 +40,14 @@
 			}
 		}
 	}
+	.feedback__delete {
+		width: 25px;
+		align-self: flex-start;
+		position: relative;
+		bottom: 15px;
+		left: 15px;
+	}
+	.feedback__delete:hover {
+		cursor: pointer;
+	}
 }
