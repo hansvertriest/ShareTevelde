@@ -1,6 +1,6 @@
 import { default as React } from 'react';
 
-import { Header } from '../components';
+import { Header, Footer } from '../components';
 
 const PageLayout = ({children}) => {
   return (
@@ -9,7 +9,7 @@ const PageLayout = ({children}) => {
       <main className={`page__main `}>
         {children}
       </main>
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 };

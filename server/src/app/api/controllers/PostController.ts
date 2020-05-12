@@ -261,7 +261,7 @@ class PostController {
 					} else if (resolve.nModified === '0') {
 						throw {code: 500, msg: 'No modifications were made.'}
 					}
-					return res.status(200).send();
+					return res.status(200).send({});
 				}).catch((error) => {
 					if (error.code) return res.status(error.code).send(error);
 				});
@@ -288,7 +288,7 @@ class PostController {
 					} else if (resolve.nModified === '0') {
 						throw {code: 500, msg: 'Nothing was softdeleted.'}
 					}
-					return res.status(200).send();
+					return res.status(200).send({});
 				})
 				.catch((error) =>{
 					if (error.code) return res.status(error.code).send(error);
@@ -314,7 +314,7 @@ class PostController {
 					} else if (resolve.nModified === '0') {
 						throw {code: 500, msg: 'Nothing was softdeleted.'}
 					}
-					return res.status(200).send();
+					return res.status(200).send({});
 				})
 				.catch((err) =>{
 					throw err;
@@ -338,7 +338,7 @@ class PostController {
 					if (resolve.n === 0) {
 						throw {code: 404, msg: 'Given post was not found.'}
 					}
-					return res.status(200).send();
+					return res.status(200).send({});
 				})
 				.catch((error) =>{
 					if (error.msg) return res.status(error.code).send(error)
@@ -358,7 +358,7 @@ class PostController {
 					if (resolve.n === 0) {
 						throw {code: 404, msg: 'No posts to delete.'}
 					}
-					return res.status(200).send();
+					return res.status(200).send({});
 				})
 				.catch((error) => {
 					throw error;
@@ -394,10 +394,39 @@ class PostController {
 					} else if (resolve.nModified === '0') {
 						throw {code: 500, msg: 'Nothing was softdeleted.'}
 					}
-					return res.status(200).send();
+					return res.status(200).send({});
 				})
 				.catch((error) =>{
 					if (error.msg) return res.status(error.code).send(error)
+				});
+
+		} catch (error) {
+			if (error.msg) return res.status(error.code).send(error);
+			this.logger.error('Error while permenantly deleting posts.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
+		}
+	}
+
+	public deleteFeedback = async (req: Request, res: Response, next: NextFunction): Promise<Response<any>> => {
+		try {
+			// get body
+			const { feedbackId, token} = req.body;
+
+			// post feedback
+			await PostModel.updateOne(
+				{'feedback._id': feedbackId,
+				'feedback.user': token.id},
+				{
+					$pull: {
+						'feedback': {'_id': mongoose.Types.ObjectId(feedbackId)}
+					}
+				})
+				.then((resolve) => {
+					return res.status(200).send({});
+				})
+				.catch((error) =>{
+					if (error.msg) return res.status(error.code).send(error)
+					return error;
 				});
 
 		} catch (error) {
@@ -411,15 +440,24 @@ class PostController {
 		try {
 			// get body 
 			const { id, token } = req.body;
-
 			// check if already agreed
 			const check = await PostModel.find({
-				'feedback.agrees.user': mongoose.Types.ObjectId(token.id),
+				'feedback._id': id,
 			})
 				.exec();
 
+			let hasAgreed = false;
+			if (check.length > 0) {
+				check[0].feedback.forEach((comment) => {
+					comment.agrees.forEach((agree) => {
+						if (agree.user == token.id) {
+							hasAgreed = true;
+						}
+					});
+				})
+			}
 			// set boolean to value like
-			if (check.length === 0) {
+			if (!hasAgreed) {
 				DBOperations.setAgree(PostModel, id, token.id)
 				.then((resolve) => {
 					if (resolve.n === 0) {
@@ -427,7 +465,7 @@ class PostController {
 					} else if (resolve.nModified === '0') {
 						throw {code: 500, msg: 'Nothing was agreed.'}
 					}
-					return res.status(200).send();
+					return res.status(200).send({});
 				})
 				.catch((error) =>{
 					if (error.msg) return res.status(error.code).send(error)
@@ -440,7 +478,7 @@ class PostController {
 					} else if (resolve.nModified === '0') {
 						throw {code: 500, msg: 'Nothing was agreed.'}
 					}
-					return res.status(200).send();
+					return res.status(200).send({});
 				})
 				.catch((error) =>{
 					if (error.msg) return res.status(error.code).send(error)
@@ -482,35 +520,40 @@ class PostController {
 			const { id, token } = req.body;
 
 			// check if already liked
-			const check = await PostModel.find({
-				'likes.user': mongoose.Types.ObjectId(token.id),
-			})
+			const check = await PostModel.find({_id: mongoose.Types.ObjectId(id)})
 				.exec();
 			
-			if (check.length === 0) {
-				// set boolean to value like
+			let hasLiket = false;
+			check[0].likes.forEach((like) => {
+				if (like.user == token.id) {
+					hasLiket = true;
+				}
+			})
+			
+			if (!hasLiket) {
+				// add like
 				DBOperations.setLike(PostModel, id, token.id)
 				.then((resolve) => {
 					if (resolve.n === 0) {
 						throw {code: 404, msg: 'Given post was not found.'}
 					} else if (resolve.nModified === '0') {
-						throw {code: 500, msg: 'Nothing was softdeleted.'}
+						throw {code: 500, msg: 'Nothing was changed.'}
 					}
-					return res.status(200).send();
+					return res.status(200).send({});
 				})
 				.catch((error) =>{
 					if (error.msg) return res.status(error.code).send(error)
 				});
 			} else {
-				// set boolean to value like
+				// delete like
 				DBOperations.deleteLike(PostModel, id, token.id)
 				.then((resolve) => {
 					if (resolve.n === 0) {
 						throw {code: 404, msg: 'Given like was not found.'}
 					} else if (resolve.nModified === '0') {
-						throw {code: 500, msg: 'Nothing was deleted.'}
+						throw {code: 500, msg: 'Nothing was changed.'}
 					}
-					return res.status(200).send();
+					return res.status(200).send({});
 				})
 				.catch((error) =>{
 					if (error.msg) return res.status(error.code).send(error)
@@ -537,6 +580,29 @@ class PostController {
 			// check output and send response
 			if (likes.length > 0) {
 				return res.status(200).send(likes);
+			} else {
+				throw {code: 404, msg: 'No post with that id'}
+			}
+		} catch(error) {
+			if (error.msg) return res.status(error.code).send(error);
+			this.logger.error('Error while permenantly deleting posts.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
+		}
+	}
+
+	public getFeedback = async (req: Request, res: Response, nex: NextFunction): Promise<Response<any>> => {
+		try {
+			// get parameter
+			const { id } = req.query;
+
+			// get likes
+			const feedback = await PostModel.find({ _id: mongoose.Types.ObjectId(id) })
+				.select('feedback')
+				.populate('feedback.user', 'profile');
+
+			// check output and send response
+			if (feedback.length > 0) {
+				return res.status(200).send(feedback);
 			} else {
 				throw {code: 404, msg: 'No post with that id'}
 			}

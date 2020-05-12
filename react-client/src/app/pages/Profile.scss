@@ -98,7 +98,28 @@
 // small screen
 @media only screen and (min-width : $breakpoint-xsm) and (max-width : $breakpoint) {
 	.page__profile {
-		.profile-container {}
+		.profile-container {
+			grid-column: span 6;
+			
+			.profile-container__picture-section {
+				display: flex;
+				flex-direction: column;
+				align-items:center;
+				padding-top: 10px;
+				.picture-section__picture {
+					margin-bottom: 20px;
+				}
+
+				.picture-section__description {
+					display:flex;
+					align-items: center;
+					flex-direction: column;
+					.username {
+						margin: 0 auto;
+					}
+				}
+			}
+		}
 
 		.aside-container--top {
 			display: block;
@@ -115,7 +136,28 @@
 // extra small screen
 @media only screen and (max-width : $breakpoint-xsm) {
 	.page__profile {
-		.profile-container {}
+		.profile-container {
+			grid-column: span 6;
+			
+			.profile-container__picture-section {
+				display: flex;
+				flex-direction: column;
+				align-items:center;
+				padding-top: 10px;
+				.picture-section__picture {
+					margin-bottom: 20px;
+				}
+
+				.picture-section__description {
+					display:flex;
+					align-items: center;
+					flex-direction: column;
+					.username {
+						margin: 0 auto;
+					}
+				}
+			}
+		}
 
 		.aside-container--top {
 			display: block;

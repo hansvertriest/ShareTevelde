@@ -27,6 +27,39 @@
 					color: $secondary-color;
 				}
 			}
+
+			.feedback-container__feedback {
+				.feedback__comments {
+					width: 70%;
+					margin: 30px auto;
+				}
+				.feedback__input-container {
+					display: flex;
+					justify-content: center;
+					.feedback__input {
+						display: flex;
+						padding: 10px;
+						background-color: $bg-color-shade-dark;
+						width: 70%;
+	
+						input {
+							background-color: transparent;
+							border: none;
+							width: 100%;
+							color: $white;
+							font-family: 'Poppins';
+						}
+	
+						button {
+							background-color: transparent;
+							border:none;
+							cursor: pointer;
+							color: $primary-color;
+						}
+					}
+				}
+				
+			}
 		}
 	}
 	.aside-container {
@@ -49,6 +82,19 @@
 		.post-container {
 			grid-column: span 6;
 		}
+
+		.post-container__feedback-container {
+			.feedback-container__feedback {
+				.feedback__comments {
+					width: 100% !important;
+				}
+				.feedback__input-container {
+					.feedback__input {
+						width: 100% !important;
+					}
+				}
+			}
+		}
 		.aside-container--top {
 			display: block;
 			grid-column: span 6;
@@ -64,6 +110,22 @@
 // extra small screen
 @media only screen and (max-width : $breakpoint-xsm) {
 	.page__post {
+		.post-container {
+			grid-column: span 6;
+		}
+
+		.post-container__feedback-container {
+			.feedback-container__feedback {
+				.feedback__comments {
+					width: 100% !important;
+				}
+				.feedback__input-container {
+					.feedback__input {
+						width: 100% !important;
+					}
+				}
+			}
+		}
 		.post-container {
 			grid-column: span 6;
 		}

@@ -110,6 +110,69 @@ const ApiProvider = ({children}) => {
 			})
 	}
 
+	const postFeedback = async (content, postId) => {
+		const url = `${BASE_URL}/post/feedback`;
+		// create body 
+		const body = {
+			content,
+			postId
+		}
+		// fetch posts
+		const response = await toolBox.fetchWithStandardOptions(url, 'POST', {body}, true);
+		return response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
+	}
+
+	const getFeedback = async (postId) => {
+		// construct url
+		const url = `${BASE_URL}/post/feedback`;
+		const queryUrl = toolBox.parametersToQuery(url, {id:[postId]});
+
+		// fetch users
+		const response = await toolBox.fetchWithStandardOptions(queryUrl, 'GET', {});
+		return response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
+	}
+
+	const postAgree = async (feedbackId) => {
+		const url = `${BASE_URL}/post/feedback/agree`;
+		// create body 
+		const body = {
+			id: feedbackId,
+		}
+		// fetch posts
+		const response = await toolBox.fetchWithStandardOptions(url, 'POST', {body}, true);
+		return response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
+	}
+
 	// USERS functions
 	const getUsers = async (filters, pageNr, limit) => {
 		// construct query
@@ -339,6 +402,7 @@ const ApiProvider = ({children}) => {
 		const response = await toolBox.fetchWithStandardOptions(url, 'POST', {body: {id: postId}}, true);
 		return response.json()
 			.then((res) => {
+				console.log(res);
 				return toolBox.handleFetchError(res);
 			})
 			.then((res) => {
@@ -363,6 +427,9 @@ const ApiProvider = ({children}) => {
 			getPostsOfUser,
 			createPost,
 			getPostById,
+			postFeedback,
+			getFeedback,
+			postAgree,
 			getUsers,
 			getAssignments,
 			getNotifications,

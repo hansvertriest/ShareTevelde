@@ -1,0 +1,43 @@
+@import '../../../variables.scss';
+
+.feedback {
+	width: 100%;
+	display: flex;
+	.feedback__img {
+		width: 100px;
+		height: 100px;
+		margin-right: 30px; 
+		img {
+			width: 100%;
+			border-radius: 50%;
+		}
+	}
+
+	.feedback__content {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+
+		.feedback-content__username {
+			display: flex;
+			justify-content: space-between;
+			color: $secondary-color;
+			cursor: pointer;
+
+			span {
+				color: $bg-color-shade-light;
+				cursor: default;
+			}
+		}
+		.feedback-content__action {
+			align-self: flex-end;
+			color: $primary-color-shade-dark;
+
+			span {
+				color: $primary-color;
+				cursor: pointer;
+				margin-left: 15px;
+			}
+		}
+	}
+}

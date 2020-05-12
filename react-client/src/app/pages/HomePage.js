@@ -46,6 +46,11 @@ const HomePage = ({children}) => {
 	useLayoutEffect(() => {
 		// listener for checking if bottom of page
 		window.addEventListener('scroll', checkIfBottomOfPage);
+		
+		// update token 
+		if (currentUser) {
+			refresh()
+		}
 	}, []);
 
 	// Fetch posts when the page is updated
@@ -91,9 +96,6 @@ const HomePage = ({children}) => {
 				await fetchPosts(postPage);
 				setPostPage(postPage + 1);
 				setUpdatePostPage(false);
-			}
-			if (currentUser) {
-				refresh()
 			}
 		}
 		func();

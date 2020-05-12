@@ -166,9 +166,9 @@ const NewPost = ({children}) => {
 				// no new element is created
 				// update imageNames
 				const currentImages =  
-					imageNames.map((imageName) => {
-						if (imageName === oldImage) {return oldImage}
-						return imageName;
+					imageNames.map((name) => {
+						if (name === oldImage) {return updateImageNames}
+						return name;
 					})
 				const newImages = currentImages;
 				setImageNames(newImages);

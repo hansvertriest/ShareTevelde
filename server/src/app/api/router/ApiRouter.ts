@@ -149,8 +149,10 @@ class ApiRouter {
 		this.router.delete('/post/all/softDeleted', this.verifyJwtAndCheckAdmin, this.postController.permanentDelete);
 		this.router.put('/post/undelete', this.verifyJwtAndCheckAdmin, this.postController.undeleteById);
 		this.router.post('/post/feedback', this.verifyJwt, this.postController.postFeedback);
+		this.router.delete('/post/feedback', this.verifyJwt, this.postController.deleteFeedback);
 		this.router.post('/post/feedback/agree', this.verifyJwt, this.postController.agree);
 		this.router.get('/post/feedback/agrees', this.postController.getAgrees);
+		this.router.get('/post/feedback', this.postController.getFeedback);
 		this.router.post('/post/like', this.verifyJwt, this.postController.like);
 		this.router.get('/post/likes', this.postController.getLikes);
 

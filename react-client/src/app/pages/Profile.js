@@ -30,31 +30,33 @@ const Profile = (props) => {
 				if (getUser.profile) setUser(getUser);
 				console.log(getUser);
 				
-				// create social media buttons
-				const profileKeys = Object.keys(getUser.profile);
-				const buttons = [];
-				profileKeys.forEach((key) => {
-					const imgName = key.replace('link', '');
-					if (socialMediums.includes(key)) {
-						buttons.push(
-							<SocialMediumButton 
-								key={key} 
-								url={getUser.profile[key]} 
-								imgName={imgName}
-							/>
-						)
-					}
-				});
-				setSocialMediaButtons(buttons);
+				if (getUser.profile) {
+					// create social media buttons
+					const profileKeys = Object.keys(getUser.profile);
+					const buttons = [];
+					profileKeys.forEach((key) => {
+						const imgName = key.replace('link', '');
+						if (socialMediums.includes(key)) {
+							buttons.push(
+								<SocialMediumButton 
+									key={key} 
+									url={getUser.profile[key]} 
+									imgName={imgName}
+								/>
+							)
+						}
+					});
+					setSocialMediaButtons(buttons);
 
-				// create post thumbnails
-				const posts = await getPostsOfUser(getUser._id);
-				const postElements = posts.map((post) => {
-					return (
-						<PostThumbnail postId={post._id} key={post._id} imgName={post.pictures[0].filename} />
-					)
-				});
-				setPostThumbnails(postElements);
+					// create post thumbnails
+					const posts = await getPostsOfUser(getUser._id);
+					const postElements = posts.map((post) => {
+						return (
+							<PostThumbnail postId={post._id} key={post._id} imgName={post.pictures[0].filename} />
+						)
+					});
+					setPostThumbnails(postElements);
+				}
 			}
 		}
 		

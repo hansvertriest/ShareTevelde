@@ -5,7 +5,7 @@ import './footer.scss';
 const Footer = ({children}) => {
   return (
     <footer className="page__footer">
-      FOOTER
+     
     </footer>
   );
 };
