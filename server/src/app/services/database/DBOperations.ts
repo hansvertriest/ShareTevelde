@@ -320,7 +320,7 @@ class DBOperations {
 					.populate('user', 'profile.username profile.profilePictureName _id')
 					.sort([['_createdAt', 'desc']])
 					.exec()
-					results.push(...collection);
+					results.unshift(...collection);
 			}
 			return results;
 	}

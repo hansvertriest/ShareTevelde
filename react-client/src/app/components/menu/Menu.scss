@@ -32,6 +32,33 @@
 		background-color: $bg-color;
 		margin: 4px 0;
 	}
+
+	.menu__notifications {
+		max-height: 200px;
+		overflow: scroll;
+		overflow-x: hidden;
+		scroll-padding-bottom: none;
+		width: 100%;
+		border-radius: 3px;
+		.notification {
+			width: 100%;
+			display: flex;
+			padding: 10px;
+			img {
+				width: 50px;
+				height: 50px;
+				border-radius: 3px;
+			}
+			.notification__content {
+				width: 100%;
+				margin-left: 8px;
+				font-size: 12px;
+			}
+		}
+		.notification:hover {
+			background-color: $bg-color-shade-light;
+		}
+	}
 }
 
 #menu-right {

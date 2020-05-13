@@ -1,0 +1,45 @@
+@import '../../variables.scss';
+
+.page__course {
+	grid-column: span 6;
+	display: grid;
+	grid-template-columns: repeat(6, 1fr);
+	column-gap: 20px;
+	
+	.course-container {
+		grid-column: span 4;
+
+		.course-container__header {
+			margin-bottom: 50px;
+		}
+
+		.assignment-list-item {
+			border-bottom: 1px solid $bg-color-shade-light;
+			width: 80%;
+			margin-bottom: 20px;
+			padding: 10px;
+			border-radius: 5px;
+			h2 {
+				margin: 0;
+			}
+		}
+
+		.assignment-list-item:hover {
+			background-color: $bg-color-shade-light;
+		}
+	}
+
+	.aside-container {
+		grid-column: span 2;
+		margin-top: 10px;
+	}
+
+	.aside-container--top {
+		display: none;
+	}
+
+	
+	.aside-container--right {
+		display: block;
+	}
+}

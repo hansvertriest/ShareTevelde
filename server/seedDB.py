@@ -63,19 +63,19 @@ for i in range(len(assignment_titles)):
 
 # CREATE POSTS
 post_pictures = [
-	'5eb0408be4b1b252ec0cffde',
-	'5eb040d3e4b1b252ec0cffe1',
-	'5eb040e7e4b1b252ec0cffe4',
-	'5eb040f8555e010fe0073df5',
-	'5eb04104f7cc15384845b937',
-	'5eb0410df7cc15384845b93a',
-	'5eb0411b436f242bd8ee9cb0',
-	'5eb043d829534f55dce2852a',
-	'5eb043f729534f55dce2852d',
-	'5eb0441529534f55dce28530',
-	'5eb0443629534f55dce28533',
-	'5eb0444f29534f55dce28536',
-	'5eb0446e29534f55dce28539'
+	'5ebbd85d46ebec5098d45f97',
+	'5ebbd8b246ebec5098d45f9a',
+	'5ebbd8ca46ebec5098d45f9d',
+	'5ebbd8e446ebec5098d45fa0',
+	'5ebbd91246ebec5098d45fa3',
+	'5ebbd95646ebec5098d45fa6',
+	'5ebbd97746ebec5098d45fa9',
+	'5ebbd98f46ebec5098d45fac',
+	'5ebbd9a746ebec5098d45faf',
+	'5ebbd9dd46ebec5098d45fb2',
+	'5ebbd9ee46ebec5098d45fb5',
+	'5ebbd9ff46ebec5098d45fb8',
+	'5ebbda1246ebec5098d45fbb'
 ]
 
 print 'Creating 4 posts per user.'

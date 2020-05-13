@@ -9,6 +9,7 @@ const PostCard = (props) => {
 
 	const [data] = useState(props.postData);
 
+
 	// console.log(props.postData.assignment.courseId.direction, props.postData.assignment.courseId.schoolyear)
 	
 	// when picture is loaded
@@ -35,7 +36,6 @@ const PostCard = (props) => {
 		window.addEventListener('resize', () => {
 			setSquareDimensions();
 		});
-		console.log(data);
 	}, []);
 
   	return (
@@ -43,13 +43,14 @@ const PostCard = (props) => {
 			<div className="post-card__img" id={`post-card__img-${props.id}`}> 
 				<div className="post-card-img__header">
 					<a className="post-card-img-header__profile-container" href={`/profile/${data.user._id}`}>
+						{
+						(data.user.profile.profilePictureName) ?
 						<img 
-							src={(data.user.profile.profilePictureName)
-								? `${BASE_URL}/image/byname/${data.user.profile.profilePictureName}`
-								: ''
-							}
+							src={`${BASE_URL}/image/byname/${data.user.profile.profilePictureName}`}
 							alt="profile"	
 						/>
+						: undefined
+						}
 						<p>{data.user.profile.username}</p>
 					</a>
 					{
@@ -72,7 +73,7 @@ const PostCard = (props) => {
 				
 			</div>
 			<div className="post-card__info">
-				<H2>{(data) ? data.assignment.title : undefined}</H2>
+				<a href={`/assignment/${data.assignment._id}`}><H2 onClick={()=> console.log(666)}>{(data) ? data.assignment.title : undefined}</H2></a>
 				<div className="info__footer">
 					<p className="card-info">feedback: <span>{(data) ? data.feedback.length : undefined}</span></p>
 					<div className="info__footer__likes">

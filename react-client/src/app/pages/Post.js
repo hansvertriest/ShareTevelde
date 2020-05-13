@@ -10,7 +10,7 @@ import { AwesomeButton } from '../components/formComponents';
 import './Post.scss';
 
 const Post = (props) => {
-	const { getPostById, sendLike, postFeedback, getFeedback, deletePost } = useApi();
+	const { getPostById, sendLike, postFeedback, getFeedback, deletePost, sendNotification } = useApi();
 	const { currentUser } = useAuth();
 
 	const [data, setData] = useState(undefined);
@@ -23,8 +23,14 @@ const Post = (props) => {
 		await sendLike(data._id)
 		.then(() => {
 			const newState = !hasLiket;
+			// send notification
+			if (!hasLiket) sendNotification({
+				userId: data.user._id,
+				content: `${currentUser.profile.username} vind jouw post awesome.`,
+				destinationUrl: `/post/${props.match.params[0]}`,
+				type: 'like',
+			});
 			setHasLiket(newState);
-
 		});
 	}
 
@@ -37,7 +43,14 @@ const Post = (props) => {
 		// upload feedback
 		if (value.length > 0) {
 			await postFeedback(value, data._id);
-			setUpdateFeedback(true)
+			setUpdateFeedback(true);
+			// send notification
+			sendNotification({
+				userId: data.user._id,
+				content: `${currentUser.profile.username} heeft jou feedback gegeven!`,
+				destinationUrl: `/post/${props.match.params[0]}`,
+				type: 'comment',
+			});
 		}
 	}
 
@@ -56,16 +69,19 @@ const Post = (props) => {
 			if (postId) {
 				// get post data
 				const getPost = await getPostById(postId);
-				if (getPost._id) setData(getPost);
-				
-				console.log(getPost.user._id === currentUser.id)
-
+				if (getPost._id){
+					setData(getPost);
+				} else {
+					window.location.href = "/notfound";
+				}
 				// set like button
-				const liketUsers = getPost.likes.map((like) => like.user)
-				if (hasLiket === undefined && liketUsers.includes(currentUser.id)) {
-					setHasLiket(true);
-				} else if (hasLiket === undefined) {
-					setHasLiket(false);
+				if (currentUser) {
+					const liketUsers = getPost.likes.map((like) => like.user)
+					if (hasLiket === undefined && liketUsers.includes(currentUser.id)) {
+						setHasLiket(true);
+					} else if (hasLiket === undefined) {
+						setHasLiket(false);
+					}
 				}
 
 				// create picture elements
@@ -110,7 +126,7 @@ const Post = (props) => {
 					: null
 				}
 				{
-					(data && data.user._id === currentUser.id)
+					(currentUser && data && data.user._id === currentUser.id)
 					? <p className="remove-post" onClick={removePost}>Verwijder deze post<img src="/icons/cross-blue.svg" /> </p>
 					:undefined
 				}
@@ -122,17 +138,23 @@ const Post = (props) => {
 				?
 				<Fragment>
 					<PageTitle>{data.assignment.title}</PageTitle>
-					<Subtitle>Door {data.user.profile.username}</Subtitle>
+					<Subtitle link={`/profile/${data.user._id}`}>Door {data.user.profile.username}</Subtitle>
 					<p className="post-container__assignment-description">{data.assignment.description}</p>
 					{pictures}
 				</Fragment>
 				: undefined
 			}
 			<div className="post-container__feedback-container">
-				<div className="feedback-container__like">
-					{(data) ? <p className="like-number">{data.likes.length}</p> : undefined}
-					<AwesomeButton hasLiket ={hasLiket} onClick={giveLike}/>	
-				</div>
+				{
+					(currentUser)
+					?
+					<div className="feedback-container__like">
+						{(data) ? <p className="like-number">{data.likes.length}</p> : undefined}
+						<AwesomeButton hasLiket ={hasLiket} onClick={giveLike}/>	
+					</div>
+					: undefined
+				}
+				
 				<div className="feedback-container__feedback">
 					<div className="feedback__comments">
 						{
@@ -142,6 +164,9 @@ const Post = (props) => {
 					}
 					</div>
 					
+					{
+					(currentUser) 
+					?
 					<div className="feedback__input-container">
 						<div className="feedback__input">
 							<input 
@@ -153,6 +178,10 @@ const Post = (props) => {
 							<button type="submit"  onClick={giveFeedback}> POST </button>
 						</div>
 					</div>
+					:
+					undefined
+					}
+					
 					
 				</div>
 			</div>
@@ -166,7 +195,7 @@ const Post = (props) => {
 				}
 				
 				{
-					(data && data.user._id === currentUser.id)
+					(currentUser && data && data.user._id === currentUser.id)
 					? <p className="remove-post" onClick={removePost}>Verwijder deze post <img src="/icons/cross-blue.svg" /> </p>
 					:undefined
 				}

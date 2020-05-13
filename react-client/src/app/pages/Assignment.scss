@@ -1,0 +1,37 @@
+@import '../../variables.scss';
+
+.page__assignment {
+	grid-column: span 6;
+	display: grid;
+	grid-template-columns: repeat(6, 1fr);
+	column-gap: 20px;
+	
+	.assignment-container {
+		grid-column: span 4;
+
+		.assignment-container__header {
+			margin-bottom: 50px;
+		}
+
+		.assignment-container__posts {
+			grid-column: span 4;
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			column-gap: 20px;
+		}
+	}
+
+	.aside-container {
+		grid-column: span 2;
+		margin-top: 10px;
+	}
+
+	.aside-container--top {
+		display: none;
+	}
+
+	
+	.aside-container--right {
+		display: block;
+	}
+}

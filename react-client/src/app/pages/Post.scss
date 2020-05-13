@@ -2,9 +2,10 @@
 
 .page__post {
 	grid-column: span 6;
-    display: grid;
+	display: grid;
 	grid-template-columns: repeat(6, 1fr);
 	column-gap: 20px;
+
 	.post-container {
 		grid-column: span 4;
 
@@ -19,8 +20,8 @@
 		.post-container__feedback-container {
 			.feedback-container__like {
 				display: flex;
-				align-items:center;
-				justify-content:center;
+				align-items: center;
+				justify-content: center;
 
 				.like-number {
 					font-size: 40px;
@@ -33,9 +34,11 @@
 					width: 70%;
 					margin: 30px auto;
 				}
+
 				.feedback__input-container {
 					display: flex;
 					justify-content: center;
+
 					.feedback__input {
 						display: flex;
 						padding: 10px;
@@ -43,7 +46,7 @@
 						width: 70%;
 						border-radius: $radius-lg;
 						box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-	
+
 						input {
 							background-color: transparent;
 							border: none;
@@ -51,43 +54,46 @@
 							color: $white;
 							font-family: 'Poppins';
 						}
-	
+
 						button {
 							background-color: transparent;
-							border:none;
+							border: none;
 							cursor: pointer;
 							color: $primary-color;
 						}
 					}
 				}
-				
+
 			}
 		}
 	}
+
 	.aside-container {
 		grid-column: span 2;
 		margin-top: 10px;
+
 		.remove-post {
-			display:flex;
+			display: flex;
 			justify-content: space-between;
-			align-items:center;
+			align-items: center;
 			background-color: $bg-color-shade-light;
 			margin: 20px 0;
 			padding: 10px 20px;
 			border-radius: $radius-lg;
+
 			img {
 				width: 20px;
 			}
 		}
 
 		.remove-post:hover {
-			cursor:pointer;
+			cursor: pointer;
 			background-color: $bg-color-shade-dark;
 		}
 	}
 
 	.aside-container--top {
-		display: none;	
+		display: none;
 	}
 
 	.aside-container--right {
@@ -107,6 +113,7 @@
 				.feedback__comments {
 					width: 100% !important;
 				}
+
 				.feedback__input-container {
 					.feedback__input {
 						width: 100% !important;
@@ -114,11 +121,12 @@
 				}
 			}
 		}
+
 		.aside-container--top {
 			display: block;
 			grid-column: span 6;
 		}
-	
+
 		.aside-container--right {
 			display: none;
 		}
@@ -138,6 +146,7 @@
 				.feedback__comments {
 					width: 100% !important;
 				}
+
 				.feedback__input-container {
 					.feedback__input {
 						width: 100% !important;
@@ -145,14 +154,16 @@
 				}
 			}
 		}
+
 		.post-container {
 			grid-column: span 6;
 		}
+
 		.aside-container--top {
 			display: block;
 			grid-column: span 6;
 		}
-	
+
 		.aside-container--right {
 			display: none;
 		}

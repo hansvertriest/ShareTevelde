@@ -62,7 +62,6 @@ class UserController {
 			});
 	
 			const user: IUser = await newUser.save();
-			console.log(user._id);
 			const token = this.authService.createToken(user);
 			DBOperations.sendNotificationToUser(user._id, 'Welkom bij ShareTevelde!', '', '', NotificationType['Info']);
 			return res.status(200).json({

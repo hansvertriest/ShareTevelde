@@ -17,7 +17,7 @@ class ToolBox {
 		let query = '?';
 
 		Object.keys(params).forEach((key) => {
-			let value = (params[key].length > 1) ? JSON.stringify(params[key]) : params[key];
+			let value =  params[key];
 			query = query + `${key}=${value}&`;
 		});
 		if (pageParams) 

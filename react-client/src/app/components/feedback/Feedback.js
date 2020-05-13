@@ -6,7 +6,7 @@ import './Feedback.scss';
 
 const Feedback = (props) => {
 	const BASE_URL = `${apiConfig.baseURL}`;
-	const { postAgree, deleteFeedback } = useApi();
+	const { postAgree, deleteFeedback, sendNotification } = useApi();
 	const { currentUser } = useAuth();
 
 	const [userProfile, setUserProfile] = useState(props.data.user.profile);
@@ -31,6 +31,21 @@ const Feedback = (props) => {
 
 	const sendAgree = async (ev) => {
 		await postAgree(props.data._id);
+		// send notification
+		let alreadyAgreed = false;
+		props.data.agrees.forEach((agree) => {
+			if (agree.user === currentUser.id) {
+				alreadyAgreed = true;
+			}
+		});
+		if (!alreadyAgreed) {
+			sendNotification({
+				userId: props.data.user._id,
+				content: `${currentUser.profile.username} gaat akkoord met jouw feedback.`,
+				destinationUrl: `/post/${props.data._id}`,
+				type: 'agree',
+			});
+		}
 		props.onUpdate();
 	}
 
@@ -63,12 +78,14 @@ const Feedback = (props) => {
 					</p>
 
 					<p className="feedback-content__action">
-						{props.data.agrees.length}<span onClick={sendAgree}>AGREE</span>
+						{props.data.agrees.length}
+						<span onClick={(currentUser) ? sendAgree : null}>AGREE</span>
 					</p>
+					
 					
 				</div>
 				{
-					(props.data.user._id === currentUser.id)
+					(currentUser && props.data.user._id === currentUser.id)
 					? <img className="feedback__delete" src="/icons/cross.svg" onClick={removeFeedback}/>
 					:undefined
 				}

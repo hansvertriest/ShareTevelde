@@ -5,6 +5,9 @@ import SignIn from './SignIn';
 import NewPost from './NewPost';
 import Profile from './Profile';
 import Post from './Post';
+import NotFound from './NotFound';
+import Course from './Course';
+import Assignment from './Assignment';
 
 export {
 	HomePage,
@@ -13,5 +16,8 @@ export {
 	SignIn,
 	NewPost,
 	Profile,
-	Post
+	Post,
+	NotFound,
+	Course,
+	Assignment
 }

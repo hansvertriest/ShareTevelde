@@ -292,6 +292,25 @@ const ApiProvider = ({children}) => {
 			})
 	}
 
+	const getAssignmentById = async (id) => {
+		// construct query
+		const url = `${BASE_URL}/assignment/byId`;
+		const queryUrl = toolBox.parametersToQuery(url, {id: [id]});
+		// fetch assignments
+		const response = await toolBox.fetchWithStandardOptions(queryUrl, 'GET');
+		return response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
+	}
+
 	const createNewAssignment = async (courseId, title, description ) => {
 		const url = `${BASE_URL}/assignment`;
 
@@ -315,11 +334,49 @@ const ApiProvider = ({children}) => {
 			})
 	}
 
+	const getAssignmentsOfCourse = async (courseId) => {
+		// construct query
+		const url = `${BASE_URL}/assignment/all`;
+		const queryUrl = toolBox.parametersToQuery(url, {'courseId': [courseId]});
+		// fetch courses
+		const response = await toolBox.fetchWithStandardOptions(queryUrl, 'GET');
+		return response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
+	}
+
 	// COURSES functions
 	const getCourses = async (filters, pageNr, limit) => {
 		// construct query
 		const url = `${BASE_URL}/course/all`;
 		const queryUrl = toolBox.parametersToQuery(url, filters, (pageNr !== undefined && limit !== undefined) ? { pageNr, limit } : undefined);
+		// fetch courses
+		const response = await toolBox.fetchWithStandardOptions(queryUrl, 'GET');
+		return response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
+	}
+
+	const getcourseById = async (id) => {
+		// construct query
+		const url = `${BASE_URL}/course/byId`;
+		const queryUrl = toolBox.parametersToQuery(url, {id: [id]});
 		// fetch courses
 		const response = await toolBox.fetchWithStandardOptions(queryUrl, 'GET');
 		return response.json()
@@ -363,7 +420,7 @@ const ApiProvider = ({children}) => {
 		// construct query
 		const url = `${BASE_URL}/notification/all`;
 		const queryUrl = toolBox.parametersToQuery(url, {}, (pageNr !== undefined && limit !== undefined) ? { pageNr, limit } : undefined);
-		// fetch posts
+		// fetch 
 		const response = await toolBox.fetchWithStandardOptions(queryUrl, 'GET', undefined, attachToken);
 		return response.json()
 			.then((res) => {
@@ -381,7 +438,7 @@ const ApiProvider = ({children}) => {
 	const sendNotification = async (notification) => {
 		// construct query
 		const url = `${BASE_URL}/notification`;
-		// fetch posts
+		// fetch 
 		const response = await toolBox.fetchWithStandardOptions(url, 'POST', {body: notification}, true);
 		return response.json()
 			.then((res) => {
@@ -440,7 +497,7 @@ const ApiProvider = ({children}) => {
 	const sendLike = async (postId) => {
 		// construct query
 		const url = `${BASE_URL}/post/like`;
-		// fetch posts
+		// fetch 
 		const response = await toolBox.fetchWithStandardOptions(url, 'POST', {body: {id: postId}}, true);
 		return response.json()
 			.then((res) => {
@@ -476,9 +533,12 @@ const ApiProvider = ({children}) => {
 			postAgree,
 			getUsers,
 			getAssignments,
+			getAssignmentById,
+			getAssignmentsOfCourse,
 			getNotifications,
 			sendNotification,
 			getCourses,
+			getcourseById,
 			createNewCourse,
 			createNewAssignment,
 			socialMediums,

@@ -56,7 +56,6 @@ const HomePage = ({children}) => {
 	// Fetch posts when the page is updated
 
 	const fetchPosts = async (page) => {
-		console.log(page);
 		// get docs
 		const docs = (filter) ?  await getPosts(filter, page, postsLimit, true) : await getPosts({}, page, postsLimit) ;
 
@@ -84,7 +83,6 @@ const HomePage = ({children}) => {
 	}
 
 	useEffect(() => {
-		// BIJ FILTER GAAT RR TWEE KEER OMDAT UPDATEPAGE
 		const func = async() => {
 			// First if : when filter is first applied.
 			// filter can't be used as a condition because the setPostPage will trigger this effect and

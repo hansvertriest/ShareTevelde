@@ -2,7 +2,6 @@ import {
 	default as mongoose,
 	Document,
 	Schema,
-	PaginateModel
 } from 'mongoose';
 
 import { default as paginate } from 'mongoose-paginate';

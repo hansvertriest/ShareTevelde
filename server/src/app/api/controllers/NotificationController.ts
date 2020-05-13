@@ -49,11 +49,11 @@ class NotificationController {
 			DBOperations.sendNotificationToUser(userId, content, destinationUrl, token.id, type)
 				.then((resolve) => {
 					if (resolve.n === 0) {
-						throw {code: 404, msg: 'No courses were found.'}
+						throw {code: 404, msg: 'No user wes found.'}
 					} else if (resolve.nModified === '0') {
-						throw {code: 500, msg: 'Nothing was softdeleted.'}
+						throw {code: 500, msg: 'Nothing was notified.'}
 					}
-					return res.status(200).send();
+					return res.status(200).send({});
 				})
 				.catch((err) =>{
 					if (err.msg) return res.status(err.code).send(err)
