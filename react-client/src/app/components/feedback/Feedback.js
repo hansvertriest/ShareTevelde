@@ -1,4 +1,4 @@
-import { default as React, useState, useEffect, Fragment } from 'react';
+import { default as React, useState, Fragment } from 'react';
 
 import { useApi, useAuth } from '../../services';
 import { apiConfig } from '../../config';
@@ -9,7 +9,7 @@ const Feedback = (props) => {
 	const { postAgree, deleteFeedback, sendNotification } = useApi();
 	const { currentUser } = useAuth();
 
-	const [userProfile, setUserProfile] = useState(props.data.user.profile);
+	const [userProfile] = useState(props.data.user.profile);
 
 	const getTimeTelation = (timestamp) => {
 		const today = new Date();
@@ -20,9 +20,9 @@ const Feedback = (props) => {
 		today.setHours(0); today.setMinutes(0); today.setSeconds(0, 0);
 		date.setHours(0); date.setMinutes(0); date.setSeconds(0, 0);
 
-		if (today == date) {
+		if (today === date) {
 			return 'vandaag';
-		}else if (yesterday == date) {
+		}else if (yesterday === date) {
 			return 'gisteren';
 		} else {
 			return `${date.getDate()} - ${date.getMonth()} - ${date.getFullYear()}`;
@@ -86,7 +86,7 @@ const Feedback = (props) => {
 				</div>
 				{
 					(currentUser && props.data.user._id === currentUser.id)
-					? <img className="feedback__delete" src="/icons/cross.svg" onClick={removeFeedback}/>
+					? <img className="feedback__delete" src="/icons/cross.svg" alt="delete-icon" onClick={removeFeedback}/>
 					:undefined
 				}
 				

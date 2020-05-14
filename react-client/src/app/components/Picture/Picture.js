@@ -1,4 +1,4 @@
-import { default as React, useState, useEffect } from 'react';
+import { default as React, useEffect } from 'react';
 
 import { apiConfig } from '../../config';
 import { H2 } from '../typography';

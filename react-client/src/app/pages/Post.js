@@ -196,7 +196,7 @@ const Post = (props) => {
 				
 				{
 					(currentUser && data && data.user._id === currentUser.id)
-					? <p className="remove-post" onClick={removePost}>Verwijder deze post <img src="/icons/cross-blue.svg" /> </p>
+					? <p className="remove-post" onClick={removePost}>Verwijder deze post <img src="/icons/cross-blue.svg" alt="delete icon"/> </p>
 					:undefined
 				}
 			</div>

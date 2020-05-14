@@ -1,4 +1,4 @@
-import { default as React, useState, useEffect, Fragment } from 'react';
+import { default as React, useState, useEffect } from 'react';
 
 import { Menu } from '../components/menu';
 import { useAuth, useApi } from '../services';

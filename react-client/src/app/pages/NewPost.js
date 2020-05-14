@@ -1,7 +1,6 @@
 import { default as React, useState, useEffect, Fragment } from 'react';
 
 import { useApi, useAuth } from '../services';
-import { toolBox } from '../utilities'
 import { Menu } from '../components/menu';
 import { PageTitle, Label } from '../components/typography';
 import { InputFieldTextWithResults, InputFieldText, UploadPicture } from '../components/formComponents';
