@@ -59,7 +59,7 @@
 // small screen
 @media only screen and (min-width : $breakpoint-xsm) and (max-width : $breakpoint) {
     .page-title {
-		font-size: $font-size-page-title-lg;
+		font-size: $font-size-page-title-sm;
 	}
 	
 	.error-field {

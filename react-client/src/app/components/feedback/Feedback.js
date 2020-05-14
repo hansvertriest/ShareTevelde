@@ -68,10 +68,10 @@ const Feedback = (props) => {
 				</a>
 
 				<div className="feedback__content">
-					<a href={`/profile/${props.data.user._id}`} className="feedback-content__username">
-						{userProfile.username}
-						<span> {getTimeTelation(props.data._createdAt)}</span>
-					</a>
+					<div className="feedback-content__header">
+						<a href={`/profile/${props.data.user._id}`} className="username">{userProfile.username}</a>
+						<p> {getTimeTelation(props.data._createdAt)}</p>
+					</div>
 
 					<p className="feedback-content__content">
 						{props.data.content}

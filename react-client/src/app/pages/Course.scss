@@ -43,3 +43,49 @@
 		display: block;
 	}
 }
+
+// small screen
+@media only screen and (min-width : $breakpoint-xsm) and (max-width : $breakpoint) {
+	.page__course {
+		.course-container {
+			.assignment-list-item {
+				width: 100%;
+			}
+		}
+		.course-container {
+			grid-column: span 6;
+		}
+		.aside-container--top {
+			display: block;
+			grid-column: span 6;
+		}
+
+		.aside-container--right {
+			display: none;
+		}
+	}
+}
+
+
+// extra small screen
+@media only screen and (max-width : $breakpoint-xsm) {
+	.page__course {
+		.course-container {
+			.assignment-list-item {
+				width: 100%;
+			}
+		}
+		.course-container {
+			grid-column: span 6;
+		}
+
+		.aside-container--top {
+			display: block;
+			grid-column: span 6;
+		}
+
+		.aside-container--right {
+			display: none;
+		}
+	}
+}

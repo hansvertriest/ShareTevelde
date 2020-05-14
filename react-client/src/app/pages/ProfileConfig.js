@@ -5,14 +5,14 @@ import { apiConfig } from '../config';
 
 import { Menu } from '../components/menu';
 import { PageTitle, Label } from '../components/typography'
-import { TextArea, DropDown, InputFieldText } from '../components/formComponents';
+import { TextArea, DropDown, InputFieldText, PrimaryButton } from '../components/formComponents';
 
 import './ProfileConfig.scss';
 
 const Profileconfig = ({children}) => {
 	const BASE_URL = `${apiConfig.baseURL}`;
 	const { currentUser, refresh } = useAuth();
-	const { uploadImage, updateUser, socialMediums } = useApi();
+	const { uploadImage, updateUser, socialMediums, resetPassword } = useApi();
 
 	const [socialMedia, setSocialMedia] = useState([]);
 
@@ -139,6 +139,46 @@ const Profileconfig = ({children}) => {
 		if (!currentUser.profile[value]) setSocialMedia(newElements);
 	}
 
+	const resetPass = async (ev) => {
+		ev.preventDefault();
+		const first = document.getElementById('first-password');
+		const second = document.getElementById('second-password');
+
+		if (first.value === second.value && first.value.length >= 10) {
+			const reset = await resetPassword(first.value);
+			console.log(reset)
+		}
+	}
+
+	const validatePassword = (ev) => {
+		if (ev.target.value.length >= 10 && ev.target.value.length > 0) {
+			return {
+				passed: true,
+			}
+		} else if (ev.target.value.length > 0) {
+			return {
+				passed: false,
+				error: 'Paswoord moet minstens 10 tekens bevatten.'
+			}
+		}
+		return false;
+	}
+
+	const validatePasswordConfirmation = (ev) => {
+		const password = document.getElementById('first-password').value;
+		if (ev.target.value === password && ev.target.value.length > 0 ) {
+			return {
+				passed: true,
+			}
+		} else if (ev.target.value.length > 0) {
+			return {
+				passed: false,
+				error: 'Paswoorden zijn niet hetzelfde.',
+			}
+		}
+		return false;
+	}
+
 	useEffect(() =>{
 		// refresh currentUser
 		refresh();
@@ -207,6 +247,26 @@ const Profileconfig = ({children}) => {
 						
 						{socialMedia}
 					</div>
+					<form className="password-reset-container">
+						<Label>Reset paswoord</Label>
+						<InputFieldText 
+							type="password" 
+							id="first-password"
+							name="password" 
+							placeholder="Paswoord"
+							validate={(ev) => validatePassword(ev)}
+							showErrors={true}
+						/>
+						<InputFieldText 
+							type="password" 
+							id="second-password"
+							name="passwordConfirmation" 
+							placeholder="Paswoord bevestiging"
+							validate={(ev) => validatePasswordConfirmation(ev)}
+							showErrors={true}
+						/>
+						<PrimaryButton onClick={resetPass}>Reset Paswoord</PrimaryButton>
+					</form>
 				</div>
 
 				<div className="profile-form-container__password-reset">

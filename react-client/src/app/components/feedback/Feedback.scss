@@ -18,13 +18,15 @@
 		flex-direction: column;
 		width: 100%;
 
-		.feedback-content__username {
+		.feedback-content__header {
 			display: flex;
 			justify-content: space-between;
-			color: $secondary-color;
 			cursor: pointer;
 
-			span {
+			a {
+				color: $secondary-color;
+			}
+			p {
 				color: $bg-color-shade-light;
 				cursor: default;
 			}
@@ -49,5 +51,30 @@
 	}
 	.feedback__delete:hover {
 		cursor: pointer;
+	}
+}
+
+// small screen
+@media only screen and (min-width : $breakpoint-xsm) and (max-width : $breakpoint) {
+	.feedback {
+		.feedback__content {
+			.feedback-content__header {
+				flex-direction: column;
+			}
+		}
+		margin-bottom: 40px;
+	}
+}
+
+
+// extra small screen
+@media only screen and (max-width : $breakpoint-xsm) {
+	.feedback {
+		.feedback__content {
+			.feedback-content__header {
+				flex-direction: column;
+			}
+		}
+		margin-bottom: 40px;
 	}
 }

@@ -10,7 +10,7 @@ const HomePage = ({children}) => {
 	const { getPosts } = useApi();
 	const { currentUser, refresh } = useAuth();
 
-	const postsLimit = 2;
+	const postsLimit = 4;
 
 	const [posts, setPosts] = useState([]);
 	const [postPage, setPostPage] = useState(0);

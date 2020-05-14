@@ -129,7 +129,7 @@ class UserController {
 		try {
 			// get data
 			const { token, password } = req.body;
-
+			console.log(req.body);
 			// check if password is long enough
 			if (password.length < 10) throw {code: 412, msg: 'Please provide a longer password.'}
 

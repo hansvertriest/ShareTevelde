@@ -48,6 +48,7 @@ const ApiProvider = ({children}) => {
 			})
 	}
 
+
 	const createPost = async ( assignmentId, urlToProject, pictures) => {
 		const url = `${BASE_URL}/post`;
 		// create body 
@@ -56,7 +57,7 @@ const ApiProvider = ({children}) => {
 			urlToProject,
 			pictures,
 		}
-		// fetch posts
+		// fetch
 		const response = await toolBox.fetchWithStandardOptions(url, 'POST', {body}, true);
 		return response.json()
 			.then((res) => {
@@ -77,7 +78,7 @@ const ApiProvider = ({children}) => {
 		const body = {
 			id: postId
 		}
-		// fetch posts
+		// fetch 
 		const response = await toolBox.fetchWithStandardOptions(url, 'DELETE', {body}, true);
 		return response.json()
 			.then((res) => {
@@ -138,7 +139,7 @@ const ApiProvider = ({children}) => {
 			content,
 			postId
 		}
-		// fetch posts
+		// fetch 
 		const response = await toolBox.fetchWithStandardOptions(url, 'POST', {body}, true);
 		return response.json()
 			.then((res) => {
@@ -159,7 +160,7 @@ const ApiProvider = ({children}) => {
 		const body = {
 			feedbackId
 		}
-		// fetch posts
+		// fetch 
 		const response = await toolBox.fetchWithStandardOptions(url, 'DELETE', {body}, true);
 		return response.json()
 			.then((res) => {
@@ -200,7 +201,7 @@ const ApiProvider = ({children}) => {
 		const body = {
 			id: feedbackId,
 		}
-		// fetch posts
+		// fetch
 		const response = await toolBox.fetchWithStandardOptions(url, 'POST', {body}, true);
 		return response.json()
 			.then((res) => {
@@ -259,6 +260,27 @@ const ApiProvider = ({children}) => {
 
 		// fetch users
 		const response = await toolBox.fetchWithStandardOptions(queryUrl, 'GET', {});
+		return response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
+	}
+
+	const resetPassword = async (password) => {
+		// construct url
+		const url = `${BASE_URL}/auth/reset`;
+		const body = {
+			password,
+		}
+		// fetch
+		const response = await toolBox.fetchWithStandardOptions(url, 'POST', {body}, true);
 		return response.json()
 			.then((res) => {
 				return toolBox.handleFetchError(res);
@@ -520,6 +542,7 @@ const ApiProvider = ({children}) => {
 			refreshUserProfile, 
 			updateUser, 
 			getUserById,
+			resetPassword,
 			uploadImage,
 			uploadPictureWithFilename,
 			getPosts,

@@ -99,7 +99,7 @@
 
 			.description-container {
 				grid-column: span 2;
-				margin-bottom: 100px;
+				margin-bottom: 50px;
 			}
 
 			.social-media-container {
@@ -107,6 +107,7 @@
 				display: grid;
 				grid-template-columns: repeat(2, 1fr);
 				column-gap: 20px;
+				margin-bottom: 50px;
 
 				h2 {
 					grid-column: span 2;
@@ -127,6 +128,27 @@
 					.input-container {
 						width: 100%;
 					}
+				}
+			}
+
+			.password-reset-container {
+				grid-column: span 2;
+
+				display: grid;
+				grid-template-columns: repeat(4, 1fr);
+				column-gap: 20px;
+
+				h2 {
+					grid-column: span 4;
+				}
+
+				.input-container {
+					grid-column: span 2;
+				}
+
+				.primary-button {
+					grid-column-start: 2;
+					grid-column-end:4;
 				}
 			}
 		}
@@ -190,6 +212,21 @@
 						grid-column: span 2;
 					}
 				}
+				.password-reset-container {
+					grid-column: span 2;
+
+					h2 {
+						grid-column: span 4;
+					}
+
+					.input-container {
+						grid-column: span 4;
+					}
+
+					.primary-button {
+						grid-column: span 4;
+					}
+				}
 			}
 		}
 		.aside-container--top {
@@ -234,6 +271,22 @@
 				.social-media-container {
 					.medium-input-container {
 						grid-column: span 2;
+					}
+				}
+				
+				.password-reset-container {
+					grid-column: span 2;
+
+					h2 {
+						grid-column: span 4;
+					}
+
+					.input-container {
+						grid-column: span 4;
+					}
+
+					.primary-button {
+						grid-column: span 4;
 					}
 				}
 			}
