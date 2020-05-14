@@ -16,17 +16,18 @@ function App() {
         <ApiProvider>
           <Router basename='/'>
             <Switch>
-              <RouteWithLayout exact path={Routes.LANDING} component={HomePage} layout={PageLayout} />
-              <RouteWithLayout exact path={Routes.PROFILECONFIG} component={ProfileConfig} layout={PageLayout} />
-              <RouteWithLayout exact path={Routes.NEWPOST} component={NewPost} layout={PageLayout} />
-              <RouteWithLayout exact path={Routes.PROFILE} component={Profile} layout={PageLayout} />
-              <RouteWithLayout exact path={Routes.COURSE} component={Course} layout={PageLayout} />
-              <RouteWithLayout exact path={Routes.ASSIGNMENT} component={Assignment} layout={PageLayout} />
-              <RouteWithLayout exact path={Routes.POST} component={Post} layout={PageLayout} />
-              <RouteWithLayout exact path={Routes.AUTH_SIGNUP} component={SignUp} layout={SignUpInLayout} />
-              <RouteWithLayout exact path={Routes.AUTH_SIGNIN} component={SignIn} layout={SignUpInLayout} />
-              <RouteWithLayout exact path={Routes.NOTFOUND} component={NotFound} layout={SignUpInLayout} />
-              <Redirect from={Routes.HOME} to={Routes.LANDING} />
+				<RouteWithLayout exact path={Routes.LANDING} component={HomePage} layout={PageLayout} />
+				<RouteWithLayout exact path={Routes.PROFILECONFIG} component={ProfileConfig} layout={PageLayout} />
+				<RouteWithLayout exact path={Routes.NEWPOST} component={NewPost} layout={PageLayout} />
+				<RouteWithLayout exact path={Routes.PROFILE} component={Profile} layout={PageLayout} />
+				<RouteWithLayout exact path={Routes.COURSE} component={Course} layout={PageLayout} />
+				<RouteWithLayout exact path={Routes.ASSIGNMENT} component={Assignment} layout={PageLayout} />
+				<RouteWithLayout exact path={Routes.POST} component={Post} layout={PageLayout} />
+				<RouteWithLayout exact path={Routes.AUTH_SIGNUP} component={SignUp} layout={SignUpInLayout} />
+				<RouteWithLayout exact path={Routes.AUTH_SIGNIN} component={SignIn} layout={SignUpInLayout} />
+				<RouteWithLayout exact path={Routes.NOTFOUND} component={NotFound} layout={SignUpInLayout} />
+				<Redirect from={Routes.HOME} to={Routes.LANDING} />
+				<RouteWithLayout exact path={Routes.UNKNOWN} component={NotFound} layout={SignUpInLayout} />
             </Switch>
           </Router>
         </ApiProvider>

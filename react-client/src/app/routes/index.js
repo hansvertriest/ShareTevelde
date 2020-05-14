@@ -1,4 +1,5 @@
 export const LANDING = '/';
+export const UNKNOWN = '/*';
 export const HOME = '/home';
 export const PROFILECONFIG = '/profileconfig';
 export const NEWPOST = '/newpost';
