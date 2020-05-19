@@ -2,7 +2,7 @@ import { default as express, NextFunction, Request, Response } from 'express';
 import { default as mongoose, Connection } from 'mongoose';
 
 import Logger, { ILogger } from '../../services/logger';
-import { CourseModel, ICourse, CourseModelKeys } from '../../models/mongoose';
+import { CourseModel, ICourse, CourseModelKeys, AssignmentModel } from '../../models/mongoose';
 import {DBOperations} from '../../services/database';
 
 class CourseController {
@@ -193,6 +193,45 @@ class CourseController {
 		} catch (error) {
 			if (error.msg) return res.status(error.code).send(error);
 			this.logger.error('Error while permenantly deleting course.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
+		}
+	}
+
+	public merge = async ( req: Request, res: Response,  next: NextFunction ): Promise<Response<any>> => {
+		try {
+			// get courseIds
+			const { fromCourseId, toCourseId } = req.body;
+
+			// check if toCourse exists
+			const check: ICourse = await CourseModel.findOne({_id: toCourseId}).exec();
+			if (!check) throw {code: 404, msg: 'ToCourseId does not exist'};
+
+			// update assignments
+			const update = await AssignmentModel.updateMany(
+				{courseId: fromCourseId},
+				{ $set : {courseId: toCourseId} }
+			)
+			
+			if (update.n === 0) {
+				throw {code: 404, msg: 'No assignments were found in the fromCourse'}
+			} else if (update.nModified === '0') {
+				throw {code: 500, msg: 'Nothing was moved.'}
+			}
+
+			// delete fromCourse
+			const deleteFromCourse = await CourseModel.deleteOne({_id: fromCourseId}).exec();
+
+			if (deleteFromCourse.n === 0) {
+				throw {code: 404, msg: 'No course was found to be deleted'}
+			} else if (deleteFromCourse.ok === 0) {
+				throw {code: 500, msg: 'Nothing was deleted.'}
+			}
+
+			return res.status(200).send();
+			
+		} catch (error) {
+			if (error.msg) return res.status(error.code).send(error);
+			this.logger.error('Error while moving course.', error);
 			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
 		}
 	}

@@ -8,6 +8,7 @@ import Post from './Post';
 import NotFound from './NotFound';
 import Course from './Course';
 import Assignment from './Assignment';
+import AdminMerge from './AdminMerge';
 
 export {
 	HomePage,
@@ -19,5 +20,6 @@ export {
 	Post,
 	NotFound,
 	Course,
-	Assignment
+	Assignment,
+	AdminMerge
 }

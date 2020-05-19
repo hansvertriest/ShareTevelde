@@ -1,0 +1,18 @@
+@import '../../variables.scss';
+
+.merge-page {
+	grid-column: span 6;
+
+	.merge-page__list {
+		background-color: $bg-color-shade-dark;
+		padding: 20px;
+		
+		.list__item{
+			padding: 20px;
+			border-radius: 10px;
+		}
+		.list__item:nth-of-type(2n) {
+			background-color: $bg-color-shade-light;
+		}
+	}
+}

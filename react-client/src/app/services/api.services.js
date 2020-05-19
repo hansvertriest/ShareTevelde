@@ -314,6 +314,25 @@ const ApiProvider = ({children}) => {
 			})
 	}
 
+	const getAssignmentsAndSoftDeleted = async (filters, pageNr, limit) => {
+		// construct query
+		const url = `${BASE_URL}/assignment/softDeleted/all`;
+		const queryUrl = toolBox.parametersToQuery(url, filters, (pageNr !== undefined && limit !== undefined) ? { pageNr, limit } : undefined);
+		// fetch courses
+		const response = await toolBox.fetchWithStandardOptions(queryUrl, 'GET', undefined, true);
+		return response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
+	}
+
 	const getAssignmentById = async (id) => {
 		// construct query
 		const url = `${BASE_URL}/assignment/byId`;
@@ -382,6 +401,25 @@ const ApiProvider = ({children}) => {
 		const queryUrl = toolBox.parametersToQuery(url, filters, (pageNr !== undefined && limit !== undefined) ? { pageNr, limit } : undefined);
 		// fetch courses
 		const response = await toolBox.fetchWithStandardOptions(queryUrl, 'GET');
+		return response.json()
+			.then((res) => {
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
+	}
+
+	const getCoursesAndSoftdeleted = async (filters, pageNr, limit) => {
+		// construct query
+		const url = `${BASE_URL}/course/softDeleted/all`;
+		const queryUrl = toolBox.parametersToQuery(url, filters, (pageNr !== undefined && limit !== undefined) ? { pageNr, limit } : undefined);
+		// fetch courses
+		const response = await toolBox.fetchWithStandardOptions(queryUrl, 'GET', undefined, true);
 		return response.json()
 			.then((res) => {
 				return toolBox.handleFetchError(res);
@@ -535,6 +573,53 @@ const ApiProvider = ({children}) => {
 			})
 	}
 
+	// ADMIN functions
+	const mergeCourses = async(fromId, toId) => {
+		const url = `${BASE_URL}/course/merge`;
+
+		const body = {
+			fromCourseId: fromId,
+			toCourseId: toId,
+		}
+		// fetch 
+		const response = await toolBox.fetchWithStandardOptions(url, 'POST', {body}, true);
+		return response.json()
+			.then((res) => {
+				console.log(res);
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
+	}
+
+	const mergeAssignments = async(fromId, toId) => {
+		const url = `${BASE_URL}/assignment/merge`;
+
+		const body = {
+			fromAssignmentId: fromId,
+			toAssignmentId: toId,
+		}
+		// fetch 
+		const response = await toolBox.fetchWithStandardOptions(url, 'POST', {body}, true);
+		return response.json()
+			.then((res) => {
+				console.log(res);
+				return toolBox.handleFetchError(res);
+			})
+			.then((res) => {
+				return res;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
+	}
+
 
   	return (
     	<ApiContext.Provider value={{
@@ -556,16 +641,20 @@ const ApiProvider = ({children}) => {
 			postAgree,
 			getUsers,
 			getAssignments,
+			getAssignmentsAndSoftDeleted,
 			getAssignmentById,
 			getAssignmentsOfCourse,
 			getNotifications,
 			sendNotification,
 			getCourses,
+			getCoursesAndSoftdeleted,
 			getcourseById,
 			createNewCourse,
 			createNewAssignment,
 			socialMediums,
 			sendLike,
+			mergeCourses,
+			mergeAssignments,
 			}}>
       	{children}
     	</ApiContext.Provider>

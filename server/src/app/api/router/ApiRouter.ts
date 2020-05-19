@@ -163,6 +163,7 @@ class ApiRouter {
 		this.router.get('/course/byId', this.courseController.getById);
 		this.router.get('/course/all', this.courseController.getAll);
 		this.router.get('/course/softDeleted/all', this.verifyJwtAndCheckAdmin, this.courseController.getAllAndSoftDeleted);
+		this.router.post('/course/merge', this.verifyJwtAndCheckAdmin, this.courseController.merge);
 
 		this.router.post('/assignment', this.verifyJwt, this.assignmentController.new);
 		this.router.get('/assignment/all', this.assignmentController.getAll);
@@ -171,6 +172,7 @@ class ApiRouter {
 		this.router.delete('/assignment', this.verifyJwtAndCheckAdmin, this.assignmentController.softDeleteById);
 		this.router.delete('/assignment/all/softDeleted', this.verifyJwtAndCheckAdmin, this.assignmentController.permanentDelete);
 		this.router.put('/assignment/undelete', this.verifyJwtAndCheckAdmin, this.assignmentController.undeleteById);
+		this.router.post('/assignment/merge', this.verifyJwtAndCheckAdmin, this.assignmentController.merge);
 		
 		this.router.post('/notification/toAll', this.verifyJwtAndCheckAdmin, this.notificationController.sendAll);
 		this.router.get('/notification/all', this.verifyJwt, this.notificationController.get)

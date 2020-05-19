@@ -2,7 +2,7 @@ import { default as express, NextFunction, Request, Response } from 'express';
 import { default as mongoose, Connection } from 'mongoose';
 
 import Logger, { ILogger } from '../../services/logger';
-import { AssignmentModel, IAssignment, AssignmentModelKeys, CourseModel } from '../../models/mongoose';
+import { AssignmentModel, IAssignment, AssignmentModelKeys, CourseModel, PostModel } from '../../models/mongoose';
 import {DBOperations} from '../../services/database';
 
 class AssignmentController {
@@ -156,7 +156,7 @@ class AssignmentController {
 					} else if (resolve.nModified === '0') {
 						throw {code: 500, msg: 'Nothing was softdeleted'}
 					}
-					return res.status(200).send();
+					return res.status(200).send({});
 				})
 				.catch((err) =>{
 					if (err.msg) return res.status(err.code).send(err)
@@ -183,7 +183,7 @@ class AssignmentController {
 					} else if (resolve.nModified === '0') {
 						throw {code: 500, msg: 'Nothing was softdeleted'}
 					}
-					return res.status(200).send();
+					return res.status(200).send({});
 				})
 				.catch((err) =>{
 					if (err.msg) return res.status(err.code).send(err)
@@ -203,7 +203,7 @@ class AssignmentController {
 					if (resolve.n === 0) {
 						throw {code: 404, msg: 'No Assignments to delete.'}
 					}
-					return res.status(200).send();
+					return res.status(200).send({});
 				})
 				.catch((err) => {
 					if (err.msg) return res.status(err.code).send(err)
@@ -211,6 +211,45 @@ class AssignmentController {
 		} catch (error) {
 			if (error.msg) return res.status(error.code).send(error);
 			this.logger.error('Error while permenantly deleting course.', error);
+			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
+		}
+	}
+
+	public merge = async ( req: Request, res: Response,  next: NextFunction ): Promise<Response<any>> => {
+		try {
+			// get assignmentIds
+			const { fromAssignmentId, toAssignmentId } = req.body;
+
+			// check if toAssignment exists
+			const check: IAssignment = await AssignmentModel.findOne({_id: toAssignmentId}).exec();
+			if (!check) throw {code: 404, msg: 'ToAssignment does not exist'};
+
+			// update assignments
+			const update = await PostModel.updateMany(
+				{ assignment: fromAssignmentId },
+				{ $set : {assignment: toAssignmentId} }
+			)
+			
+			if (update.n === 0) {
+				throw {code: 404, msg: 'No posts were found in the fromCourse'}
+			} else if (update.nModified === '0') {
+				throw {code: 500, msg: 'Nothing was moved.'}
+			}
+
+			// delete fromAssignment
+			const deleteFromAssignment = await AssignmentModel.deleteOne({_id: fromAssignmentId}).exec();
+
+			if (deleteFromAssignment.n === 0) {
+				throw {code: 404, msg: 'No assignment was found to be deleted'}
+			} else if (deleteFromAssignment.ok === 0) {
+				throw {code: 500, msg: 'Nothing was deleted.'}
+			}
+
+			return res.status(200).send({});
+			
+		} catch (error) {
+			if (error.msg) return res.status(error.code).send(error);
+			this.logger.error('Error while moving course.', error);
 			return res.status(500).send({code: 500, msg: 'Unknown error occured.'})
 		}
 	}
