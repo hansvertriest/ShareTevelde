@@ -1,7 +1,7 @@
 import React from 'react';
 import {BrowserRouter as Router, Redirect, Switch} from 'react-router-dom';
 
-import { HomePage, ProfileConfig, SignUp, SignIn, NewPost, Profile, Post, NotFound, Course, Assignment, AdminMerge } from './pages';
+import { HomePage, ProfileConfig, SignUp, SignIn, NewPost, Profile, Post, NotFound, Course, Assignment, AdminMerge, GoogleCallback } from './pages';
 import { PageLayout, SignUpInLayout, AdminLayout } from './layouts';
 import { RouteWithLayout } from './utilities';
 import * as Routes from './routes';
@@ -26,6 +26,7 @@ function App() {
 				<RouteWithLayout exact path={Routes.AUTH_SIGNUP} component={SignUp} layout={SignUpInLayout} />
 				<RouteWithLayout exact path={Routes.AUTH_SIGNIN} component={SignIn} layout={SignUpInLayout} />
 				{/* <RouteWithLayout exact path={Routes.ADMIN_DELETE} component={NotFound} layout={SignUpInLayout} /> */}
+				<RouteWithLayout exact path={Routes.GOOGLE_CALLBACK} component={GoogleCallback} layout={SignUpInLayout} />
 				<RouteWithLayout exact path={Routes.ADMIN_MERGE} component={AdminMerge} layout={AdminLayout} />
 				<RouteWithLayout exact path={Routes.NOTFOUND} component={NotFound} layout={SignUpInLayout} />
 				<Redirect from={Routes.HOME} to={Routes.LANDING} />

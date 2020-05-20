@@ -12,3 +12,4 @@ export const AUTH_SIGNIN = '/auth/signin';
 export const AUTH_SIGNUP = '/auth/signup';
 export const ADMIN_DELETE = '/admin/delete';
 export const ADMIN_MERGE = '/admin/merge';
+export const GOOGLE_CALLBACK = '/auth/google/callback';

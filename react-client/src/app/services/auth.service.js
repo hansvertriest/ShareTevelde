@@ -113,6 +113,39 @@ const AuthProvider = ({children}) => {
 			})
 	}
 
+	const googleAuth = async () => {
+		let url = `${BASE_URL}/auth/google`;
+
+		// const myHeaders = {
+		// 	'Accept': 'application/json',
+		// 	'Content-Type': 'application/json' 
+		// }
+
+		// const options = {
+		// 	method: 'get',
+		// 	// headers: myHeaders,
+		// 	// body: JSON.stringify(body),
+		// 	// redirect: 'follow'
+		// };
+
+		// const response = await fetch(`${url}`, options);
+		// await response.json()
+		// 	.then((res) => {
+		// 		return toolBox.handleFetchError(res);
+		// 	})
+		// 	.then((response) => {
+		// 		console.log(response)
+		// 		// localStorage.setItem('mern:authUser', response.token);
+		// 		// setCurrentUser(response);
+		// 		// succesCb();
+		// 	})
+		// 	.catch((error) => {
+		// 		console.log(error)
+		// 		// errorCb(error);
+		// 	})
+		window.location.href= url;
+	}
+
 	const refresh = async () => {
 		let url = `${BASE_URL}/auth/refresh`;
 		// const queryUrl = toolBox.parametersToQuery(url, {stayedLoggedIn: false});
@@ -142,6 +175,7 @@ const AuthProvider = ({children}) => {
 				signUpLocal,
 				logout,
 				refresh,
+				googleAuth,
 			}
 		} > {
 			children

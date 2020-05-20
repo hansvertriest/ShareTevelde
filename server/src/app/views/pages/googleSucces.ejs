@@ -7,12 +7,11 @@
     <link rel="stylesheet" href="css/app.css">
 </head>
 <body class="page--home">
-    <%- include('../partials/header.ejs') %>
-    <main class="main">
-        <% sections.forEach(function(section) { %>
-            <%- include('../partials/home-section.ejs', { section: section}) %>
-        <% }) %>
-    </main>
-    <%- include('../partials/footer.ejs') %>
+   
+	<script>
+		const token = `<%= token %>`;
+		localStorage.setItem('mern:authUser', "sss");
+		window.location.href="http://localhost:3000/"
+	</script>
 </body>
 </html>

@@ -66,7 +66,7 @@ class App {
     if (error.status === 404) {
       res.status(404).render('pages/404');
     } else {
-      res.status(error.status).render('pages/404');
+      res.status((error.status) ? error.status : 500).render('pages/404');
     }
   }
 

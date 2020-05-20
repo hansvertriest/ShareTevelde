@@ -63,6 +63,7 @@ const AdminMerge = (props) => {
 						<div className="list__item" key={assignment._id}  >
 							<div className="list-item__header">
 								<h2>{assignment.title}</h2>
+								<p>{assignment._id}</p>
 							</div>
 							<button id={`item-${assignment._id}`} onClick={selectItem}>Selecteer</button>
 						</div>

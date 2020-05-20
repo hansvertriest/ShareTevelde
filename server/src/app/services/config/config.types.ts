@@ -41,6 +41,12 @@ export interface IConfig {
   mongoDBConnection: string;
   auth: IAuthConfig;
   adminCreds: IAdminCreds;
+  google: IGoogleConfig;
+}
+
+export interface IGoogleConfig {
+	clientId: string;
+	clientSecret: string;
 }
 
 export interface IAdminCreds {

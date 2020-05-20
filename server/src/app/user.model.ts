@@ -11,6 +11,11 @@ interface ILocalProvider {
 	password: string;
 }
 
+interface IGoogleProvider {
+	googleId: string;
+	pictureUrl: string;
+}
+
 enum NotificationType {
 	Info = 'info',
 	Agree = 'agree',
@@ -41,6 +46,7 @@ interface IUser extends Document {
 	email: string;
 
 	localProvider ? : ILocalProvider;
+	googleProvider ? : IGoogleProvider;
 
 	role: string;
 	profile ? : IProfile;
@@ -81,6 +87,17 @@ const userSchema: Schema = new Schema({
 	},
 	localProvider: {
 		password: {
+			type: String,
+			required: false,
+		},
+	},
+
+	googleProvider: {
+		googleId: {
+			type: String,
+			required: false,
+		},
+		pictureUrl: {
 			type: String,
 			required: false,
 		},
@@ -156,6 +173,33 @@ userSchema.methods.comparePassword = function(candidatePassword: String, cb: Fun
 		return cb(null, isMatch);
 	});
 };
+
+// userSchema.methods.findOrCreate = function(email: String, googleId: string,  cb: Function) {
+// 	const user = this;
+// 	user.findOne({email}).exec()
+// 		.then((response: IUser) => {
+// 			// if exists return response else create the user
+// 			if (response) {
+// 				return cb(null, response)
+// 			} else {
+// 				const newUser: IUser = new UserModel({
+// 					email,
+// 					googleProvider: {
+// 						googleId,
+// 					},
+// 					role: 'user'
+// 				});
+
+// 				newUser.save()
+// 					.then((response) => {
+// 						return cb(null, response);
+// 					})
+// 					.catch((err) => {
+// 						return cb(err, null)
+// 					});
+// 			}
+// 		});
+// };
 
 const UserModel = mongoose.model < IUser > ('User', userSchema);
 

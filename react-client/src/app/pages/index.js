@@ -9,6 +9,7 @@ import NotFound from './NotFound';
 import Course from './Course';
 import Assignment from './Assignment';
 import AdminMerge from './AdminMerge';
+import GoogleCallback from './GoogleCallback';
 
 export {
 	HomePage,
@@ -21,5 +22,6 @@ export {
 	NotFound,
 	Course,
 	Assignment,
-	AdminMerge
+	AdminMerge,
+	GoogleCallback
 }

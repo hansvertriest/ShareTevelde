@@ -7,6 +7,7 @@ import {
   ServerProtocol,
   IAuthConfig,
   IAdminCreds,
+  IGoogleConfig,
 } from './config.types';
 
 class Config implements IConfig {
@@ -15,6 +16,7 @@ class Config implements IConfig {
   public server: IServerConfig;
   public mongoDBConnection: string;
   public auth: IAuthConfig;
+  public google: IGoogleConfig;
   public adminCreds: IAdminCreds;
   public jwt_secret: string;
 
@@ -59,7 +61,12 @@ class Config implements IConfig {
         clientSecret: process.env.AUTH_FACEBOOK_CLIENT_SECRET,
       },
 	};
-	
+
+	//google config
+	this.google = {
+		clientId: process.env.GOOGLE_CLIENT_ID,
+		clientSecret: process.env.GOOGLE_SECRET,
+	}
 	//admin credentials
 	this.adminCreds = {
 		email: process.env.ADMIN_EMAIL,

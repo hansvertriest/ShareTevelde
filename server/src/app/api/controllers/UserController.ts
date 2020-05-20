@@ -107,6 +107,34 @@ class UserController {
 		)(req, res, next);
 	};
 
+	googleResponse = async ( req: Request, res: Response, next: NextFunction ): Promise<void> => {
+		this.authService.passport.authenticate(
+			'google',
+			{ session: this.config.auth.jwt.session },
+			(err, user, info) => {
+				if (err) {
+					console.log(err);;
+					return next(err);
+				}
+				if (!user) {
+					return  res.status(404).json({
+						code: 404,
+						msg: 'Combination of email and password was not found.'
+					});
+				}
+				const token = this.authService.createToken(user);
+				return res.status(200).json({
+					id: user.id,
+					email: user.email,
+					token: `${token}`,
+					strategy: 'local',
+					role: user.role,
+					avatar: user.profile.avatar,
+				});
+			},
+		)(req, res, next);
+	};
+
 	public refreshToken = async ( req: Request, res: Response,  next: NextFunction ): Promise<Response<any>> => {
 		try {
 			const { token } = req.body;

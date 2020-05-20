@@ -2,11 +2,13 @@ import { Request, Response, NextFunction } from 'express';
 import { default as passport, PassportStatic } from 'passport';
 import { default as passportLocal } from 'passport-local';
 import { default as passportJwt } from 'passport-jwt';
+// import { default as GoogleStrategy } from 'passport-google-oauth20';
+var GoogleStrategy = require('passport-google-oauth20').Strategy;
 import { default as jwt } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
 import { Environment, IConfig } from '../config';
-import { IUser, UserModel } from '../../models/mongoose';
+import { IUser, UserModel, userSchema } from '../../models/mongoose';
 import { Role, IVerifiedToken } from './auth.types';
 import { UnauthorizedError, ForbiddenError } from '../../utilities';
 
@@ -18,10 +20,11 @@ class AuthService {
   private JwtStrategy = passportJwt.Strategy;
 
   constructor(config: IConfig) {
-    this.config = config;
-
+	this.config = config;
+	
     this.initializeLocalStrategy();
-    this.initializeJwtStrategy();
+	this.initializeJwtStrategy();
+	this.initializeGoogleStrategy();
     passport.serializeUser((user, done) => {
       done(null, user);
     });
@@ -60,6 +63,66 @@ class AuthService {
         },
       ),
     );
+  }
+
+  initializeGoogleStrategy = () => {
+	passport.use(new GoogleStrategy({
+		clientID: this.config.google.clientId,
+		clientSecret: this.config.google.clientSecret,
+		callbackURL: "http://localhost:3000/auth/google/callback"
+	  },
+	  function(accessToken, refreshToken, data, profile, cb) {
+		// userSchema.findOrCreate(profile.email, profile.id function (err, user) {
+		//   return cb(err, user);
+		// });
+		const profileJson = profile._json;
+		UserModel.findOne({email: profileJson.email}).exec()
+		.then((response: IUser) => {
+			// if exists return response else create the user
+			if (response) {
+				if (response.googleProvider.googleId) {
+					return cb(null, response)
+				} else {
+					response.update({
+						profile: {
+							username: profileJson.name.replace(' ', '_')
+						},
+						googleProvider: {
+							googleId: profile.id,
+							pictureUrl: profileJson.picture,
+						},
+					}).exec()
+						.then((response) => {
+							return cb(null, response);
+						})
+						.catch((err) => {
+							return cb(err, false)
+						});
+				}
+			} else {
+				const newUser: IUser = new UserModel({
+					email: profileJson.email,
+					profile: {
+						username: profileJson.name.replace(' ', '_')
+					},
+					googleProvider: {
+						googleId: profile.id,
+						pictureUrl: profileJson.picture,
+					},
+					role: 'user'
+				});
+
+				newUser.save()
+					.then((response) => {
+						return cb(null, response);
+					})
+					.catch((err) => {
+						return cb(err, false)
+					});
+			}
+		});
+	  }
+	));
   }
 
   initializeJwtStrategy = () => {
