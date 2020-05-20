@@ -2,11 +2,16 @@ import { default as React, useState, useEffect, Fragment } from 'react';
 
 
 import './AdminMerge.scss';
-import { useApi } from '../services';
+import { useApi, useAuth } from '../services';
 import { PageTitle } from '../components/typography';
 
 const AdminMerge = (props) => {
 	const { mergeAssignments, getCoursesAndSoftdeleted, getAssignmentsAndSoftDeleted, mergeCourses } = useApi();
+	const { currentUser } = useAuth();
+
+	if (!currentUser || currentUser.role != 'administrator') {
+		window.location.href= "/";
+	}
 
 	const [tableName, setTableName] = useState('course');
 	const [listItems, setListItems] = useState([]);

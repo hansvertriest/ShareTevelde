@@ -10,9 +10,8 @@ const GoogleCallback = (props) => {
 	useEffect(() => {
 		const func = async () => {
 			const query = window.location.search;
-			const user = await toolBox.fetchWithStandardOptions(`${BASE_URL}/auth/google/callback${query}`, 'GET');
-			console.log(user)
-			localStorage.setItem('mern:authUser', user.token);
+			localStorage.setItem('mern:authUser', query.replace('?token=', ''));
+			window.location.href="/profileconfig"
 		}
 
 		func();

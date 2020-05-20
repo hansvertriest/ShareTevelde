@@ -16,6 +16,11 @@ const Profileconfig = ({children}) => {
 
 	const [socialMedia, setSocialMedia] = useState([]);
 
+	// check if currentUser
+	if (!currentUser) {
+		window.location.href = '/';
+	}
+
 	const onProfilePictureClick = (ev) => {
 		const inputElement = document.getElementById('upload-picture');
 		inputElement.click();
@@ -180,6 +185,7 @@ const Profileconfig = ({children}) => {
 	}
 
 	useEffect(() =>{
+
 		// refresh currentUser
 		refresh();
 
@@ -215,7 +221,13 @@ const Profileconfig = ({children}) => {
 				<PageTitle>Profiel</PageTitle>
 				<div className="profile-form-container__profile-picture-section">
 					<div className="picture-container" onClick={onProfilePictureClick}>
-						<img src={`${BASE_URL}/image/byname/${currentUser.profile.profilePictureName}`} className="profile-picture" alt="profile"/>
+						<img src={
+							(currentUser.profile.profilePictureName) 
+							? `${BASE_URL}/image/byname/${currentUser.profile.profilePictureName}`
+							: (currentUser.googlePictureUrl)
+								?	currentUser.googlePictureUrl
+								: ''
+						} className="profile-picture" alt="profile"/>
 						<img src="./icons/camera.svg" className="overlay" alt="profile overlay"/>
 						<input type="file" id={'upload-picture'} onChange={uploadPicture} accept="image/*" />
 					</div>

@@ -14,7 +14,7 @@ import {
 } from './picture.model';
 import {
 	IUser
-} from '../../user.model';
+} from './user.model';
 
 
 interface ILike {

@@ -13,10 +13,17 @@ class GlobalMiddleware {
     app.use(bodyParser.json({ limit: '50mb' }));
     app.use(express.static(path.join(rootPath, 'static')));
 	app.use(methodOverride('_method'));
-	app.use(cors())
 	app.use(passport.initialize());
     app.set('views', path.join(rootPath, 'views'));
-    app.set('view engine', 'ejs');
+	app.set('view engine', 'ejs');
+	
+	const corsOptions = {
+		origin: true,
+		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+		credentials: true,
+		exposedHeaders: ['x-auth-token'],
+	  };
+	app.use(cors(corsOptions));
   }
 }
 

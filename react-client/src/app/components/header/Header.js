@@ -11,10 +11,11 @@ import './header.scss';
 const Header = ({children}) => {
 	const { currentUser } = useAuth();
 
-
 	const profilePictureUrl = (currentUser && currentUser.profile.profilePictureName) 
 		? `${apiConfig.baseURL}/image/byname/${currentUser.profile.profilePictureName}`
-		: './images/defaultProfilePicture.jpg';
+		: (currentUser && currentUser.googlePictureUrl)
+			?	currentUser.googlePictureUrl
+			: 	'./images/defaultProfilePicture.jpg';
 
 	const toggleMenu = () => {
 		const menu = document.getElementById('menu-top');

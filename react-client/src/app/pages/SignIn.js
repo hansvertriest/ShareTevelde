@@ -9,7 +9,7 @@ import { Logo } from '../components/misc';
 import './SignUpIn.scss';
 
 const SignIn = ({children}) => {
-	const { signInLocal } = useAuth();
+	const { signInLocal, googleAuth } = useAuth();
 	
 	const submitSignIn = async (ev) => {
 		ev.preventDefault();
@@ -32,7 +32,7 @@ const SignIn = ({children}) => {
 
 	const loginGoogle = async (ev) => {
 		ev.preventDefault();
-		// reroute
+		googleAuth();
 	}
 
 

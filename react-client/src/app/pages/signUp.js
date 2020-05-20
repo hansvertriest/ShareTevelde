@@ -30,8 +30,10 @@ const SignUp = ({children}) => {
 			errorField.innerHTML = response.msg;
 			errorField.style.display = 'block';
 		})
-			.then((repsonse) => {
-				window.location.href = "/profileconfig";
+			.then((response) => {
+				if (response) {
+					window.location.href = "/profileconfig";
+				}
 			})
 	}
 

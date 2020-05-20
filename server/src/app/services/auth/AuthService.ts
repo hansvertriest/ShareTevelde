@@ -69,7 +69,7 @@ class AuthService {
 	passport.use(new GoogleStrategy({
 		clientID: this.config.google.clientId,
 		clientSecret: this.config.google.clientSecret,
-		callbackURL: "http://localhost:3000/auth/google/callback"
+		callbackURL: "http://localhost:8080/api/auth/google/callback"
 	  },
 	  function(accessToken, refreshToken, data, profile, cb) {
 		// userSchema.findOrCreate(profile.email, profile.id function (err, user) {
@@ -153,6 +153,7 @@ class AuthService {
   public createToken(user: IUser, expiresIn: number|undefined = undefined ): string {
     const payload = {
 		profile: user.profile,
+		googlePictureUrl: user.googleProvider.pictureUrl || undefined,
 		id: user._id,
 		role: user.role,
     };
