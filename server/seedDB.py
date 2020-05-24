@@ -75,7 +75,13 @@ post_pictures = [
 	'5ebbd9dd46ebec5098d45fb2',
 	'5ebbd9ee46ebec5098d45fb5',
 	'5ebbd9ff46ebec5098d45fb8',
-	'5ebbda1246ebec5098d45fbb'
+	'5ebbda1246ebec5098d45fbb',
+	'5ebbe07e46ebec5098d45ffc',
+	'5ebbe07e46ebec5098d45ffd',
+	'5ec5865214629543bc4773d9',
+	'5ec5865214629543bc4773da',
+	'5eca4af2f7501056e4c9aea7',
+	'5eca4afaf7501056e4c9aea8'
 ]
 
 print 'Creating 4 posts per user.'

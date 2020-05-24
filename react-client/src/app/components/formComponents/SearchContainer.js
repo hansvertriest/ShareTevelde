@@ -28,7 +28,7 @@ const SearchContainer = (props) => {
 	const generateAssignmentResults = (docs) => {
 		const elements = docs.map((doc) => {
 			return (
-				<p className='search-result-assignment__title' key={doc._id}>{doc.title}</p>
+				<a href={`/assignment/${doc._id}`} ><p className='search-result-assignment__title' >{doc.title}</p></a>
 			)
 		});
 		setAssignmentResults(elements);

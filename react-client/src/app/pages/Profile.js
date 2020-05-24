@@ -83,10 +83,10 @@ const Profile = (props) => {
 			<Fragment>
 				<div className="profile-container__picture-section">
 					<img className="picture-section__picture" src={
-							(currentUser.profile.profilePictureName) 
-							? `${BASE_URL}/image/byname/${currentUser.profile.profilePictureName}`
-							: (currentUser.googlePictureUrl)
-								?	currentUser.googlePictureUrl
+							(user.profile.profilePictureName) 
+							? `${BASE_URL}/image/byname/${user.profile.profilePictureName}`
+							: (user.googleProvider && user.googleProvider.googlePictureUrl)
+								?	user.googleProvider.googlePictureUrl
 								: ''
 						} alt="profile"/>
 					<div className="picture-section__description">

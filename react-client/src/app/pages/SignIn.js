@@ -21,7 +21,7 @@ const SignIn = ({children}) => {
 			email, 
 			password, 
 			(response) => {
-				// window.location.href = '/home';
+				window.location.href = '/home';
 			},
 			(response) => {
 			const errorField = document.getElementById('error-field');

@@ -196,7 +196,7 @@ class UserController {
 
 			// get user
 			const user: IUser = await UserModel.findOne({_id: mongoose.Types.ObjectId(id), softDeleted: false})
-			.select('profile id')
+			.select('profile id googleProvider')
 			.exec();
 
 			// send response

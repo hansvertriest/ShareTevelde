@@ -23,7 +23,7 @@ const SignUp = ({children}) => {
 			password,
 			passwordConfirmation,
 			(response) => {
-
+				window.location.href = '/profileconfig';
 			},
 			(response) => {
 			const errorField = document.getElementById('error-field');
