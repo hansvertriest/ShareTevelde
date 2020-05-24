@@ -213,6 +213,8 @@ class CourseController {
 			)
 			
 			if (update.n === 0) {
+				// delete fromCourse
+				const deleteFromCourse = await CourseModel.deleteOne({_id: fromCourseId}).exec();
 				throw {code: 404, msg: 'No assignments were found in the fromCourse'}
 			} else if (update.nModified === '0') {
 				throw {code: 500, msg: 'Nothing was moved.'}

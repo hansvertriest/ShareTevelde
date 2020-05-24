@@ -82,7 +82,13 @@ const Profile = (props) => {
 			?
 			<Fragment>
 				<div className="profile-container__picture-section">
-					<img className="picture-section__picture" src={`${BASE_URL}/image/byname/${user.profile.profilePictureName}`} alt="profile"/>
+					<img className="picture-section__picture" src={
+							(currentUser.profile.profilePictureName) 
+							? `${BASE_URL}/image/byname/${currentUser.profile.profilePictureName}`
+							: (currentUser.googlePictureUrl)
+								?	currentUser.googlePictureUrl
+								: ''
+						} alt="profile"/>
 					<div className="picture-section__description">
 						{(user.profile.username) ? <div className="username-container"><p className="username">{user.profile.username}</p></div>: undefined}
 						{user.profile.profileDescription ? <p className="description">{user.profile.profileDescription}</p>: undefined}

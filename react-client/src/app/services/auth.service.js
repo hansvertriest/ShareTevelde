@@ -72,6 +72,7 @@ const AuthProvider = ({children}) => {
 			.catch((error) => {
 				errorCb(error);
 			})
+		return currentUser;
 	}
 
 	const signUpLocal = async (email, password, passwordConfirmation, succesCb, errorCb) => {

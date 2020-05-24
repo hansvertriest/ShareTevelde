@@ -9,7 +9,7 @@ import { Logo } from '../components/misc';
 import './SignUpIn.scss';
 
 const SignIn = ({children}) => {
-	const { signInLocal, googleAuth } = useAuth();
+	const { signInLocal, googleAuth, currentUser } = useAuth();
 	
 	const submitSignIn = async (ev) => {
 		ev.preventDefault();
@@ -21,7 +21,7 @@ const SignIn = ({children}) => {
 			email, 
 			password, 
 			(response) => {
-				window.location.href = '/home';
+				// window.location.href = '/home';
 			},
 			(response) => {
 			const errorField = document.getElementById('error-field');

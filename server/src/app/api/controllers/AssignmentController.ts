@@ -231,6 +231,8 @@ class AssignmentController {
 			)
 			
 			if (update.n === 0) {
+				// delete fromAssignment
+				const deleteFromAssignment = await AssignmentModel.deleteOne({_id: fromAssignmentId}).exec();
 				throw {code: 404, msg: 'No posts were found in the fromCourse'}
 			} else if (update.nModified === '0') {
 				throw {code: 500, msg: 'Nothing was moved.'}
