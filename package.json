@@ -22,6 +22,6 @@
     "watch": "concurrently \"cd server && yarn watch:serve\" \"cd react-client && yarn start\""
   },
   "dependencies": {
-    "sharp": "^0.25.2"
+    "sharp": "^0.30.5"
   }
 }
